@@ -2,6 +2,7 @@ package net.agusdropout.bloodyhell.screen;
 
 import net.agusdropout.bloodyhell.BloodyHell;
 import net.agusdropout.bloodyhell.screen.custom.menu.BloodWorkBenchMenu;
+import net.agusdropout.bloodyhell.screen.custom.menu.ReliquaryMenu;
 import net.agusdropout.bloodyhell.screen.custom.menu.SanguineLapidaryMenu;
 import net.agusdropout.bloodyhell.screen.custom.menu.VesperMenu;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -28,6 +29,9 @@ public class ModMenuTypes {
 
     public static final RegistryObject<MenuType<SanguineLapidaryMenu>> SANGUINE_LAPIDARY_MENU =
             registerMenuType(SanguineLapidaryMenu::new, "sanguine_lapidary_menu");
+
+    public static final RegistryObject<MenuType<ReliquaryMenu>> RELIQUARY_MENU =
+            registerMenuType(ReliquaryMenu::new, "reliquary_menu");
 
 
     // --- Helper Methods ---

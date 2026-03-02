@@ -80,6 +80,14 @@ public class ModItemTagGenerator extends ItemTagsProvider {
                 .add(ModItems.BLASPHEMOUS_IMPALER.get())
                 .add(ModItems.BLASPHEMOUS_HULKING_MASS_OF_IRON.get());
 
+        this.tag(ModTags.Items.RELIQUARY_UPGRADE_ITEM)
+                .add(ModItems.ANCIENT_OCULAR_LENSE.get())
+                .add(ModItems.BLASPHEMOUS_OCULAR_LENSE.get());
+
+        this.tag(ModTags.Items.RELIQUARY_RUNE_ITEM)
+                .add(ModItems.MARK_OF_THE_RESTLESS_SLUMBER.get())
+                .add(ModItems.RUNE_OF_THE_RAVENOUS_GAZE.get());
+
 
         this.tag(ModTags.Items.SANGUINITE_TIER_ITEMS)
                 .add(ModItems.SANGUINITE.get())
@@ -132,4 +140,8 @@ public class ModItemTagGenerator extends ItemTagsProvider {
                 .add(ModItems.BLASPHEMOUS_IMPALER.get())
                 .add(ModItems.BLASPHEMOUS_RING.get());
     }
+
+
+
+
 }

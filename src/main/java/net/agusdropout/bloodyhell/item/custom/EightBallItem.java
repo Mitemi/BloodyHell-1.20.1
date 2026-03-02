@@ -12,6 +12,7 @@ import net.agusdropout.bloodyhell.particle.ParticleOptions.EtherealSwirlOptions;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.HollowRectangleOptions;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.TetherParticleOptions;
 import net.agusdropout.bloodyhell.util.bones.BoneManipulation;
+import net.agusdropout.bloodyhell.util.capability.InsightHelper;
 import net.agusdropout.bloodyhell.util.visuals.ParticleHelper;
 import net.agusdropout.bloodyhell.util.visuals.SpellPalette;
 import net.minecraft.ChatFormatting;
@@ -19,6 +20,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -45,7 +47,8 @@ public class EightBallItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
+            InsightHelper.addInsight( serverPlayer,10);
 
      //int quantity = 5;
 //

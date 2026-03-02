@@ -1,0 +1,160 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"idle": {
+			"loop": true,
+			"bones": {
+				"eye": {
+					"rotation": {
+						"vector": [
+							"-(math.cos(query.anim_time * 45 + math.sin(query.anim_time * 80) * 50) * 20 * math.clamp(math.sin(query.anim_time * 20) * 2.5, 0, 1))",
+							"-(math.sin(query.anim_time * 55 + math.cos(query.anim_time * 100) * 60) * 35 * math.clamp(math.sin(query.anim_time * 20) * 2.5, 0, 1))",
+							0
+						]
+					},
+					"position": {
+						"vector": [0, "math.sin(query.anim_time*50)*0.3", 0]
+					}
+				},
+				"f1": {
+					"rotation": {
+						"vector": [0, 0, "math.sin(query.anim_time*50)*20"]
+					}
+				},
+				"f2": {
+					"rotation": {
+						"vector": [0, 0, "math.cos(query.anim_time*50)*20"]
+					}
+				},
+				"f3": {
+					"rotation": {
+						"vector": ["-math.sin(query.anim_time*50)*20", 0, 0]
+					}
+				},
+				"f4": {
+					"rotation": {
+						"vector": ["-math.cos(query.anim_time*50)*20", 0, 0]
+					}
+				},
+				"f5": {
+					"rotation": {
+						"vector": ["-math.cos(query.anim_time*50)*20", 0, 0]
+					}
+				},
+				"f6": {
+					"rotation": {
+						"vector": ["-math.sin(query.anim_time*50)*20", 0, 0]
+					}
+				},
+				"f7": {
+					"rotation": {
+						"vector": [0, 0, "math.sin(query.anim_time*50)*20"]
+					}
+				},
+				"f8": {
+					"rotation": {
+						"vector": [0, 0, "math.cos(query.anim_time*50)*20"]
+					}
+				},
+				"f9": {
+					"rotation": {
+						"vector": ["-math.sin(query.anim_time*50)*20", "-math.cos(query.anim_time*50)*20", "math.sin(query.anim_time*50)*20"]
+					}
+				},
+				"f10": {
+					"rotation": {
+						"vector": ["-math.cos(query.anim_time*50)*20", "-math.sin(query.anim_time*50)*20", "math.cos(query.anim_time*50)*20"]
+					}
+				},
+				"f11": {
+					"rotation": {
+						"vector": ["-math.cos(query.anim_time*50)*20", "-math.cos(query.anim_time*50)*20", "math.cos(query.anim_time*50)*20"]
+					}
+				},
+				"f12": {
+					"rotation": {
+						"vector": ["-math.cos(query.anim_time*50)*20", "-math.sin(query.anim_time*50)*20", "math.sin(query.anim_time*50)*20"]
+					}
+				}
+			}
+		},
+		"charging": {
+			"loop": true,
+			"bones": {
+				"eye": {
+					"rotation": {
+						"vector": [
+							"-math.sin(query.anim_time * 4500) * 1.5 - math.cos(query.anim_time * 1400) * 0.8",
+							"-math.cos(query.anim_time * 5000) * 1.5 - math.sin(query.anim_time * 1300) * 0.8",
+							0
+						]
+					},
+					"position": {
+						"vector": [0, "math.sin(query.anim_time*50)*0.3", 0]
+					}
+				},
+				"f1": {
+					"rotation": {
+						"vector": [0, 0, "math.sin(query.anim_time*3000)*20"]
+					}
+				},
+				"f2": {
+					"rotation": {
+						"vector": [0, 0, "math.cos(query.anim_time*3000)*20"]
+					}
+				},
+				"f3": {
+					"rotation": {
+						"vector": ["-math.sin(query.anim_time*3000)*20", 0, 0]
+					}
+				},
+				"f4": {
+					"rotation": {
+						"vector": ["-math.cos(query.anim_time*3000)*20", 0, 0]
+					}
+				},
+				"f5": {
+					"rotation": {
+						"vector": ["-math.cos(query.anim_time*3000)*20", 0, 0]
+					}
+				},
+				"f6": {
+					"rotation": {
+						"vector": ["-math.sin(query.anim_time*3000)*20", 0, 0]
+					}
+				},
+				"f7": {
+					"rotation": {
+						"vector": [0, 0, "math.sin(query.anim_time*3000)*20"]
+					}
+				},
+				"f8": {
+					"rotation": {
+						"vector": [0, 0, "math.cos(query.anim_time*3000)*20"]
+					}
+				},
+				"f9": {
+					"rotation": {
+						"vector": ["-math.sin(query.anim_time*3000)*20", "-math.cos(query.anim_time*3000)*20", "math.sin(query.anim_time*3000)*20"]
+					}
+				},
+				"f10": {
+					"rotation": {
+						"vector": ["-math.cos(query.anim_time*3000)*20", "-math.sin(query.anim_time*3000)*20", "math.cos(query.anim_time*3000)*20"]
+					}
+				},
+				"f11": {
+					"rotation": {
+						"vector": ["-math.cos(query.anim_time*3000)*20", "-math.cos(query.anim_time*3000)*20", "math.cos(query.anim_time*3000)*20"]
+					}
+				},
+				"f12": {
+					"rotation": {
+						"vector": ["-math.cos(query.anim_time*3000)*20", "-math.sin(query.anim_time*3000)*20", "math.cos(query.anim_time*3000)*20"]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

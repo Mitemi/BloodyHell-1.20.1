@@ -2,10 +2,12 @@ package net.agusdropout.bloodyhell.event;
 
 import net.agusdropout.bloodyhell.capability.crimsonveilPower.PlayerCrimsonVeil;
 import net.agusdropout.bloodyhell.capability.crimsonveilPower.PlayerCrimsonveilProvider;
+import net.agusdropout.bloodyhell.capability.insight.PlayerInsight;
 import net.agusdropout.bloodyhell.effect.ModEffects;
 import net.agusdropout.bloodyhell.entity.ModEntityTypes;
 import net.agusdropout.bloodyhell.entity.custom.*;
 import net.agusdropout.bloodyhell.event.handlers.BloodHarvestHandler;
+import net.agusdropout.bloodyhell.event.handlers.PlayerCapabilityHandler;
 import net.agusdropout.bloodyhell.item.ModItems;
 import net.agusdropout.bloodyhell.item.custom.base.IComboWeapon;
 import net.agusdropout.bloodyhell.networking.ModMessages;
@@ -96,15 +98,11 @@ public class ModEvents {
 
     @Mod.EventBusSubscriber(modid = MODID)
     public static class ForgeEvents {
+
         @SubscribeEvent
         public static void onAttachCapabilitiesPlayer(AttachCapabilitiesEvent<Entity> event) {
-            if (event.getObject() instanceof Player) {
-                if (!event.getObject().getCapability(PlayerCrimsonveilProvider.PLAYER_CRIMSONVEIL).isPresent()) {
-                    event.addCapability(new ResourceLocation(MODID, "properties"), new PlayerCrimsonveilProvider());
-                }
-            }
+            PlayerCapabilityHandler.handleAttachCapabilities(event);
         }
-
 
 
         @SubscribeEvent
@@ -141,36 +139,15 @@ public class ModEvents {
 
         @SubscribeEvent
         public static void onPlayerCloned(PlayerEvent.Clone event) {
-            if (event.isWasDeath()) {
-                event.getOriginal().reviveCaps();
-                event.getOriginal().getCapability(PlayerCrimsonveilProvider.PLAYER_CRIMSONVEIL).ifPresent(oldStore -> {
-                    event.getEntity().getCapability(PlayerCrimsonveilProvider.PLAYER_CRIMSONVEIL).ifPresent(newStore -> {
-                        newStore.copyFrom(oldStore);
-                    });
-                });
-                event.getOriginal().invalidateCaps();
-            }
+            PlayerCapabilityHandler.handlePlayerCloned(event);
         }
 
         @SubscribeEvent
         public static void onPlayerJoinWorld(EntityJoinLevelEvent event) {
-            if (!event.getLevel().isClientSide()) {
-                if (event.getEntity() instanceof ServerPlayer player) {
-                    player.getCapability(PlayerCrimsonveilProvider.PLAYER_CRIMSONVEIL).ifPresent(crimsonVeil -> {
-                        ModMessages.sendToPlayer(new CrimsonVeilDataSyncS2CPacket(crimsonVeil.getCrimsonVeil()), player);
-                    });
-                }
-            }
+            PlayerCapabilityHandler.handlePlayerJoinLevel(event);
         }
 
-        @SubscribeEvent
-        public static void onPlayerAbandonWorld(EntityLeaveLevelEvent event) {
-            if (!event.getLevel().isClientSide()) {
-                if (event.getEntity() instanceof ServerPlayer player) {
-                    // Cleanup if needed
-                }
-            }
-        }
+
 
         @SubscribeEvent
         public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
@@ -205,6 +182,7 @@ public class ModEvents {
         @SubscribeEvent
         public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
             event.register(PlayerCrimsonVeil.class);
+            event.register(PlayerInsight.class);
         }
     }
 }

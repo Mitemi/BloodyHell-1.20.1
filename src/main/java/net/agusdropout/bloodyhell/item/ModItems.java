@@ -11,6 +11,7 @@ import net.agusdropout.bloodyhell.item.custom.OnlyAppendHoverText.*;
 import net.agusdropout.bloodyhell.item.custom.base.BasePowerGemItem;
 import net.agusdropout.bloodyhell.item.custom.mechanism.SanguiniteBloodHarvesterItem;
 import net.agusdropout.bloodyhell.item.custom.mechanism.SanguinitePipeItem;
+import net.agusdropout.bloodyhell.item.custom.reliquary.ReliquaryItem;
 import net.agusdropout.bloodyhell.item.custom.spellbooks.*;
 import net.agusdropout.bloodyhell.item.potions.BloodFlaskItem;
 import net.agusdropout.bloodyhell.item.potions.BloodPotionItem;
@@ -208,6 +209,21 @@ public class ModItems {
 
     public static final RegistryObject<Item> VORACIOUS_MUSHROOM = ITEMS.register("voracious_mushroom_item", () -> new BlockItem(ModBlocks.VORACIOUS_MUSHROOM_BLOCK.get(),
             new Item.Properties()));
+
+    public static final RegistryObject<Item> RELIQUARY = ITEMS.register("reliquary", () -> new ReliquaryItem(
+            new Item.Properties()));
+
+
+    //Reliquary Upgrade Items
+    public static final RegistryObject<Item> ANCIENT_OCULAR_LENSE = ITEMS.register("ancient_ocular_lense", () -> new Item(
+            new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> BLASPHEMOUS_OCULAR_LENSE = ITEMS.register("blasphemous_ocular_lense", () -> new Item(
+            new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> MARK_OF_THE_RESTLESS_SLUMBER = ITEMS.register("mark_of_the_restless_slumber", () -> new Item(
+            new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> RUNE_OF_THE_RAVENOUS_GAZE = ITEMS.register("rune_of_the_ravenous_gaze", () -> new Item(
+            new Item.Properties().stacksTo(1)));
+
 
 
 

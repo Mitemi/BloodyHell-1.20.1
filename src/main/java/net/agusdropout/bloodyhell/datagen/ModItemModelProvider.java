@@ -138,6 +138,14 @@ public class ModItemModelProvider extends ItemModelProvider {
         normalItem(ModItems.CRIMSON_WARD_RING);
         normalItem(ModItems.BLASPHEMOUS_RING);
 
+        //Reliquary Items
+        normalItem(ModItems.ANCIENT_OCULAR_LENSE);
+        normalItem(ModItems.BLASPHEMOUS_OCULAR_LENSE);
+        normalItem(ModItems.MARK_OF_THE_RESTLESS_SLUMBER);
+        normalItem(ModItems.RUNE_OF_THE_RAVENOUS_GAZE);
+
+
+
 
 
         evenSimplerBlockItem(ModBlocks.SANGUINE_CRUCIBLE);

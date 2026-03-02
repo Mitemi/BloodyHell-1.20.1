@@ -26,6 +26,7 @@ import net.agusdropout.bloodyhell.registry.BloodCapabilities;
 import net.agusdropout.bloodyhell.screen.custom.screen.BloodWorkBenchScreen;
 import net.agusdropout.bloodyhell.screen.ModCreativeModeTabs;
 import net.agusdropout.bloodyhell.screen.ModMenuTypes;
+import net.agusdropout.bloodyhell.screen.custom.screen.ReliquaryScreen;
 import net.agusdropout.bloodyhell.screen.custom.screen.SanguineLapidaryScreen;
 import net.agusdropout.bloodyhell.screen.custom.screen.VesperScreen;
 import net.agusdropout.bloodyhell.sound.ModSounds;
@@ -239,6 +240,7 @@ public class BloodyHell
             MenuScreens.register(ModMenuTypes.BLOOD_WORKBENCH_MENU.get(), BloodWorkBenchScreen::new);
             MenuScreens.register(ModMenuTypes.VESPER_MENU.get(), VesperScreen::new);
             MenuScreens.register(ModMenuTypes.SANGUINE_LAPIDARY_MENU.get(), SanguineLapidaryScreen::new);
+            MenuScreens.register(ModMenuTypes.RELIQUARY_MENU.get(), ReliquaryScreen::new);
             EntityRenderers.register(ModEntityTypes.BLOOD_SEEKER.get(), BloodSeekerRenderer::new);
             EntityRenderers.register(ModEntityTypes.OMEN_GAZER_ENTITY.get(), OmenGazerRenderer::new);
             EntityRenderers.register(ModEntityTypes.VEINRAVER_ENTITY.get(), VeinRaverEntityRenderer::new);

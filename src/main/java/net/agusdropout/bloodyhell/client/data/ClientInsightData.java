@@ -3,7 +3,7 @@ package net.agusdropout.bloodyhell.client.data;
 import net.agusdropout.bloodyhell.capability.insight.PlayerInsight;
 
 public class ClientInsightData {
-    private static int playerInsight = 100;
+    private static int playerInsight = 0;
 
     public static void set(int insight) {
         if(insight > PlayerInsight.MAX_INSIGHT) {

@@ -215,13 +215,13 @@ public class ModCreativeModeTabs {
                         output.accept(ModBlocks.BLEEDING_BLOCK.get());
                         output.accept(ModBlocks.ONI_STATUE.get());
 
-                        // --- Animated Block Items ---
-                        // FIX: We only add ModItems.BLOOD_ALTAR, not ModBlocks.BLOOD_ALTAR
-                        // because ModBlocks.BLOOD_ALTAR has no item.
+
                         output.accept(ModItems.BLOOD_ALTAR.get());
 
                         // FIX: Same for Main Blood Altar
                         output.accept(ModItems.MAIN_BLOOD_ALTAR.get());
+
+                        output.accept(ModItems.RELIQUARY.get());
 
                         // --- Potions ---
                         output.accept(ModItems.BLOOD_FLASK.get());
@@ -254,6 +254,13 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.TANZARINE_BLOOD_GEM.get());
                         output.accept(ModItems.AVENTURINE_BLOOD_GEM.get());
                         output.accept(ModItems.CITRINE_BLOOD_GEM.get());
+
+                        //--- Reliquary Items ---
+                        output.accept(ModItems.ANCIENT_OCULAR_LENSE.get());
+                        output.accept(ModItems.BLASPHEMOUS_OCULAR_LENSE.get());
+                        output.accept(ModItems.MARK_OF_THE_RESTLESS_SLUMBER.get());
+                        output.accept(ModItems.RUNE_OF_THE_RAVENOUS_GAZE.get());
+
 
 
                         // --- Crimson Blood Items ---

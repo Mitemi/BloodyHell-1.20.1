@@ -1,6 +1,8 @@
-// 1.20.1	2026-02-28T16:02:18.5415594	Tags for minecraft:item mod id bloodyhell
+// 1.20.1	2026-03-02T17:46:52.0957812	Tags for minecraft:item mod id bloodyhell
 13cc6131dd871ae46f994b95ed9996547e7f9861 data/bloodyhell/tags/items/blasphemous_tier_items.json
 8808f43ca5a3dffc3abed5d5d5452614acdd8ba6 data/bloodyhell/tags/items/blood_logs.json
+691e36c53175fed8fb7c9416ba473a3022eb3bbc data/bloodyhell/tags/items/reliquary_rune_item.json
+3fb15087ee2e7ae68d52d293e8010dabfe9cd53f data/bloodyhell/tags/items/reliquary_upgrade_item.json
 4d39bf536357f3cab846b86f8d9b27242e667bbb data/bloodyhell/tags/items/rhnull_tier_items.json
 8b01e622f8878fefcc19af3397c2b836c2d6b0d8 data/bloodyhell/tags/items/sanguinite_tier_items.json
 3fb317172c2edb585e287256bf7f0f2a16a414c6 data/bloodyhell/tags/items/spell_books.json

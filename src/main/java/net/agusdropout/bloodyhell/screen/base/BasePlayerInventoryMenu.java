@@ -32,7 +32,6 @@ public abstract class BasePlayerInventoryMenu extends AbstractContainerMenu {
     private void addPlayerInventory(Inventory playerInv) {
         for (int i = 0; i < 3; ++i) {
             for (int l = 0; l < 9; ++l) {
-                // FIXED: Changed 84 -> 86 to match your texture
                 this.addSlot(new Slot(playerInv, l + i * 9 + 9, 8 + l * 18, 86 + i * 18));
             }
         }
@@ -40,12 +39,10 @@ public abstract class BasePlayerInventoryMenu extends AbstractContainerMenu {
 
     private void addPlayerHotbar(Inventory playerInv) {
         for (int i = 0; i < 9; ++i) {
-            // FIXED: Changed 142 -> 144 to match your texture
             this.addSlot(new Slot(playerInv, i, 8 + i * 18, 144));
         }
     }
 
-    // ... quickMoveStack logic (same as before) ...
     @Override
     public ItemStack quickMoveStack(Player playerIn, int index) {
         Slot sourceSlot = slots.get(index);
