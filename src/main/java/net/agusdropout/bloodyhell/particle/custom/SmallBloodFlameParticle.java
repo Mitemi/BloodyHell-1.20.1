@@ -30,10 +30,10 @@ public class SmallBloodFlameParticle extends TextureSheetParticle {
             return;
         }
 
-        // 1. Move
+
         this.move(this.xd, this.yd, this.zd);
 
-        // 2. Physics: Add drag and slight lift
+
         this.xd *= 0.96F;
         this.zd *= 0.96F;
         this.yd *= 0.96F;
@@ -43,7 +43,7 @@ public class SmallBloodFlameParticle extends TextureSheetParticle {
             this.zd *= 0.7F;
         }
 
-        // 3. Visuals: Shrink slightly as it dies (Flame behavior)
+
         if (this.age > this.lifetime / 2) {
             this.quadSize *= 0.96F;
         }
@@ -54,10 +54,10 @@ public class SmallBloodFlameParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_OPAQUE;
     }
 
-    // --- MAX BRIGHTNESS (Glows in dark) ---
+
     @Override
     protected int getLightColor(float partialTick) {
-        return 15728880; // Full Brightness (240)
+        return 15728880;
     }
 
     public static class Provider implements ParticleProvider<SimpleParticleType> {

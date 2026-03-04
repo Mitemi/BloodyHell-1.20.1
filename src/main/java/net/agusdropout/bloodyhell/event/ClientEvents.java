@@ -278,7 +278,7 @@ public class ClientEvents {
             event.registerSpriteSet(ModParticles.MAGIC_FLOOR_PARTICLE.get(), MagicFloorParticle.Provider::new);
             event.registerSpriteSet(ModParticles.BLOOD_SIGIL_PARTICLE.get(), BloodSigilParticle.Provider::new);
             event.registerSpriteSet(ModParticles.SMALL_BLOOD_FLAME_PARTICLE.get(), SmallBloodFlameParticle.Provider::new);
-            event.registerSpriteSet(ModParticles.CHILL_BLACK_PARTICLE.get(), ChillBlackParticle.Provider::new);
+            event.registerSpriteSet(ModParticles.CHILL_FALLING_PARTICLE.get(), ChillFallingParticle.Provider::new);
             event.registerSpriteSet(ModParticles.BLOOD_DROP_PARTICLE.get(), BloodDropParticle.Provider::new);
             event.registerSpriteSet(ModParticles.BLOOD_STAIN_PARTICLE.get(), BloodStainParticle.Provider::new);
             event.registerSpriteSet(ModParticles.TETHER_PARTICLE.get(), TetherParticle.Provider::new);

@@ -46,17 +46,16 @@ public class StarExplosionParticle extends Particle {
         double py = Mth.lerp(partialTicks, yo, y) - camPos.y;
         double pz = Mth.lerp(partialTicks, zo, z) - camPos.z;
 
-        // ---- CONFIGURACIÓN DE RENDER ----
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
         RenderSystem.disableCull();
         RenderSystem.enableDepthTest();
         RenderSystem.depthMask(false);
 
-        // Usa shader de posición y color (sin texCoord obligatorio)
+
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
-        RenderSystem.setShaderColor(1f, 1f, 0f, 1f); // amarillo base
-        RenderSystem.setShaderTexture(0, texture);   // si querés textura, aún sirve
+        RenderSystem.setShaderColor(1f, 1f, 0f, 1f);
+        RenderSystem.setShaderTexture(0, texture);
 
         Tesselator tess = Tesselator.getInstance();
         BufferBuilder buffer = tess.getBuilder();

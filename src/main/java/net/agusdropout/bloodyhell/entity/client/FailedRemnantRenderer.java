@@ -3,6 +3,7 @@ package net.agusdropout.bloodyhell.entity.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.agusdropout.bloodyhell.entity.custom.FailedRemnantEntity;
 import net.agusdropout.bloodyhell.particle.ModParticles;
+import net.agusdropout.bloodyhell.particle.ParticleOptions.ChillFallingParticleOptions;
 import net.agusdropout.bloodyhell.util.visuals.ParticleHelper;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -36,38 +37,39 @@ public class FailedRemnantRenderer extends GeoEntityRenderer<FailedRemnantEntity
         if (model == null) return;
 
         model.getBone("faceParticle").ifPresent(bone -> {
-            // Chance to drip (Disgusting drool effect)
+
             if (entity.getRandom().nextFloat() < 0.10f) {
 
-                // 1. Get Rotation from World Matrix
                 Quaternionf boneRotation = new Quaternionf();
                 bone.getWorldSpaceMatrix().getUnnormalizedRotation(boneRotation);
 
-                // 2. Define Face Size (Small crawling face)
                 float width = 0.25f;
                 float height = 0.25f;
 
-                // 3. Random Point on Surface (Local)
                 float lx = (entity.getRandom().nextFloat() - 0.5f) * width;
                 float ly = (entity.getRandom().nextFloat() - 0.5f) * height;
-                // Negative Z pushes it "Forward" out of the mesh
-                float lz = -0.2f;
+                float lz = 1f;
 
-                // 4. Rotate Local Vector
                 Vector3f spawnOffset = new Vector3f(lx, ly, lz);
                 spawnOffset.rotate(boneRotation);
 
-                // 5. Add World Position
+
                 Vector3d bonePos = bone.getWorldPosition();
 
-                // 6. Spawn Chill Black Particle
-                // Drops down slowly, maybe slight forward momentum
-                Vec3 look = entity.getLookAngle();
-                ParticleHelper.spawn(entity.level(), ModParticles.CHILL_BLACK_PARTICLE.get(),
-                        bonePos.x + spawnOffset.x,
-                        bonePos.y + spawnOffset.y,
-                        bonePos.z + spawnOffset.z,
-                        look.x * 0.02, -0.05, look.z * 0.02);
+            // ChillFallingParticleOptions blackParticle = new ChillFallingParticleOptions(
+            //         new Vector3f(0.05f, 0.05f, 0.05f),
+            //         0.02f,
+            //         60,
+            //         15
+            // );
+
+
+            // Vec3 look = entity.getLookAngle();
+            // ParticleHelper.spawn(entity.level(), blackParticle,
+            //         bonePos.x + spawnOffset.x,
+            //         bonePos.y + spawnOffset.y,
+            //         bonePos.z + spawnOffset.z,
+            //         look.x * 0.02, -0.05, look.z * 0.02);
             }
         });
     }

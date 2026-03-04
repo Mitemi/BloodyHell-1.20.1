@@ -44,7 +44,6 @@ public class SlashParticle extends TextureSheetParticle {
 
     @Override
     public void render(VertexConsumer consumer, Camera camera, float delta) {
-        // Simple render logic: no rotation applied.
         super.render(consumer, camera, delta);
     }
 
@@ -63,7 +62,6 @@ public class SlashParticle extends TextureSheetParticle {
 
         @Override
         public Particle createParticle(SimpleParticleType particleOptions, ClientLevel clientLevel, double d, double e, double f, double g, double h, double i) {
-            // No yaw calculations, just create the particle at a fixed offset
             return new SlashParticle(clientLevel, d, e, f, this.sprites);
         }
     }

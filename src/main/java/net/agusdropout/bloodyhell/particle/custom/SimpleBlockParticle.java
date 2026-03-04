@@ -49,10 +49,10 @@ public class SimpleBlockParticle extends Particle {
     public void tick() {
         super.tick();
 
-        // 🔒 Forzar sin movimiento en Y
+
         this.yd = 0.03;
 
-        // Revertir el damping (0.98) para mantener la velocidad en XZ
+
         this.xd /= 0.94;
         this.zd /= 0.94;
 
@@ -60,9 +60,9 @@ public class SimpleBlockParticle extends Particle {
             this.scale += 0.07f;
         }
 
-        // 🔽 Fade out progresivo
+
         float lifeRatio = (float) this.age / (float) this.lifetime;
-        this.alpha = 1.0f - lifeRatio; // de 1 → 0 a lo largo de la vida
+        this.alpha = 1.0f - lifeRatio;
     }
 
     @Override

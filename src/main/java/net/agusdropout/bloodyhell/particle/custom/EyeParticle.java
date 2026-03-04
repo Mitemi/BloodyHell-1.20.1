@@ -22,7 +22,7 @@ public class EyeParticle extends TextureSheetParticle {
     private final float facingYaw;
     private final float facingPitch;
 
-    // Controla cuánto puede moverse la iris
+
     private static final float MAX_IRIS_OFFSET = 0.125f;
     private static final float Z_FIGHT_OFFSET = 0.001f;
 
@@ -36,7 +36,7 @@ public class EyeParticle extends TextureSheetParticle {
         this.gravity = 0.0F;
         this.quadSize = 0.5F;
 
-        // Calcular orientación hacia el jugador
+
         Player player = Minecraft.getInstance().player;
         if (player != null) {
             double dx = player.getX() - pX;
@@ -54,7 +54,7 @@ public class EyeParticle extends TextureSheetParticle {
 
     @Override
     protected int getLightColor(float tint) {
-        // Ignora luz ambiental, siempre máximo
+
         return 0xF000F0;
     }
 
@@ -62,14 +62,14 @@ public class EyeParticle extends TextureSheetParticle {
     public void tick() {
         super.tick();
 
-        // Fade suave al final de la vida
-        float fadeStart = 0.85f; // comienza a desaparecer al 85% de la vida
+
+        float fadeStart = 0.85f;
         float lifeRatio = (float)this.age / (float)this.lifetime;
 
         if (lifeRatio < fadeStart) {
-            this.alpha = 1.0f; // completamente visible
+            this.alpha = 1.0f;
         } else {
-            this.alpha = 1.0f - (lifeRatio - fadeStart) / (1.0f - fadeStart); // fade al final
+            this.alpha = 1.0f - (lifeRatio - fadeStart) / (1.0f - fadeStart);
         }
     }
 
@@ -87,7 +87,7 @@ public class EyeParticle extends TextureSheetParticle {
         float relY = pY - (float) cameraPos.y;
         float relZ = pZ - (float) cameraPos.z;
 
-        // Desplazamiento de la iris hacia el jugador
+
         Vec3 particlePos = new Vec3(pX, pY, pZ);
         Vec3 playerEyes = player.getEyePosition();
         Vec3 lookVec = playerEyes.subtract(particlePos).normalize();
@@ -107,7 +107,7 @@ public class EyeParticle extends TextureSheetParticle {
         rotateVectorYawPitch(irisDisplacement, facingYaw, facingPitch);
         irisDisplacement.mul(this.quadSize);
 
-        // Dibujar base y iris
+
         drawQuad(vertexConsumer, relX, relY, relZ, this.spriteBase, 1.0F);
         drawQuad(vertexConsumer,
                 relX + irisDisplacement.x(),
@@ -121,13 +121,13 @@ public class EyeParticle extends TextureSheetParticle {
         float yaw = (float) Math.toRadians(yawDeg);
         float pitch = (float) Math.toRadians(pitchDeg);
 
-        // rotación Yaw (eje Y)
+
         float cosY = Mth.cos(yaw);
         float sinY = Mth.sin(yaw);
         float x1 = v.x() * cosY + v.z() * sinY;
         float z1 = -v.x() * sinY + v.z() * cosY;
 
-        // rotación Pitch (eje X)
+
         float cosP = Mth.cos(pitch);
         float sinP = Mth.sin(pitch);
         float y1 = v.y() * cosP - z1 * sinP;
@@ -162,7 +162,7 @@ public class EyeParticle extends TextureSheetParticle {
 
         float[] uvs = new float[]{ u0, v0, u1, v0, u1, v1, u0, v1 };
 
-        int light = 0xF000F0; // luz máxima
+        int light = 0xF000F0;
 
         for (int i = 0; i < 4; ++i) {
             Vector3f vertex = vertices[i];

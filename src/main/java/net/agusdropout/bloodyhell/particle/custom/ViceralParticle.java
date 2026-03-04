@@ -8,10 +8,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class ViceralParticle extends TextureSheetParticle {
-    private static final float GRAVITY = 0.02F; // Aumenta el efecto de caída
-    private static final float INITIAL_SPEED = 0.1F; // Velocidad inicial hacia arriba
-    private static final float AIR_RESISTANCE = 0.98F; // Simula la resistencia del aire
-    private static final float SPREAD = 0.05F; // Variación aleatoria en las direcciones X y Z
+    private static final float GRAVITY = 0.02F;
+    private static final float INITIAL_SPEED = 0.1F;
+    private static final float AIR_RESISTANCE = 0.98F;
+    private static final float SPREAD = 0.05F;
 
     private float rotSpeed;
     private final float spinAcceleration;
@@ -22,14 +22,14 @@ public class ViceralParticle extends TextureSheetParticle {
         this.rotSpeed = (float) Math.toRadians(this.random.nextBoolean() ? -30.0 : 30.0);
         this.spinAcceleration = (float) Math.toRadians(this.random.nextBoolean() ? -5.0 : 5.0);
 
-        this.lifetime = 40 + this.random.nextInt(20); // Duración aleatoria entre 40 y 60 ticks
+        this.lifetime = 40 + this.random.nextInt(20);
         this.gravity = GRAVITY;
 
         float size = this.random.nextBoolean() ? 0.05F : 0.075F;
         this.quadSize = size;
         this.setSize(size, size);
 
-        // Generar una dirección aleatoria con impulso inicial
+
         this.xd = dx + (this.random.nextFloat() - 0.5) * SPREAD;
         this.zd = dz + (this.random.nextFloat() - 0.5) * SPREAD;
         this.yd = dy + this.random.nextFloat() * INITIAL_SPEED;
@@ -48,22 +48,21 @@ public class ViceralParticle extends TextureSheetParticle {
             return;
         }
 
-        // Aplicar gravedad para caída parabólica
+
         this.yd -= this.gravity;
 
-        // Mover la partícula según su velocidad
+
         this.move(this.xd, this.yd, this.zd);
 
-        // Aplicar resistencia al aire para ralentizar la velocidad con el tiempo
+
         this.xd *= AIR_RESISTANCE;
         this.yd *= AIR_RESISTANCE;
         this.zd *= AIR_RESISTANCE;
 
-        // Rotación de la partícula en el aire
         this.oRoll = this.roll;
         this.roll += this.rotSpeed / 20.0F;
 
-        // Si toca el suelo, eliminar la partícula
+
         if (this.onGround) {
             this.remove();
         }

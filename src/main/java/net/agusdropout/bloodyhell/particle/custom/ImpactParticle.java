@@ -30,7 +30,7 @@ public class ImpactParticle extends TextureSheetParticle {
         super(level, x, y, z);
         this.sprites = sprites;
 
-        // 1. Apply Options (Individual RGB)
+
         this.rCol = options.getR();
         this.gCol = options.getG();
         this.bCol = options.getB();
@@ -40,11 +40,11 @@ public class ImpactParticle extends TextureSheetParticle {
         this.jitter = options.shouldJitter();
         this.expansionSpeed = options.getExpansionSpeed();
 
-        // 2. Physics
+
         this.gravity = 0.0F;
         this.quadSize = 0.25F;
 
-        // 3. Jitter Calculation
+
         if (this.jitter) {
             float[] hsb = Color.RGBtoHSB((int)(rCol*255), (int)(gCol*255), (int)(bCol*255), null);
             this.baseHue = hsb[0];
