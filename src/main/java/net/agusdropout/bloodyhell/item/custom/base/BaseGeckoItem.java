@@ -36,7 +36,7 @@ public abstract class BaseGeckoItem extends Item implements GeoItem {
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 if (this.renderer == null) {
-                    this.renderer = new GenericGeckoItemRenderer();
+                    this.renderer = new GenericGeckoItemRenderer(true);
                 }
                 return this.renderer;
             }

@@ -5,6 +5,8 @@ import net.agusdropout.bloodyhell.entity.minions.ai.FollowSummonerGoal;
 import net.agusdropout.bloodyhell.entity.minions.base.AbstractMinionEntity;
 import net.agusdropout.bloodyhell.sound.ModSounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
@@ -83,6 +85,20 @@ public class FailedSonOfTheUnknown extends AbstractMinionEntity {
 
         state.getController().setAnimation(RawAnimation.begin().thenLoop("idle"));
         return PlayState.CONTINUE;
+    }
+
+    @Override
+    public void die(DamageSource cause) {
+        if (!this.level().isClientSide) {
+            this.level().getEntitiesOfClass(Mob.class, this.getBoundingBox().inflate(3.0D),
+                            entity -> !this.isAlliedTo(entity) && entity.isAlive())
+                    .forEach(enemy -> enemy.hurt(this.damageSources().magic(), 4.0F));
+
+            ((ServerLevel) this.level()).sendParticles(ParticleTypes.SQUID_INK,
+                    this.getX(), this.getY() + 0.5D, this.getZ(),
+                    20, 0.5D, 0.5D, 0.5D, 0.1D);
+        }
+        super.die(cause);
     }
 
     @Override

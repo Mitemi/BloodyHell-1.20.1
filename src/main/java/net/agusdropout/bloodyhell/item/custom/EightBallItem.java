@@ -1,6 +1,7 @@
 package net.agusdropout.bloodyhell.item.custom;
 
 import net.agusdropout.bloodyhell.entity.ModEntityTypes;
+import net.agusdropout.bloodyhell.entity.effects.BlackHoleEntity;
 import net.agusdropout.bloodyhell.entity.minions.custom.FailedSonOfTheUnknown;
 import net.agusdropout.bloodyhell.entity.minions.custom.WeepingOcularEntity;
 import net.agusdropout.bloodyhell.entity.projectile.spell.RhnullHeavySwordEntity;
@@ -12,6 +13,7 @@ import net.agusdropout.bloodyhell.networking.packet.S2CPainThronePacket;
 import net.agusdropout.bloodyhell.particle.ModParticles;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.EtherealSwirlOptions;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.HollowRectangleOptions;
+import net.agusdropout.bloodyhell.particle.ParticleOptions.MagicalRingParticleOptions;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.TetherParticleOptions;
 import net.agusdropout.bloodyhell.util.bones.BoneManipulation;
 import net.agusdropout.bloodyhell.util.capability.InsightHelper;
@@ -49,18 +51,22 @@ public class EightBallItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+
+
+        //triggerSummoningRitual(level, player.getX(), player.getY(), player.getZ(), 1.5f, 3.0f, 120, COLOR_CORE);
+
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
             InsightHelper.addInsight( serverPlayer,10);
 
-
-              FailedSonOfTheUnknown son = new FailedSonOfTheUnknown(ModEntityTypes.FAILED_SON_OF_THE_UNKNOWN.get(), level);
-              son.setOwnerUUID(player.getUUID());
-              son.setPos(player.getX(), player.getY(), player.getZ());
-              level.addFreshEntity(son);
+//
+             FailedSonOfTheUnknown son = new FailedSonOfTheUnknown(ModEntityTypes.FAILED_SON_OF_THE_UNKNOWN.get(), level);
+             son.setOwnerUUID(player.getUUID());
+             son.setPos(player.getX(), player.getY(), player.getZ());
+             level.addFreshEntity(son);
 
               WeepingOcularEntity eye = new WeepingOcularEntity(ModEntityTypes.WEEPING_OCULAR.get(), level);
-            eye.setOwnerUUID(player.getUUID());
-            eye.setPos(player.getX(), player.getY(), player.getZ());
+                eye.setOwnerUUID(player.getUUID());
+                eye.setPos(player.getX(), player.getY(), player.getZ());
               level.addFreshEntity(eye);
 
      //int quantity = 5;
@@ -88,7 +94,16 @@ public class EightBallItem extends Item {
         } else {
 
             // Visual Feedback (Client Side)
-           // ParticleHelper.spawn(level, new EtherealSwirlOptions(1f, 0.796f, 0f, 200, 20.0f), player.getX(), player.getY(), player.getZ(), 0, 0, 0);
+         //   Vector3f color = new Vector3f(1f, 0.9f, 0.0f);
+         //   float radius = 1.5f;
+         //   float height = 3.0f;
+         //   double maxLifeTime = 120.0;
+//
+//
+//
+         //   level.addParticle(new MagicalRingParticleOptions(color, radius, height),
+         //           player.getX(), player.getY(), player.getZ(),
+         //           maxLifeTime, 0.0D, 0.0D);
            // System.out.println("Spawned Ethereal Swirl Particle at " + player.getX() + ", " + player.getY() + ", " + player.getZ());
             //ParticleHelper.spawn(level, new EtherealSwirlOptions(SpellPalette.RHNULL.getColor(1), 300, 1.0f), player.position().add(0,1.5,0), 0, 0, 0);
         }
@@ -133,6 +148,25 @@ public class EightBallItem extends Item {
     public void startThroneEffect(LivingEntity victim) {
         if (!victim.level().isClientSide) {
             ModMessages.sendToPlayersTrackingEntity(new S2CPainThronePacket(victim.getUUID(), 1000, BoneManipulation.JITTER), victim);
+        }
+    }
+
+    public static void triggerSummoningRitual(Level level, double x, double y, double z, float radius, float height, int duration, Vector3f color) {
+        if (!level.isClientSide) {
+            BlackHoleEntity blackHole = new BlackHoleEntity(ModEntityTypes.BLACK_HOLE.get(), level);
+            blackHole.setPos(x, y, z);
+            blackHole.setRadius(radius);
+            blackHole.setMaxAge(duration);
+
+            int r = (int)(color.x() * 255.0F);
+            int g = (int)(color.y() * 255.0F);
+            int b = (int)(color.z() * 255.0F);
+            int intColor = (r << 16) | (g << 8) | b;
+            blackHole.setColor(intColor);
+
+            level.addFreshEntity(blackHole);
+        } else {
+            level.addParticle(new MagicalRingParticleOptions(color, radius, height), x, y, z, duration, 0.0D, 0.0D);
         }
     }
 

@@ -63,6 +63,191 @@ public class RenderHelper {
     }
 
     /**
+     * Renders a magical cylinder with dynamically shifting segment heights and shiny white flashes.
+     */
+    public static void renderMagicalDynamicCylinder(VertexConsumer consumer, Matrix4f pose,
+                                                    float radius, float baseHeight, int segments, float time,
+                                                    float r, float g, float b, float alpha) {
+
+        if (ShaderUtils.areShadersActive()) {
+            segments *= 4;
+        }
+
+        float heightAmp = baseHeight * 0.4f;
+
+        for (int j = 0; j < segments; j++) {
+            float ang1 = (float) j / segments * Mth.TWO_PI;
+            float ang2 = (float) (j + 1) / segments * Mth.TWO_PI;
+
+            float cos1 = Mth.cos(ang1);
+            float sin1 = Mth.sin(ang1);
+            float cos2 = Mth.cos(ang2);
+            float sin2 = Mth.sin(ang2);
+
+            float x1 = cos1 * radius;
+            float z1 = sin1 * radius;
+            float x2 = cos2 * radius;
+            float z2 = sin2 * radius;
+
+            double nx = cos1 * 1.2;
+            double nz = sin1 * 1.2;
+
+            float heightNoise = (float) Perlin.noise(nx, nz - time * 0.05);
+            float h = baseHeight + heightNoise * heightAmp;
+
+            float alphaNoise = (float) Perlin.noise(nx + 100.0, nz - time * 0.03);
+            float curA = Mth.clamp(alpha + alphaNoise * 0.4f, 0.1f, 1.0f);
+
+            float curR = r, curG = g, curB = b;
+
+            if (Mth.sin(time * 1.5f - ang1 * 3.0f) > 0.85f) {
+                curR = 1.0f;
+                curG = 1.0f;
+                curB = 1.0f;
+                curA = Math.min(1.0f, curA + 0.3f);
+            }
+
+            simpleVertex(consumer, pose, x1, 0, z1, curR, curG, curB, curA);
+            simpleVertex(consumer, pose, x1, h, z1, curR, curG, curB, curA);
+            simpleVertex(consumer, pose, x2, h, z2, curR, curG, curB, curA);
+            simpleVertex(consumer, pose, x2, 0, z2, curR, curG, curB, curA);
+
+            simpleVertex(consumer, pose, x2, 0, z2, curR, curG, curB, curA);
+            simpleVertex(consumer, pose, x2, h, z2, curR, curG, curB, curA);
+            simpleVertex(consumer, pose, x1, h, z1, curR, curG, curB, curA);
+            simpleVertex(consumer, pose, x1, 0, z1, curR, curG, curB, curA);
+        }
+    }
+
+    /**
+     * Renders a textureless auroral ring effect using vertical alpha gradients and wave interference.
+     */
+    public static void renderAuroraRing(VertexConsumer consumer, Matrix4f pose,
+                                        float radius, float maxHeight, int segments, float time,
+                                        float r, float g, float b, float baseAlpha) {
+
+        if (ShaderUtils.areShadersActive()) {
+            segments *= 4;
+        }
+
+        for (int j = 0; j < segments; j++) {
+            float ang1 = (float) j / segments * Mth.TWO_PI;
+            float ang2 = (float) (j + 1) / segments * Mth.TWO_PI;
+
+            float cos1 = Mth.cos(ang1);
+            float sin1 = Mth.sin(ang1);
+            float cos2 = Mth.cos(ang2);
+            float sin2 = Mth.sin(ang2);
+
+            float x1 = cos1 * radius;
+            float z1 = sin1 * radius;
+            float x2 = cos2 * radius;
+            float z2 = sin2 * radius;
+
+            float wave1_a = Mth.sin(ang1 * 4.0f - time * 0.8f);
+            float wave1_b = Mth.sin(ang1 * 7.0f + time * 1.2f);
+            float interference1 = (float) Math.pow((wave1_a + wave1_b) * 0.25f + 0.5f, 2.0);
+
+            float wave2_a = Mth.sin((ang2 * 10.0f) - (time * 2f));
+            float wave2_b = Mth.sin(ang2 * 17.0f + time * 3f);
+            float interference2 = (float) Math.pow((wave2_a + wave2_b) * 0.25f + 0.5f, 2.0);
+
+            float h1 = maxHeight * (0.2f + interference1 * 0.8f)+0.3f;
+            float h2 = maxHeight * (0.2f + interference2 * 0.8f)+0.3f;
+
+            float a1 = Mth.clamp(baseAlpha * interference1 * 0.5f + h1 - x1, 0.0f, 1.0f);
+            float a2 = Mth.clamp(baseAlpha * interference2 * 0.5f + h2 - x2, 0.0f, 1.0f);
+
+            float brightnessBoost = 0.3f * interference1 * ((h1+h2)/5);
+
+            float darkening = (1.0f - interference1) * 0.6f * (1 + (1/(h1 + h2)));
+
+            float curR = Mth.clamp(r + (interference1 * 0.1f + brightnessBoost) - darkening * 0.2f, 0.0f, 1.0f);
+            float curG = Mth.clamp(g + (interference1 * 0.1f + brightnessBoost) - darkening * 0.6f, 0.0f, 1.0f);
+            float curB = Mth.clamp(b + (interference1 * 0.1f + brightnessBoost) - darkening * 1.0f, 0.0f, 1.0f);
+
+
+
+            simpleVertex(consumer, pose, x1, 0, z1, curR, curG, curB, a1);
+            simpleVertex(consumer, pose, x1, h1, z1, curR, curG, curB, 0.0f);
+            simpleVertex(consumer, pose, x2, h2, z2, curR, curG, curB, 0.0f);
+            simpleVertex(consumer, pose, x2, 0, z2, curR, curG, curB, a2);
+
+            simpleVertex(consumer, pose, x2, 0, z2, curR, curG, curB, a2);
+            simpleVertex(consumer, pose, x2, h2, z2, curR, curG, curB, 0.0f);
+            simpleVertex(consumer, pose, x1, h1, z1, curR, curG, curB, 0.0f);
+            simpleVertex(consumer, pose, x1, 0, z1, curR, curG, curB, a1);
+        }
+    }
+
+
+    public static void renderTexturedAuroraRing(VertexConsumer consumer, Matrix4f pose,
+                                                float radius, float maxHeight, int segments, float time,
+                                                float r, float g, float b, float baseAlpha) {
+
+        if (ShaderUtils.areShadersActive()) {
+            segments *= 2;
+        }
+
+
+        float scrollSpeed = time * 0.05f;
+        float textureRepeats = 3.0f;
+
+        for (int j = 0; j < segments; j++) {
+            float ang1 = (float) j / segments * Mth.TWO_PI;
+            float ang2 = (float) (j + 1) / segments * Mth.TWO_PI;
+
+            float cos1 = Mth.cos(ang1);
+            float sin1 = Mth.sin(ang1);
+            float cos2 = Mth.cos(ang2);
+            float sin2 = Mth.sin(ang2);
+
+            float x1 = cos1 * radius;
+            float z1 = sin1 * radius;
+            float x2 = cos2 * radius;
+            float z2 = sin2 * radius;
+
+
+            float u1 = ((float) j / segments) * textureRepeats + scrollSpeed;
+            float u2 = ((float) (j + 1) / segments) * textureRepeats + scrollSpeed;
+
+
+            float wave1_a = Mth.sin(ang1 * 4.0f - time * 0.8f);
+            float wave1_b = Mth.sin(ang1 * 7.0f + time * 1.2f);
+            float interference1 = (float) Math.pow((wave1_a + wave1_b) * 0.25f + 0.5f, 2.0);
+
+            float wave2_a = Mth.sin((ang2 * 10.0f) - (time * 2f));
+            float wave2_b = Mth.sin(ang2 * 17.0f + time * 3f);
+            float interference2 = (float) Math.pow((wave2_a + wave2_b) * 0.25f + 0.5f, 2.0);
+
+            float h1 = maxHeight * (0.2f + interference1 * 0.8f) + 0.3f;
+            float h2 = maxHeight * (0.2f + interference2 * 0.8f) + 0.3f;
+
+            float a1 = Mth.clamp(baseAlpha * interference1 * 0.5f + h1, 0.0f, 1.0f);
+            float a2 = Mth.clamp(baseAlpha * interference2 * 0.5f + h2, 0.0f, 1.0f);
+
+            float brightnessBoost = 0.3f * interference1 * ((h1 + h2) / 5);
+            float darkening = (1.0f - interference1) * 0.6f;
+
+            float curR = Mth.clamp(r + (interference1 * 0.1f + brightnessBoost) - darkening * 0.2f, 0.0f, 1.0f);
+            float curG = Mth.clamp(g + (interference1 * 0.1f + brightnessBoost) - darkening * 0.6f, 0.0f, 1.0f);
+            float curB = Mth.clamp(b + (interference1 * 0.1f + brightnessBoost) - darkening * 1.0f, 0.0f, 1.0f);
+
+
+            texturedVertex(consumer, pose, x1, 0, z1, curR, curG, curB, a1, u1, 1.0f);
+            texturedVertex(consumer, pose, x1, h1, z1, curR, curG, curB, 0.0f, u1, 0.0f);
+            texturedVertex(consumer, pose, x2, h2, z2, curR, curG, curB, 0.0f, u2, 0.0f);
+            texturedVertex(consumer, pose, x2, 0, z2, curR, curG, curB, a2, u2, 1.0f);
+
+            // Back face
+            texturedVertex(consumer, pose, x2, 0, z2, curR, curG, curB, a2, u2, 1.0f);
+            texturedVertex(consumer, pose, x2, h2, z2, curR, curG, curB, 0.0f, u2, 0.0f);
+            texturedVertex(consumer, pose, x1, h1, z1, curR, curG, curB, 0.0f, u1, 0.0f);
+            texturedVertex(consumer, pose, x1, 0, z1, curR, curG, curB, a1, u1, 1.0f);
+        }
+    }
+
+    /**
      * Renders a sphere where the radius is determined dynamically per vertex via a function.
      */
     public static void renderProceduralSphere(VertexConsumer consumer, Matrix4f pose, Matrix3f normal,
@@ -1087,6 +1272,17 @@ public class RenderHelper {
                 colorSphereVertex(consumer, pose, radius, theta1, phi2, red, green, blue, alpha);
             }
         }
+    }
+
+    private static void texturedVertex(VertexConsumer consumer, Matrix4f pose, float x, float y, float z,
+                                       float r, float g, float b, float a, float u, float v) {
+        consumer.vertex(pose, x, y, z)
+                .color(r, g, b, a)
+                .uv(u, v)
+                .overlayCoords(net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY)
+                .uv2(15728880)
+                .normal(0, 1, 0)
+                .endVertex();
     }
 
     private static void colorSphereVertex(VertexConsumer consumer, Matrix4f pose, float rad, double theta, double phi, int r, int g, int b, int a) {

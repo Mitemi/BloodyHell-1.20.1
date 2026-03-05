@@ -320,7 +320,7 @@ public class BloodyHell
             EntityRenderers.register(ModEntityTypes.WEEPING_OCULAR.get(), WeepingOcularRenderer::new);
             EntityRenderers.register(ModEntityTypes.FAILED_SON_OF_THE_UNKNOWN.get(), FailedSonOfTheUnknownRenderer::new);
             EntityRenderers.register(ModEntityTypes.WEEPING_TEAR_PROJECTILE.get(), SimpleColoredLineProjectileRenderer::new);
-
+            EntityRenderers.register(ModEntityTypes.BLACK_HOLE.get(), BlackHoleRenderer::new);
 
 
 

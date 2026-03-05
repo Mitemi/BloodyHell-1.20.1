@@ -225,6 +225,11 @@ public class ClientEvents {
             event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(BloodyHell.MODID, "ethereal_swirl"), DefaultVertexFormat.POSITION_TEX_COLOR), shaderInstance -> {
                 ModShaders.ETHEREAL_SWIRL_SHADER = shaderInstance;
             });
+            event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(BloodyHell.MODID, "black_hole"), DefaultVertexFormat.POSITION_TEX), shaderInstance -> {
+                ModShaders.BLACK_HOLE_SHADER = shaderInstance;
+            });
+
+
         }
 
         private static IAnimation registerPlayerAnimation(AbstractClientPlayer player) {
@@ -284,6 +289,7 @@ public class ClientEvents {
             event.registerSpriteSet(ModParticles.TETHER_PARTICLE.get(), TetherParticle.Provider::new);
             event.registerSpriteSet(ModParticles.GLITTER_PARTICLE.get(), GlitterParticle.Provider::new);
             event.registerSpriteSet(ModParticles.SMALL_GLITTER_PARTICLE.get(), SmallGlitterParticle.Provider::new);
+            event.registerSpriteSet(ModParticles.MAGICAL_RING_PARTICLE.get(), spriteSet -> new MagicalRingParticle.Provider());
         }
 
         @SubscribeEvent

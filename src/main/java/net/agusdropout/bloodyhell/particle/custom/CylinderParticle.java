@@ -33,6 +33,8 @@ public class CylinderParticle extends Particle {
 
     @Override
     public void render(VertexConsumer ignored, Camera camera, float partialTicks) {
+        float ticks = (age + partialTicks)/5;
+
         Vec3 camPos = camera.getPosition();
         double px = Mth.lerp(partialTicks, xo, x) - camPos.x;
         double py = Mth.lerp(partialTicks, yo, y) - camPos.y;
@@ -51,17 +53,17 @@ public class CylinderParticle extends Particle {
         PoseStack stack = new PoseStack();
         stack.translate(px, py, pz);
 
-        // Uses RenderHelper to draw the cylinder
-        // Note: The Perlin noise logic from the original was complex vertex manipulation.
-        // For a general "Cylinder Particle", the standard TaperedCylinder is used here.
-        // If you need the exact Perlin deformation, it must remain custom code in this class.
-        // However, standard magic cylinders usually look fine with just Alpha gradients.
+
 
         RenderHelper.renderTaperedCylinder(buffer, stack.last().pose(), null,
                 2.0f, 1.5f, 1.5f,
                 0f, 0f,
                 1, 32,
                 1f, 0.9f, 0.3f, 0.2f, 0.0f, 15728880);
+
+
+
+
 
         tess.end();
         RenderSystem.depthMask(true);

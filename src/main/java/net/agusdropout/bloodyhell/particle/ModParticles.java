@@ -166,6 +166,13 @@ public class ModParticles {
                     return ShockwaveParticleOptions.CODEC;
                 }
             });
+    public static final RegistryObject<ParticleType<MagicalRingParticleOptions>> MAGICAL_RING_PARTICLE =
+            PARTICLE_TYPES.register("magical_ring", () -> new ParticleType<MagicalRingParticleOptions>(false, MagicalRingParticleOptions.DESERIALIZER) {
+                @Override
+                public Codec<MagicalRingParticleOptions> codec() {
+                    return MagicalRingParticleOptions.CODEC;
+                }
+            });
 
 
 

@@ -226,6 +226,13 @@ public class ModEntityTypes {
                     () -> EntityType.Builder.<InfestationDecalEntity>of(InfestationDecalEntity::new, MobCategory.AMBIENT)
                             .sized(1.0f, 1.0f) // Wide but flat (Crawling)
                             .build(new ResourceLocation(BloodyHell.MODID, "infestation_decal").toString()));
+
+    public static final RegistryObject<EntityType<BlackHoleEntity>> BLACK_HOLE =
+            ENTITY_TYPES.register("black_hole_entity",
+                    () -> EntityType.Builder.<BlackHoleEntity>of(BlackHoleEntity::new, MobCategory.AMBIENT)
+                            .sized(0.5f, 0.5f)
+                            .build(new ResourceLocation(BloodyHell.MODID, "black_hole_entity").toString()));
+
     public static final RegistryObject<EntityType<BloodSoulEntity>> BLOOD_SOUL =
             ENTITY_TYPES.register("blood_soul_entity",
                     () -> EntityType.Builder.<BloodSoulEntity>of(BloodSoulEntity::new, MobCategory.AMBIENT)

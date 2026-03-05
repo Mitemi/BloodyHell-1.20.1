@@ -1,7 +1,11 @@
 package net.agusdropout.bloodyhell.entity.minions.base;
 
 import net.agusdropout.bloodyhell.client.data.ClientInsightData;
+import net.agusdropout.bloodyhell.entity.ModEntityTypes;
 import net.agusdropout.bloodyhell.entity.base.InsightEntity;
+import net.agusdropout.bloodyhell.entity.effects.BlackHoleEntity;
+import net.agusdropout.bloodyhell.particle.ParticleOptions.MagicalRingParticleOptions;
+import net.agusdropout.bloodyhell.particle.ParticleOptions.SmallGlitterParticleOptions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -17,6 +21,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -82,6 +87,19 @@ public abstract class AbstractMinionEntity extends Monster implements GeoEntity,
         super.tick();
 
         if (this.getIsSummoning()) {
+
+            if(summonTicks == 0) {
+                Vector3f colorVec = new Vector3f(
+                        ((getStripeColor() >> 16) & 0xFF) / 255.0f,
+                        ((getStripeColor() >> 8) & 0xFF) / 255.0f,
+                        (getStripeColor() & 0xFF) / 255.0f
+                );
+                triggerSummoningRitual(this.level(), this.getX(), this.getY(), this.getZ(), (float) this.getBoundingBox().getSize(), (float) this.getBoundingBox().getYsize(), this.getSummonDuration()+20, colorVec);
+            }
+            if(this.level().isClientSide) {
+                handleSummoningClientVisuals();
+            }
+
             this.summonTicks++;
             this.setDeltaMovement(0, this.getDeltaMovement().y, 0);
             this.setYRot(this.yRotO);
@@ -216,6 +234,41 @@ public abstract class AbstractMinionEntity extends Monster implements GeoEntity,
     protected void playStepSound(BlockPos pos, BlockState blockIn) {
         if (this.hasSufficientClientInsight()) {
             super.playStepSound(pos, blockIn);
+        }
+    }
+
+    public static void triggerSummoningRitual(Level level, double x, double y, double z, float radius, float height, int duration, Vector3f color) {
+        if (!level.isClientSide) {
+            BlackHoleEntity blackHole = new BlackHoleEntity(ModEntityTypes.BLACK_HOLE.get(), level);
+            blackHole.setPos(x, y, z);
+            blackHole.setRadius(radius);
+            blackHole.setMaxAge(duration);
+
+            int r = (int)(color.x() * 255.0F);
+            int g = (int)(color.y() * 255.0F);
+            int b = (int)(color.z() * 255.0F);
+            int intColor = (r << 16) | (g << 8) | b;
+            blackHole.setColor(intColor);
+
+            level.addFreshEntity(blackHole);
+        } else {
+            level.addParticle(new MagicalRingParticleOptions(color, radius, height), x, y, z, duration, 0.0D, 0.0D);
+        }
+    }
+
+    protected void handleSummoningClientVisuals() {
+        for (int i = 0; i < 5; i++) {
+            double offsetX = (this.random.nextDouble() - 0.5) * this.getBoundingBox().getXsize();
+            double offsetY = this.random.nextDouble() * this.getBoundingBox().getYsize();
+            double offsetZ = (this.random.nextDouble() - 0.5) * this.getBoundingBox().getZsize();
+            Vector3f colorVec = new Vector3f(
+                    ((getStripeColor() >> 16) & 0xFF) / 255.0f,
+                    ((getStripeColor() >> 8) & 0xFF) / 255.0f,
+                    (getStripeColor() & 0xFF) / 255.0f
+            );
+            this.level().addParticle(new SmallGlitterParticleOptions(colorVec, (float)this.getBoundingBox().getSize(), false,20),
+                    this.getX() + offsetX, this.getY() + offsetY, this.getZ() + offsetZ,
+                    0D, 0.1D, 0.0D);
         }
     }
 }
