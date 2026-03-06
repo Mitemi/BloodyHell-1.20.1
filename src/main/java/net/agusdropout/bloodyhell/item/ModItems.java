@@ -210,6 +210,8 @@ public class ModItems {
 
     public static final RegistryObject<Item> VORACIOUS_MUSHROOM = ITEMS.register("voracious_mushroom_item", () -> new BlockItem(ModBlocks.VORACIOUS_MUSHROOM_BLOCK.get(),
             new Item.Properties()));
+    public static final RegistryObject<Item> CRIMSON_LURE_MUSHROOM = ITEMS.register("crimson_lure_mushroom_item", () -> new BlockItem(ModBlocks.CRIMSON_LURE_MUSHROOM_BLOCK.get(),
+            new Item.Properties()));
 
     public static final RegistryObject<Item> RELIQUARY = ITEMS.register("reliquary", () -> new ReliquaryItem(
             new Item.Properties()));

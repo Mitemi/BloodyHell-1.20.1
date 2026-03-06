@@ -29,9 +29,6 @@ public class TentacleEntityRenderer extends EntityRenderer<TentacleEntity> {
         super(context);
         this.model = new TentacleEntityModel(context.bakeLayer(TentacleEntityModel.LAYER_LOCATION));
 
-        // INICIALIZACIÓN DE LA GLOW LAYER
-        // Como TentacleEntity no es un LivingEntity, no tiene el sistema de layers automático.
-        // Creamos un "Padre" anónimo para pasarle el modelo a la layer.
         this.glowLayer = new TentacleGlowLayer(new RenderLayerParent<TentacleEntity, TentacleEntityModel>() {
             @Override
             public TentacleEntityModel getModel() {
@@ -63,21 +60,16 @@ public class TentacleEntityRenderer extends EntityRenderer<TentacleEntity> {
         poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
         poseStack.translate(0.0D, -1.5D, 0.0D);
 
-        // Interpolación para suavidad
         float smoothedLife = entity.getLifeTicks(partialTick);
 
-        // Configuración de animación
         this.model.setupAnim(entity, 0, 0, smoothedLife, 0, 0);
 
-        // 1. RENDER BASE (Sombras y luces normales)
+
         var vertexConsumer = buffer.getBuffer(this.model.renderType(getTextureLocation(entity)));
         this.model.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 
-        // 2. RENDER GLOW MASK (Brillo en oscuridad)
-        // Llamamos manualmente a la layer pasando los datos necesarios.
         this.glowLayer.render(poseStack, buffer, packedLight, entity, 0, 0, partialTick, smoothedLife, 0, 0);
 
-        // 3. RENDER ITEMS EN MANO
         renderItemsInHand(entity, poseStack, buffer, packedLight);
 
         poseStack.popPose();
@@ -90,7 +82,6 @@ public class TentacleEntityRenderer extends EntityRenderer<TentacleEntity> {
         if (!items.isEmpty()) {
             poseStack.pushPose();
 
-            // --- CADENA CINEMÁTICA ---
             model.v1.translateAndRotate(poseStack);
             model.v2.translateAndRotate(poseStack);
             model.v3.translateAndRotate(poseStack);
@@ -107,10 +98,9 @@ public class TentacleEntityRenderer extends EntityRenderer<TentacleEntity> {
             model.v14.translateAndRotate(poseStack);
             model.v15.translateAndRotate(poseStack);
             model.v16.translateAndRotate(poseStack);
-            model.v17.translateAndRotate(poseStack); // La mano
+            model.v17.translateAndRotate(poseStack);
             model.locator.translateAndRotate(poseStack);
 
-            // --- ORGANIZACIÓN DE ITEMS ---
             poseStack.scale(0.35f, 0.35f, 0.35f);
             poseStack.mulPose(Axis.XP.rotationDegrees(90));
 

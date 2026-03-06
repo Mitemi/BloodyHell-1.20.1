@@ -2,7 +2,7 @@ package net.agusdropout.bloodyhell.block.custom.mushroom;
 
 import net.agusdropout.bloodyhell.block.base.AbstractMushroomBlock;
 import net.agusdropout.bloodyhell.block.entity.ModBlockEntities;
-import net.agusdropout.bloodyhell.block.entity.custom.mushroom.VoraciousMushroomBlockEntity;
+import net.agusdropout.bloodyhell.block.entity.custom.mushroom.CrimsonLureMushroomBlockEntity;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.MagicParticleOptions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -14,9 +14,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-public class VoraciousMushroomBlock extends AbstractMushroomBlock {
+public class CrimsonLureMushroomBlock extends AbstractMushroomBlock {
 
-    public VoraciousMushroomBlock(Properties properties) {
+    public CrimsonLureMushroomBlock(Properties properties) {
         super(properties);
     }
 
@@ -26,8 +26,8 @@ public class VoraciousMushroomBlock extends AbstractMushroomBlock {
         double y = pos.getY() + 0.5 + random.nextDouble() * 0.4;
         double z = pos.getZ() + 0.5 + (random.nextDouble() - 0.5) * 0.4;
 
-        Vector3f goldColor = new Vector3f(1.0f, 0.9f, 0.2f);
-        MagicParticleOptions particleData = new MagicParticleOptions(goldColor, 1.0f, false, 40);
+        Vector3f crimsonColor = new Vector3f(0.8f, 0.1f, 0.1f);
+        MagicParticleOptions particleData = new MagicParticleOptions(crimsonColor, 1.0f, false, 40);
 
         level.addParticle(particleData, x, y, z, 0.0D, 0.05D, 0.0D);
     }
@@ -35,14 +35,14 @@ public class VoraciousMushroomBlock extends AbstractMushroomBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new VoraciousMushroomBlockEntity(pos, state);
+        return new CrimsonLureMushroomBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         if (level.isClientSide) return null;
-        return createTickerHelper(type, ModBlockEntities.VORACIOUS_MUSHROOM_BE.get(),
-                VoraciousMushroomBlockEntity::tick);
+        return createTickerHelper(type, ModBlockEntities.CRIMSON_LURE_MUSHROOM_BE.get(),
+                CrimsonLureMushroomBlockEntity::tick);
     }
 }

@@ -88,8 +88,8 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.Eyeball_seed.get());
                         output.accept(ModItems.GLOW_FRUIT.get());
                         output.accept(ModItems.GLOW_MUSHROOM.get());
-                        output.accept(ModBlocks.VORACIOUS_MUSHROOM_BLOCK.get());
                         output.accept(ModItems.VORACIOUS_MUSHROOM.get());
+                        output.accept(ModItems.CRIMSON_LURE_MUSHROOM.get());
                         output.accept(ModBlocks.VISCERAL_INFECTED_VEIN.get());
                         output.accept(ModItems.SCARLET_RAW_CHICKEN.get());
                         output.accept(ModItems.SCARLET_COOKED_CHICKEN.get());

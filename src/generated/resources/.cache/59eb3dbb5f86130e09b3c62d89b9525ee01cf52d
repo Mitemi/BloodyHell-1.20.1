@@ -1,4 +1,4 @@
-// 1.20.1	2026-03-06T13:55:56.552052	Loot Tables
+// 1.20.1	2026-03-06T16:29:28.8703761	Loot Tables
 bdc15ebc2a02a82e61a914b0bd6b6d56c3d69ab7 data/bloodyhell/loot_tables/blocks/ancient_bloody_lamp.json
 3e5464c67bd9f7358ce85ae0627c72b91b7537a6 data/bloodyhell/loot_tables/blocks/ancient_bloody_stone_bricks.json
 b5521909998c93d083cf6fe797817ca8fdad5feb data/bloodyhell/loot_tables/blocks/ancient_bloody_stone_bricks_column.json
@@ -62,6 +62,7 @@ c94f745285023da99f9a18edff15d1cc3cd8495e data/bloodyhell/loot_tables/blocks/cind
 4344a7afb5386953f1a5eb3a6068b197ee7c6743 data/bloodyhell/loot_tables/blocks/cinder_bloom_cactus_flower.json
 19a07903f98396f715da5f726c59f10d04228963 data/bloodyhell/loot_tables/blocks/cinder_bloom_cactus_root.json
 eef1b121fe1816224fb22970cf62b256127c16e3 data/bloodyhell/loot_tables/blocks/cracked_blasphemous_sandstone.json
+8bb0571bd869ff52c39890723492bcd8d62f1de0 data/bloodyhell/loot_tables/blocks/crimson_lure_mushroom.json
 fc94c5a736cc1eb037ca10a319d819f09ac856d1 data/bloodyhell/loot_tables/blocks/cut_blasphemous_sandstone_block.json
 25b25fc1f9542ccf72e6d272181a27708d5b06e3 data/bloodyhell/loot_tables/blocks/decorated_pot_block.json
 0a08bf636627d25d400b2c67c21d28b1bb63cf36 data/bloodyhell/loot_tables/blocks/droopvine.json

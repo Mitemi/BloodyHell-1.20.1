@@ -3,8 +3,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "crimson_lure_mushroom",
-		"particle": "crimson_lure_mushroom"
+		"0": "bloodyhell:block/crimson_lure_mushroom_block",
+		"particle": "bloodyhell:block/crimson_lure_mushroom_block"
 	},
 	"elements": [
 		{

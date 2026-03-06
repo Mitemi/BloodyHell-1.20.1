@@ -5,6 +5,7 @@ import net.agusdropout.bloodyhell.BloodyHell;
 import net.agusdropout.bloodyhell.block.base.*;
 import net.agusdropout.bloodyhell.block.custom.*;
 import net.agusdropout.bloodyhell.block.custom.mechanism.*;
+import net.agusdropout.bloodyhell.block.custom.mushroom.CrimsonLureMushroomBlock;
 import net.agusdropout.bloodyhell.block.custom.mushroom.VoraciousMushroomBlock;
 import net.agusdropout.bloodyhell.block.custom.mushroom.InfestationVeinBlock;
 import net.agusdropout.bloodyhell.block.custom.plant.BloodGemSproutBlock;
@@ -263,7 +264,9 @@ public class ModBlocks {
 
     //Special mushrooms
     public static final RegistryObject<Block> VORACIOUS_MUSHROOM_BLOCK = registerBlock("voracious_mushroom_block", ()-> new VoraciousMushroomBlock(
-            BlockBehaviour.Properties.copy(Blocks.BROWN_MUSHROOM_BLOCK).strength(0.5f).noOcclusion().lightLevel((state)->10)));
+            BlockBehaviour.Properties.copy(Blocks.BROWN_MUSHROOM_BLOCK).strength(0.5f).noOcclusion().lightLevel(state -> state.getValue(AbstractMushroomBlock.ACTIVE) ? 8 : 0)));
+    public static final RegistryObject<Block> CRIMSON_LURE_MUSHROOM_BLOCK = registerBlock("crimson_lure_mushroom_block", () -> new CrimsonLureMushroomBlock(
+            BlockBehaviour.Properties.copy(Blocks.RED_MUSHROOM).lightLevel(state -> state.getValue(AbstractMushroomBlock.ACTIVE) ? 8 : 0).noOcclusion()));
     public static final RegistryObject<Block> VISCERAL_INFECTED_VEIN = registerBlock("visceral_infected_vein", ()-> new InfestationVeinBlock(
             BlockBehaviour.Properties.copy(Blocks.SCULK_VEIN).strength(0.5f).noOcclusion().noCollission().replaceable().lightLevel((state)->10).noLootTable()));
 

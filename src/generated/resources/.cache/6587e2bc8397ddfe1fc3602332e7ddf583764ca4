@@ -1,4 +1,4 @@
-// 1.20.1	2026-03-02T17:40:28.4819104	Item Models: bloodyhell
+// 1.20.1	2026-03-06T16:29:28.8753794	Item Models: bloodyhell
 e033c901896a75f6a136de4a515a0448261803b7 assets/bloodyhell/models/item/amulet_of_ancestral_blood.json
 0daad63d3db69ced8f0038465c04abe47a00815e assets/bloodyhell/models/item/ancient_bloody_lamp.json
 77c198480c0204d88a6582721584ec72818df45b assets/bloodyhell/models/item/ancient_bloody_stone_bricks.json
@@ -76,6 +76,7 @@ c9dae4787cd817de036dc324665181aafd6e65f5 assets/bloodyhell/models/item/corrupted
 b3fc61db059346819d91dd3e8b9ab106308d8970 assets/bloodyhell/models/item/corrupted_blood_flask.json
 192954ddb5d4f638a75b2ea944c5627b8c4e0fba assets/bloodyhell/models/item/cracked_blasphemous_sandstone.json
 ab6939c6717581b28e5d5d1d393aab3decfaada9 assets/bloodyhell/models/item/crimson_idol_coin.json
+f35eccef07ed8b65b10a57c431d2dc68df9262b7 assets/bloodyhell/models/item/crimson_lure_mushroom_item.json
 dea138f0ecc896706a9be7ba1dbaec5431c34b59 assets/bloodyhell/models/item/crimson_shell.json
 0ff686f00defb71cc68544ef6d8030fce2f02bf7 assets/bloodyhell/models/item/crimson_ward_ring.json
 f3b26716eb16d4c7e1060743bce2f6e342f06303 assets/bloodyhell/models/item/cut_blasphemous_sandstone_block.json

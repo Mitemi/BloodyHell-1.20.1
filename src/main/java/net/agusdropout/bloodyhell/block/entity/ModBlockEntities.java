@@ -4,6 +4,7 @@ import net.agusdropout.bloodyhell.BloodyHell;
 import net.agusdropout.bloodyhell.block.ModBlocks;
 import net.agusdropout.bloodyhell.block.entity.custom.*;
 import net.agusdropout.bloodyhell.block.entity.custom.mechanism.*;
+import net.agusdropout.bloodyhell.block.entity.custom.mushroom.CrimsonLureMushroomBlockEntity;
 import net.agusdropout.bloodyhell.block.entity.custom.mushroom.VoraciousMushroomBlockEntity;
 import net.agusdropout.bloodyhell.block.entity.custom.plant.BloodGemSproutBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -70,6 +71,10 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("voracious_mushroom_be", () ->
                     BlockEntityType.Builder.of(VoraciousMushroomBlockEntity::new,
                             ModBlocks.VORACIOUS_MUSHROOM_BLOCK.get()).build(null));
+    public static final RegistryObject<BlockEntityType<CrimsonLureMushroomBlockEntity>> CRIMSON_LURE_MUSHROOM_BE =
+            BLOCK_ENTITIES.register("crimson_lure_mushroom_be", () ->
+                    BlockEntityType.Builder.of(CrimsonLureMushroomBlockEntity::new,
+                            ModBlocks.CRIMSON_LURE_MUSHROOM_BLOCK.get()).build(null));
     public static final RegistryObject<BlockEntityType<SanguiniteInfusorBlockEntity>> SANGUINITE_INFUSOR_BE =
             BLOCK_ENTITIES.register("sanguinite_infusor_be", () ->
                     BlockEntityType.Builder.of(SanguiniteInfusorBlockEntity::new,

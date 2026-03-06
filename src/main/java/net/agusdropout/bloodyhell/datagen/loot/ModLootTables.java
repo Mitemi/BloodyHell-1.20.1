@@ -97,6 +97,7 @@ public class ModLootTables extends LootTableProvider {
 
 
             this.dropSelf(ModBlocks.VORACIOUS_MUSHROOM_BLOCK.get());
+            this.dropSelf(ModBlocks.CRIMSON_LURE_MUSHROOM_BLOCK.get());
             this.dropSelf(ModBlocks.SANGUINITE_INFUSOR.get());
 
 

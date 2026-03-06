@@ -275,6 +275,7 @@ public class BloodyHell
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.SPIKY_GRASS.get(), RenderType.translucent());
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.SANGUINE_CRUCIBLE.get(), RenderType.translucent());
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.VORACIOUS_MUSHROOM_BLOCK.get(), RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.CRIMSON_LURE_MUSHROOM_BLOCK.get(), RenderType.translucent());
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.LIGHT_MUSHROOM_BLOCK.get(), RenderType.translucent());
             BlockEntityRenderers.register(ModBlockEntities.SANGUINITE_INFUSOR_BE.get(), SanguiniteInfusorRenderer::new);
             BlockEntityRenderers.register(ModBlockEntities.SANGUINE_LAPIDARY_BE.get(), SanguineLapidaryRenderer::new);
