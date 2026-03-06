@@ -50,14 +50,22 @@ public class ChillFallingParticle extends TextureSheetParticle {
             return;
         }
 
-        if (this.age <= this.growTime) {
-            float progress = (float) this.age / (float) this.growTime;
-            this.quadSize = this.targetSize * Mth.sin(progress * (float)Math.PI / 2f);
+        if (this.growTime > 0) {
+            if (this.age <= this.growTime) {
+                float progress = (float) this.age / (float) this.growTime;
+                this.quadSize = this.targetSize * Mth.sin(progress * (float)Math.PI / 2f);
 
-            this.xd = 0;
-            this.yd = 0;
-            this.zd = 0;
+                this.xd = 0;
+                this.yd = 0;
+                this.zd = 0;
+            } else {
+                this.quadSize = this.targetSize;
+                this.yd -= 0.005D;
+                this.xd = targetvx;
+                this.zd = targetvz;
+            }
         } else {
+            this.quadSize = this.targetSize;
             this.yd -= 0.005D;
             this.xd = targetvx;
             this.zd = targetvz;

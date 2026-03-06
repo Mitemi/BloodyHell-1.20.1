@@ -3,6 +3,7 @@ package net.agusdropout.bloodyhell.entity.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.agusdropout.bloodyhell.BloodyHell;
+import net.agusdropout.bloodyhell.entity.client.base.InsightCreatureRenderer;
 import net.agusdropout.bloodyhell.entity.custom.BlasphemousMalformationEntity;
 import net.agusdropout.bloodyhell.entity.custom.OffspringOfTheUnknownEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -13,11 +14,11 @@ import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.renderer.layer.AutoGlowingGeoLayer;
 
-public class BlasphemousMalformationRenderer extends GeoEntityRenderer<BlasphemousMalformationEntity> {
+public class BlasphemousMalformationRenderer extends InsightCreatureRenderer<BlasphemousMalformationEntity> {
     public BlasphemousMalformationRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new BlasphemousMalformationModel());
-        this.shadowRadius = 0.8f;
-        addRenderLayer(new AutoGlowingGeoLayer<>(this));
+        this.shadowRadius = 0.00008f;
+        //addRenderLayer(new AutoGlowingGeoLayer<>(this));
 
     }
 

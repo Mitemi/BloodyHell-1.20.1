@@ -7,7 +7,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class OffspringOfTheUnknownRenderer extends GeoEntityRenderer<OffspringOfTheUnknownEntity> {
+public class OffspringOfTheUnknownRenderer extends InsightCreatureRenderer<OffspringOfTheUnknownEntity> {
 
     public OffspringOfTheUnknownRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new OffspringOfTheUnknownModel());

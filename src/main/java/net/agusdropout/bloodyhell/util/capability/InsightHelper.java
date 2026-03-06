@@ -30,6 +30,10 @@ public class InsightHelper {
         });
     }
 
+    public static int getInsight(ServerPlayer player) {
+        return player.getCapability(PlayerInsightProvider.PLAYER_INSIGHT).map(PlayerInsight::getInsight).orElse(0);
+    }
+
     public static void syncInsight(ServerPlayer player) {
         player.getCapability(PlayerInsightProvider.PLAYER_INSIGHT).ifPresent(insight -> {
             sync(player, insight);

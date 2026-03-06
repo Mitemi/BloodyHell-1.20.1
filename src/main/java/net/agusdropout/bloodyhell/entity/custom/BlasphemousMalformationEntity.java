@@ -1,8 +1,9 @@
 package net.agusdropout.bloodyhell.entity.custom;
 
+import net.agusdropout.bloodyhell.capability.insight.PlayerInsight;
 import net.agusdropout.bloodyhell.entity.ai.goals.KeepDistanceGoal;
-import net.agusdropout.bloodyhell.entity.ai.goals.OffspringOfTheUnknownAttack;
 import net.agusdropout.bloodyhell.entity.ai.goals.ShootVirulentAnchorGoal;
+import net.agusdropout.bloodyhell.entity.base.AbstractInsightMonster;
 import net.agusdropout.bloodyhell.sound.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -37,37 +38,27 @@ import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInst
 import software.bernie.geckolib.core.animation.*;
 import software.bernie.geckolib.core.object.PlayState;
 
+public class BlasphemousMalformationEntity extends AbstractInsightMonster implements GeoEntity {
 
-public class BlasphemousMalformationEntity extends Monster implements GeoEntity {
-    private AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
-
-
-    private int DeathCooldown = 70;
-    private boolean isAlreadyDead = false;
+    private final AnimatableInstanceCache factory = new SingletonAnimatableInstanceCache(this);
     private static final EntityDataAccessor<Integer> ATTACK_COOLDOWN = SynchedEntityData.defineId(BlasphemousMalformationEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> IS_ATTACKING = SynchedEntityData.defineId(BlasphemousMalformationEntity.class, EntityDataSerializers.BOOLEAN);
 
-    @Override
-    protected void tickDeath() {
-        isAlreadyDead = true;
-        DeathCooldown--;
-        BlockPos belowPos = this.blockPosition().below();
-        BlockState belowBlock = level().getBlockState(belowPos);
+    private int deathCooldown = 70;
+    private boolean isAlreadyDead = false;
 
-        if (level() instanceof ServerLevel serverLevel) {
-            serverLevel.playSound(null, this.blockPosition(), SoundEvents.STONE_STEP, SoundSource.HOSTILE, 1.0F, 1.0F);
-            serverLevel.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, belowBlock),
-                    this.getX(), this.getY(), this.getZ(),
-                    10,
-                    0.5, 0.1, 0.5,
-                    0.1
-            );
-        }
+    public BlasphemousMalformationEntity(EntityType<? extends Monster> entityType, Level level) {
+        super(entityType, level);
+    }
 
-        if (DeathCooldown <= 0) {
-            level().playLocalSound(this.getX(), this.getY(), this.getZ(), ModSounds.GRAWL_DEATH.get(), this.getSoundSource(), 1.0F, 1.0F, false);
-            this.remove(RemovalReason.KILLED);
-        }
+    public static AttributeSupplier setAttributes() {
+        return Monster.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, 45.0D)
+                .add(Attributes.ATTACK_DAMAGE, 7.0D)
+                .add(Attributes.ATTACK_SPEED, 0.8D)
+                .add(Attributes.MOVEMENT_SPEED, 0.2D)
+                .add(Attributes.FOLLOW_RANGE, 20.0D)
+                .build();
     }
 
     @Override
@@ -78,150 +69,148 @@ public class BlasphemousMalformationEntity extends Monster implements GeoEntity 
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag compoundTag) {
-        super.addAdditionalSaveData(compoundTag);
-    }
-
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag compoundTag) {
-        super.readAdditionalSaveData(compoundTag);
-    }
-
-    public BlasphemousMalformationEntity(EntityType<? extends Monster> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
-    }
-    public static AttributeSupplier setAttributes() {
-        return Monster.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 45)
-                .add(Attributes.ATTACK_DAMAGE, 7.0f)
-                .add(Attributes.ATTACK_SPEED, 0.8F)
-                .add(Attributes.MOVEMENT_SPEED, 0.2D)
-                .add(Attributes.FOLLOW_RANGE,20).build();
-
-
-    }
-
-    @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.goalSelector.addGoal(1, new KeepDistanceGoal(this, 1.5D, 5.0D, 10.0D));
+        this.goalSelector.addGoal(2, new ShootVirulentAnchorGoal(this, 1.3F, 6.0F, 100));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(2, new ShootVirulentAnchorGoal(this, 1.3f, 6.0f, 100));
-        this.goalSelector.addGoal(1, new KeepDistanceGoal(this, 1.5, 5.0, 10.0));
+
         this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Player.class, true));
         this.targetSelector.addGoal(10, new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false));
         this.targetSelector.addGoal(10, new NearestAttackableTargetGoal<>(this, IronGolem.class, true));
         this.targetSelector.addGoal(10, new NearestAttackableTargetGoal<>(this, Creeper.class, true));
     }
 
-    private PlayState predicate(AnimationState animationState) {
-            if(!this.isAlreadyDead) {
-
-                if (animationState.isMoving()) {
-                    animationState.getController().setAnimation(RawAnimation.begin().then("walking", Animation.LoopType.LOOP));
-                    return PlayState.CONTINUE;
-                }
-                animationState.getController().setAnimation(RawAnimation.begin().then("idle", Animation.LoopType.LOOP));
-                return PlayState.CONTINUE;
-            } else {
-                animationState.getController().setAnimation(RawAnimation.begin().then("death", Animation.LoopType.PLAY_ONCE));
-                return PlayState.CONTINUE;
-            }
-    }
-
-    private PlayState attackPredicate(AnimationState state) {
-        if(this.swinging && state.getController().getAnimationState().equals(AnimationController.State.STOPPED)) {
-            state.getController().forceAnimationReset();
-            this.level().playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.EGG_THROW, this.getSoundSource(), 1.0F, 1.0F, false);
-            this.swinging = false;
-        }
-
-        return PlayState.CONTINUE;
-    }
-
-
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController(this, "controller",
-                0, this::predicate));
-        controllers.add(new AnimationController(this, "attackController",
-                0, this::attackPredicate));
-    }
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return factory;
-    }
-
-    @Override
-    protected float tickHeadTurn(float v, float v1) {
-        return super.tickHeadTurn(v, v1);
-    }
     @Override
     public void aiStep() {
         super.aiStep();
         if (this.getTarget() != null) {
             this.getLookControl().setLookAt(this.getTarget(), 30.0F, 30.0F);
         }
+
         if (isAlreadyDead) {
-            DeathCooldown--;
-            if (DeathCooldown <= 0) {
+            deathCooldown--;
+            if (deathCooldown <= 0) {
                 this.discard();
             }
         } else {
             updateCooldowns();
-
         }
-
-
-
     }
 
+    @Override
+    protected void tickDeath() {
+        isAlreadyDead = true;
+        deathCooldown--;
+        BlockPos belowPos = this.blockPosition().below();
+        BlockState belowBlock = level().getBlockState(belowPos);
 
-    public void updateCooldowns(){
-        if(this.getAttackCooldown() > 0 && !this.getIsAttacking()){
+        if (level() instanceof ServerLevel serverLevel) {
+            serverLevel.playSound(null, this.blockPosition(), SoundEvents.STONE_STEP, SoundSource.HOSTILE, 1.0F, 1.0F);
+            serverLevel.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, belowBlock),
+                    this.getX(), this.getY(), this.getZ(),
+                    10, 0.5D, 0.1D, 0.5D, 0.1D
+            );
+        }
+
+        if (deathCooldown <= 0) {
+            this.playSound(ModSounds.GRAWL_DEATH.get(), 1.0F, 1.0F);
+            this.remove(RemovalReason.KILLED);
+        }
+    }
+
+    public void updateCooldowns() {
+        if (this.getAttackCooldown() > 0 && !this.getIsAttacking()) {
             this.setAttackCooldown(this.getAttackCooldown() - 1);
         }
-
     }
 
+    @Override
+    protected float tickHeadTurn(float yRot, float animStep) {
+        return super.tickHeadTurn(yRot, animStep);
+    }
 
-    //Getters & Setters
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return factory;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+        controllers.add(new AnimationController<>(this, "controller", 0, this::predicate));
+        controllers.add(new AnimationController<>(this, "attackController", 0, this::attackPredicate));
+    }
+
+    private PlayState predicate(AnimationState<BlasphemousMalformationEntity> animationState) {
+        if (!this.isAlreadyDead) {
+            if (animationState.isMoving()) {
+                animationState.getController().setAnimation(RawAnimation.begin().then("walking", Animation.LoopType.LOOP));
+                return PlayState.CONTINUE;
+            }
+            animationState.getController().setAnimation(RawAnimation.begin().then("idle", Animation.LoopType.LOOP));
+            return PlayState.CONTINUE;
+        } else {
+            animationState.getController().setAnimation(RawAnimation.begin().then("death", Animation.LoopType.PLAY_ONCE));
+            return PlayState.CONTINUE;
+        }
+    }
+
+    private PlayState attackPredicate(AnimationState<BlasphemousMalformationEntity> state) {
+        if (this.swinging && state.getController().getAnimationState().equals(AnimationController.State.STOPPED)) {
+            state.getController().forceAnimationReset();
+            this.playSound(SoundEvents.EGG_THROW, 1.0F, 1.0F);
+            this.swinging = false;
+        }
+        return PlayState.CONTINUE;
+    }
+
+    @Override
+    public float getMinimumInsight() {
+        return PlayerInsight.INSIGHT_FOR_LEVEL_1;
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return hasSufficientClientInsight() ? ModSounds.OFFSPRING_AMBIENT.get() : null;
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+        return hasSufficientClientInsight() ? ModSounds.OFFSPRING_HURT.get() : null;
+    }
+
+    @Override
+    protected void playStepSound(BlockPos pos, BlockState blockIn) {
+        if (this.hasSufficientClientInsight()) {
+            this.playSound(ModSounds.OFFSPRING_STEP.get(), 0.8F, 0.2F);
+        }
+    }
 
     public void setAttackCooldown(int cooldown) {
         this.entityData.set(ATTACK_COOLDOWN, cooldown);
     }
+
     public int getAttackCooldown() {
         return this.entityData.get(ATTACK_COOLDOWN);
     }
+
     public void setIsAttacking(boolean isAttacking) {
         this.entityData.set(IS_ATTACKING, isAttacking);
     }
+
     public boolean getIsAttacking() {
         return this.entityData.get(IS_ATTACKING);
     }
 
-    protected SoundEvent getAmbientSound() {
-        return ModSounds.OFFSPRING_AMBIENT.get();
+    @Override
+    public void addAdditionalSaveData(CompoundTag compoundTag) {
+        super.addAdditionalSaveData(compoundTag);
     }
 
-    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        return ModSounds.OFFSPRING_HURT.get();
-
+    @Override
+    public void readAdditionalSaveData(CompoundTag compoundTag) {
+        super.readAdditionalSaveData(compoundTag);
     }
-    protected void playStepSound(BlockPos pos, BlockState blockIn) {
-        this.playSound(ModSounds.OFFSPRING_STEP.get(), 0.8F, 0.2F);
-    }
-
-
-    protected float getSoundVolume() {
-        return 1F;
-    }
-
-
-
-    
-
-
 }

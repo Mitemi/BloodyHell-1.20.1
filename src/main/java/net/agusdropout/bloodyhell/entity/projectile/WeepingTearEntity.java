@@ -1,22 +1,31 @@
 package net.agusdropout.bloodyhell.entity.projectile;
 
+import net.agusdropout.bloodyhell.effect.ModEffects;
 import net.agusdropout.bloodyhell.entity.ModEntityTypes;
 import net.agusdropout.bloodyhell.entity.minions.base.AbstractMinionEntity;
 import net.agusdropout.bloodyhell.entity.minions.custom.WeepingOcularEntity;
 import net.agusdropout.bloodyhell.entity.projectile.base.AbstractColoredProjectile;
+import net.agusdropout.bloodyhell.networking.ModMessages;
+import net.agusdropout.bloodyhell.networking.packet.SyncVisceralEffectPacket;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.ChillFallingParticleOptions;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.ShockwaveParticleOptions;
 import net.agusdropout.bloodyhell.util.visuals.ColorHelper;
 import net.agusdropout.bloodyhell.util.visuals.ParticleHelper;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
+import java.util.List;
 import java.util.UUID;
 
 public class WeepingTearEntity extends AbstractColoredProjectile {
@@ -47,12 +56,15 @@ public class WeepingTearEntity extends AbstractColoredProjectile {
     }
 
     @Override
-    protected boolean canHitEntity(net.minecraft.world.entity.Entity target) {
+    protected boolean canHitEntity(Entity target) {
         if (!super.canHitEntity(target)) return false;
+        return this.isValidTarget(target);
+    }
+
+    private boolean isValidTarget(Entity target) {
         if (target.equals(this.getOwner())) return false;
         if (this.minionOwnerUUID != null && target.getUUID().equals(this.minionOwnerUUID)) return false;
         if (target instanceof AbstractMinionEntity otherMinion && this.minionOwnerUUID != null && this.minionOwnerUUID.equals(otherMinion.getOwnerUUID())) return false;
-
         return true;
     }
 
@@ -73,7 +85,21 @@ public class WeepingTearEntity extends AbstractColoredProjectile {
     }
 
     private void explode() {
-        this.level().explode(this, this.getX(), this.getY(), this.getZ(), 1.0f, Level.ExplosionInteraction.NONE);
+        float effectRadius = 2.0f;
+        AABB damageArea = this.getBoundingBox().inflate(effectRadius);
+        List<LivingEntity> targets = this.level().getEntitiesOfClass(LivingEntity.class, damageArea);
+
+        for (LivingEntity target : targets) {
+            if (this.isValidTarget(target) && target.isAlive()) {
+                target.hurt(this.damageSources().mobProjectile(this, (LivingEntity) this.getOwner()), this.damage);
+                target.addEffect(new MobEffectInstance(ModEffects.VISCERAL_EFFECT.get(), 100, 1));
+                ModMessages.sendToClients(new SyncVisceralEffectPacket(target.getId(), 100, 0));
+            }
+        }
+        Vector3f color = this.getBaseColor();
+        ChillFallingParticleOptions splashParticle = new ChillFallingParticleOptions(color, 0.04f, 20, 0);
+        ParticleHelper.spawnHemisphereExplosion(this.level(), splashParticle, this.position(), 20, effectRadius, 0.5);
+
         this.discard();
     }
 
@@ -89,10 +115,8 @@ public class WeepingTearEntity extends AbstractColoredProjectile {
             Vector3f color = this.getBaseColor();
             Vec3 motion = this.getDeltaMovement();
             ShockwaveParticleOptions shockWaveParticle = new ShockwaveParticleOptions(color, 0.1f, 0.3f);
-            ParticleHelper.spawn(this.level(), shockWaveParticle, this.getX(), this.getY(), this.getZ(),motion.x , motion.y, motion.z);
+            ParticleHelper.spawn(this.level(), shockWaveParticle, this.getX(), this.getY(), this.getZ(), motion.x, motion.y, motion.z);
         }
-
-
 
         if (this.random.nextFloat() < 0.3f) {
             this.level().addParticle(ParticleTypes.SMOKE, this.getX(), this.getY(), this.getZ(), 0, 0, 0);
