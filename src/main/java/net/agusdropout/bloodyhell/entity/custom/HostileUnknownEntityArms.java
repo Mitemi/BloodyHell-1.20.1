@@ -124,25 +124,26 @@ public class HostileUnknownEntityArms extends Entity implements GeoEntity {
     }
 
 
-    public void updateGrabBonePosition(float x, float y, float z) {
+    private int lastProcessedPacketTick = 0;
+
+
+
+    public void updateGrabBonePosition(float x, float y, float z, int currentTick) {
+        if (this.lastProcessedPacketTick == currentTick) {
+            return;
+        }
+
+        this.lastProcessedPacketTick = currentTick;
         this.grabBoneX = x;
         this.grabBoneY = y;
         this.grabBoneZ = z;
     }
-
 
     @Override
 
     public void tick() {
 
         super.tick();
-
-
-        if(!level().isClientSide()){
-            System.out.println("Has Grabbed on the server: " + hasGrabbed() + ", Target: " + getTarget() + ", State: " + getTentacleState());
-        } else {
-            System.out.println("Has Grabbed on the client: " + hasGrabbed() + ", Target: " + getTarget() + ", State: " + getTentacleState());
-        }
 
 
         if (this.level().isClientSide()) return;

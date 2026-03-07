@@ -281,6 +281,7 @@ public class BloodyHell
             BlockEntityRenderers.register(ModBlockEntities.SANGUINE_LAPIDARY_BE.get(), SanguineLapidaryRenderer::new);
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.SANGUINE_LAPIDARY.get(), RenderType.cutout());
             BlockEntityRenderers.register(ModBlockEntities.BLOOD_ALTAR.get(), BloodAltarRenderer::new);
+            BlockEntityRenderers.register(ModBlockEntities.UNKNOWN_PORTAL_BE.get(), UnknownPortalRenderer::new);
             BlockEntityRenderers.register(ModBlockEntities.SANGUINITE_PIPE_BE.get(), PipeRenderer::new);
             BlockEntityRenderers.register(ModBlockEntities.RHNULL_PIPE_BE.get(), PipeRenderer::new);
             BlockEntityRenderers.register(ModBlockEntities.SANGUINITE_TANK_BE.get(), TankRenderer::new);

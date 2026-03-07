@@ -87,6 +87,10 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("sanguine_lapidary_be", () ->
                     BlockEntityType.Builder.of(SanguineLapidaryBlockEntity::new,
                             ModBlocks.SANGUINE_LAPIDARY.get()).build(null));
+    public static final RegistryObject<BlockEntityType<UnknownPortalBlockEntity>> UNKNOWN_PORTAL_BE =
+            BLOCK_ENTITIES.register("unknown_portal_be", () ->
+                    BlockEntityType.Builder.of(UnknownPortalBlockEntity::new,
+                            ModBlocks.UNKNOWN_PORTAL_BLOCK.get()).build(null));
 
 
     public static void register(IEventBus eventBus) {

@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -45,8 +46,8 @@ public abstract class AbstractTankBlockEntity extends FilterableFluidBlockEntity
                 if (!isFluidSupported(stack)) return false;
 
                 // 2. Must pass the user-defined filter (if any is set)
-                return AbstractTankBlockEntity.this.getFilter() == null
-                        || AbstractTankBlockEntity.this.getFilter().isSame(stack.getFluid());
+              return AbstractTankBlockEntity.this.getFilter() == null
+                      || AbstractTankBlockEntity.this.getFilter().isSame(stack.getFluid()) || AbstractTankBlockEntity.this.getFilter() == Fluids.EMPTY;
             }
         };
         this.lazyFluidHandler = LazyOptional.of(() -> this.fluidTank);

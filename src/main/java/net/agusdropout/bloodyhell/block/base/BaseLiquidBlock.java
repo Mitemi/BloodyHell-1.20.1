@@ -24,12 +24,9 @@ public class BaseLiquidBlock extends LiquidBlock {
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
         super.animateTick(state, level, pos, random);
 
-        // Only spawn particles if the random check passes
         if (random.nextFloat() < this.particleChance) {
-            // Only spawn if the block ABOVE is air (so it looks like it's on the surface)
             if (level.isEmptyBlock(pos.above())) {
                 double x = pos.getX() + random.nextDouble();
-                // Spawn slightly below the top of the block so it emerges from the liquid
                 double y = pos.getY() + 1.0D - (random.nextDouble() * 0.1D);
                 double z = pos.getZ() + random.nextDouble();
 

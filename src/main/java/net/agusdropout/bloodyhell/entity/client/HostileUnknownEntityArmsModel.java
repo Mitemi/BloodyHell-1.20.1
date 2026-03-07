@@ -49,6 +49,8 @@ public class HostileUnknownEntityArmsModel extends GeoModel<HostileUnknownEntity
     }
 
 
+
+
     @Override
     public void setCustomAnimations(HostileUnknownEntityArms animatable, long instanceId, AnimationState<HostileUnknownEntityArms> animationState) {
         super.setCustomAnimations(animatable, instanceId, animationState);
@@ -91,7 +93,7 @@ public class HostileUnknownEntityArmsModel extends GeoModel<HostileUnknownEntity
                 float boneY = (float) (armBaseBone.getWorldPosition().y);
                 float boneZ = (float) (armBaseBone.getWorldPosition().z);
 
-                ModMessages.sendToServer(new SyncGrabBonePacket(animatable.getId(), boneX, boneY, boneZ));
+                ModMessages.sendToServer(new SyncGrabBonePacket(animatable.getUUID(), boneX, boneY, boneZ));
             }
         }
 

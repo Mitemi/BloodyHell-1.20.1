@@ -1,0 +1,15 @@
+package net.agusdropout.bloodyhell.block.client;
+
+import net.agusdropout.bloodyhell.block.client.generic.BaseGeckoBlockModel;
+import net.agusdropout.bloodyhell.block.client.layer.UnknownPortalFluidLayer;
+import net.agusdropout.bloodyhell.block.entity.custom.mechanism.UnknownPortalBlockEntity;
+import net.agusdropout.bloodyhell.item.client.generic.GenericGeckoBlockItemModel;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import software.bernie.geckolib.renderer.GeoBlockRenderer;
+
+public class UnknownPortalRenderer extends GeoBlockRenderer<UnknownPortalBlockEntity> {
+    public UnknownPortalRenderer(BlockEntityRendererProvider.Context context) {
+        super(new BaseGeckoBlockModel<>());
+        this.addRenderLayer(new UnknownPortalFluidLayer(this));
+    }
+}

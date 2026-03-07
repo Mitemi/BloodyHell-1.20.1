@@ -24,7 +24,7 @@ public abstract class BaseGeckoBlockEntity extends BlockEntity implements GeoBlo
         // Default controller: Always plays "idle" if available.
         // Child classes can override this if they have complex states (on/off/working)
         controllers.add(new AnimationController<>(this, "controller", 0, state -> {
-            return state.setAndContinue(RawAnimation.begin().thenLoop("animation.bloodyhell." + getAssetPathName() + ".idle"));
+            return state.setAndContinue(RawAnimation.begin().thenLoop("idle"));
         }));
     }
 

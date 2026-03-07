@@ -220,6 +220,7 @@ public class ModCreativeModeTabs {
 
                         output.accept(ModItems.BLOOD_ALTAR.get());
                         output.accept(ModItems.MAIN_BLOOD_ALTAR.get());
+                        output.accept(ModBlocks.UNKNOWN_PORTAL_BLOCK.get());
 
                         output.accept(ModItems.RELIQUARY.get());
 

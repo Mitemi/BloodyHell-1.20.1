@@ -17,18 +17,15 @@ import java.util.List;
 
 public interface IFluidFilterable {
 
-    // --- METHODS TO BE IMPLEMENTED BY BE ---
+
     Fluid getFilter();
     void setFilter(Fluid fluid);
 
-    // --- DEFAULT METHODS (LOGIC) ---
 
     default boolean isFluidAllowed(FluidStack stack) {
-        // If filter is Empty (or null), allow EVERYTHING (No filter)
         if (getFilter() == null || getFilter() == Fluids.EMPTY) {
             return true;
         }
-        // Otherwise, allow only exact matches
         return stack.getFluid().isSame(getFilter());
     }
 
@@ -36,31 +33,27 @@ public interface IFluidFilterable {
         List<Fluid> allowedFluids = getAllowedFluids();
         Fluid current = getFilter();
 
-        // Find current index
-        int index = allowedFluids.indexOf(current);
-        if (index == -1) index = 0; // Default to start if unknown
 
-        // Calculate next index
+        int index = allowedFluids.indexOf(current);
+        if (index == -1) index = 0;
+
         int nextIndex = (index + 1) % allowedFluids.size();
         Fluid nextFluid = allowedFluids.get(nextIndex);
 
-        // Update BE
         setFilter(nextFluid);
 
-        // Play Sound
+
         level.playSound(null, pos, SoundEvents.UI_BUTTON_CLICK.get(), SoundSource.BLOCKS, 0.5f, 1.2f);
 
-        // Send Message
         if (!level.isClientSide) {
             String fluidName = (nextFluid == Fluids.EMPTY) ? "None (Allow All)" : ForgeRegistries.FLUIDS.getKey(nextFluid).getPath();
             player.displayClientMessage(Component.literal("§6[Filter Set]: §f" + fluidName), true);
         }
     }
 
-    // Centralized List of Filterable Fluids
     default List<Fluid> getAllowedFluids() {
         return List.of(
-                Fluids.EMPTY, // Index 0: No Filter
+                Fluids.EMPTY,
                 Fluids.WATER,
                 Fluids.LAVA,
                 ModFluids.BLOOD_SOURCE.get(),
