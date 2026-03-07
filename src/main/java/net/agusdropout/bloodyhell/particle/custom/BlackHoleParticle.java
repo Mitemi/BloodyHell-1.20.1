@@ -3,6 +3,7 @@ package net.agusdropout.bloodyhell.particle.custom;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
+import net.agusdropout.bloodyhell.block.entity.custom.mechanism.UnknownPortalBlockEntity;
 import net.agusdropout.bloodyhell.particle.ModParticles;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.BlackHoleParticleOptions;
 import net.agusdropout.bloodyhell.util.visuals.RenderHelper;
@@ -13,6 +14,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
@@ -35,23 +37,25 @@ public class BlackHoleParticle extends Particle {
     private static final Vector3f COLOR_SPARKLES_BASE = new Vector3f(1.0f, 0.86f, 0.59f);
 
     private final float r, g, b;
-    private final float baseCoreSize;
-    private final float baseRingSize;
-    private final float vortexSize;
-    private final float baseLensSize;
+    private float baseCoreSize;
+    private float baseRingSize;
+    private float vortexSize;
+    private float baseLensSize;
     private final long starSeed;
 
-    protected BlackHoleParticle(ClientLevel level, double x, double y, double z, float size, float r, float g, float b) {
+    private final boolean isDynamic;
+
+    protected BlackHoleParticle(ClientLevel level, double x, double y, double z, boolean isDynamic, float size, float r, float g, float b) {
         super(level, x, y, z);
         this.gravity = 0;
         this.hasPhysics = false;
-        this.lifetime = 250;
+
+        this.isDynamic = isDynamic;
+        this.lifetime = this.isDynamic ? Integer.MAX_VALUE : 250;
         this.starSeed = random.nextLong();
 
-        this.baseCoreSize = size;
-        this.baseRingSize = size * 2.75f;
-        this.vortexSize = size * 2.0f;
-        this.baseLensSize = size * 1.25f;
+        updateScaleMath(size);
+
         this.r = r;
         this.g = g;
         this.b = b;
@@ -61,9 +65,44 @@ public class BlackHoleParticle extends Particle {
         }
     }
 
+    private void updateScaleMath(float newSize) {
+        this.baseCoreSize = newSize;
+        this.baseRingSize = newSize * 2.75f;
+        this.vortexSize = newSize * 2.0f;
+        this.baseLensSize = newSize * 1.25f;
+    }
+
     @Override
     public void tick() {
-        if (age++ >= lifetime) remove();
+        if (!isDynamic) {
+            // STANDARD MODE: Follow normal lifetime and disappear
+            if (age++ >= lifetime) {
+                remove();
+                return;
+            }
+        } else {
+            // DYNAMIC PORTAL MODE: Prevent aging and monitor the BlockEntity
+            this.xo = this.x;
+            this.yo = this.y;
+            this.zo = this.z;
+            this.age++;
+
+
+            BlockPos parentPos = BlockPos.containing(this.x, this.y - UnknownPortalBlockEntity.Y_OFFSET, this.z);
+            if (this.level.getBlockEntity(parentPos) instanceof UnknownPortalBlockEntity portal) {
+                if (portal.portalProgress <= 0) {
+                    this.remove();
+                    return;
+                } else {
+                    float newSize = (portal.portalProgress / 100.0f) * 0.8f;
+                    updateScaleMath(newSize);
+                }
+            } else {
+                this.remove();
+                return;
+            }
+        }
+
         if (age > 20 && age < lifetime - 20) {
             if (random.nextInt(3) == 0) spawnInfallingParticles();
         }
@@ -89,11 +128,18 @@ public class BlackHoleParticle extends Particle {
         double pz = Mth.lerp(partialTicks, zo, z) - camPos.z;
 
         float time = age + partialTicks;
-        float lifeRatio = time / (float) lifetime;
-        float scale = lifeRatio < 0.1f ? (float) Math.sin((lifeRatio / 0.1f) * Math.PI / 2) :
-                (lifeRatio > 0.9f ? 1.0f - (lifeRatio - 0.9f) / 0.1f : 1.0f);
 
-        if (scale <= 0.01f) return;
+        // Dynamic portals are scaled mathematically by the Block Entity, so we lock their internal render scale to 1.0f
+        float scale;
+        if (!isDynamic) {
+            float lifeRatio = time / (float) lifetime;
+            scale = lifeRatio < 0.1f ? (float) Math.sin((lifeRatio / 0.1f) * Math.PI / 2) :
+                    (lifeRatio > 0.9f ? 1.0f - (lifeRatio - 0.9f) / 0.1f : 1.0f);
+        } else {
+            scale = 1.0f;
+        }
+
+        if (scale <= 0.01f || this.baseCoreSize <= 0.01f) return;
 
         Tesselator tess = Tesselator.getInstance();
         BufferBuilder buffer = tess.getBuilder();
@@ -175,7 +221,7 @@ public class BlackHoleParticle extends Particle {
 
             RenderHelper.renderBillboardQuad(buffer, stack.last().pose(),
                     dx, dy, dz, finalSize,
-                    r, g, b, // Personalize star color with the disk color
+                    r, g, b,
                     alpha, camRot, 15728880);
         }
     }
@@ -187,7 +233,7 @@ public class BlackHoleParticle extends Particle {
     public static class Provider implements ParticleProvider<BlackHoleParticleOptions> {
         @Nullable @Override
         public Particle createParticle(BlackHoleParticleOptions data, ClientLevel world, double x, double y, double z, double vx, double vy, double vz) {
-            return new BlackHoleParticle(world, x, y, z, data.getSize(), data.getR(), data.getG(), data.getB());
+            return new BlackHoleParticle(world, x, y, z, data.isDynamic(), data.getSize(), data.getR(), data.getG(), data.getB());
         }
     }
 }

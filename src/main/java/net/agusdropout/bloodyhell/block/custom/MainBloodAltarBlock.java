@@ -197,7 +197,7 @@ public class MainBloodAltarBlock extends BaseEntityBlock {
                     center.north(4), center.east(4), center.south(4), center.west(4)
             };
 
-            serverLevel.sendParticles(new BlackHoleParticleOptions(2.0f, 1.0f, 0.871f, 0f),
+            serverLevel.sendParticles(new BlackHoleParticleOptions(2.0f, 1.0f, 0.871f, 0f, false),
                     center.getX() + 0.5, center.getY() + 6, center.getZ() + 0.5,
                     1, 0, 0, 0, 0.1);
             level.playSound(null, center, SoundEvents.WARDEN_SONIC_CHARGE, SoundSource.BLOCKS, 2.0f, 0.5f);

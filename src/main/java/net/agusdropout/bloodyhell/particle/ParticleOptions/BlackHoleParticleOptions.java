@@ -8,7 +8,6 @@ import net.agusdropout.bloodyhell.particle.ModParticles;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
-import org.joml.Vector3f;
 
 import java.util.Locale;
 
@@ -18,7 +17,8 @@ public class BlackHoleParticleOptions implements ParticleOptions {
                     Codec.FLOAT.fieldOf("size").forGetter((opt) -> opt.size),
                     Codec.FLOAT.fieldOf("r").forGetter((opt) -> opt.r),
                     Codec.FLOAT.fieldOf("g").forGetter((opt) -> opt.g),
-                    Codec.FLOAT.fieldOf("b").forGetter((opt) -> opt.b)
+                    Codec.FLOAT.fieldOf("b").forGetter((opt) -> opt.b),
+                    Codec.BOOL.fieldOf("is_dynamic").forGetter((opt) -> opt.isDynamic)
             ).apply(instance, BlackHoleParticleOptions::new)
     );
 
@@ -34,23 +34,27 @@ public class BlackHoleParticleOptions implements ParticleOptions {
             float g = reader.readFloat();
             reader.expect(' ');
             float b = reader.readFloat();
-            return new BlackHoleParticleOptions(size, r, g, b);
+            reader.expect(' ');
+            boolean isDynamic = reader.readBoolean();
+            return new BlackHoleParticleOptions(size, r, g, b, isDynamic);
         }
 
         @Override
         public BlackHoleParticleOptions fromNetwork(ParticleType<BlackHoleParticleOptions> type, FriendlyByteBuf buf) {
-            return new BlackHoleParticleOptions(buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat());
+            return new BlackHoleParticleOptions(buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readBoolean());
         }
     };
 
     private final float size;
     private final float r, g, b;
+    private final boolean isDynamic;
 
-    public BlackHoleParticleOptions(float size, float r, float g, float b) {
+    public BlackHoleParticleOptions(float size, float r, float g, float b, boolean isDynamic) {
         this.size = size;
         this.r = r;
         this.g = g;
         this.b = b;
+        this.isDynamic = isDynamic;
     }
 
     @Override
@@ -59,11 +63,12 @@ public class BlackHoleParticleOptions implements ParticleOptions {
         buf.writeFloat(this.r);
         buf.writeFloat(this.g);
         buf.writeFloat(this.b);
+        buf.writeBoolean(this.isDynamic);
     }
 
     @Override
     public String writeToString() {
-        return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f", ModParticles.BLACK_HOLE_PARTICLE.getId(), this.size, this.r, this.g, this.b);
+        return String.format(Locale.ROOT, "%s %.2f %.2f %.2f %.2f %b", ModParticles.BLACK_HOLE_PARTICLE.getId(), this.size, this.r, this.g, this.b, this.isDynamic);
     }
 
     @Override
@@ -75,4 +80,5 @@ public class BlackHoleParticleOptions implements ParticleOptions {
     public float getR() { return r; }
     public float getG() { return g; }
     public float getB() { return b; }
+    public boolean isDynamic() { return isDynamic; }
 }
