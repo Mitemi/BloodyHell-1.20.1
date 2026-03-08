@@ -6,9 +6,11 @@ import com.mojang.math.Axis;
 import net.agusdropout.bloodyhell.block.entity.custom.mechanism.UnknownPortalBlockEntity;
 import net.agusdropout.bloodyhell.particle.ModParticles;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.BlackHoleParticleOptions;
+import net.agusdropout.bloodyhell.util.visuals.manager.BlackHoleRenderManager;
+import net.agusdropout.bloodyhell.util.visuals.ModShaders;
 import net.agusdropout.bloodyhell.util.visuals.RenderHelper;
-import net.agusdropout.bloodyhell.util.visuals.ShaderUtils;
 import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -24,6 +26,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
@@ -31,7 +34,6 @@ import javax.annotation.Nullable;
 @OnlyIn(Dist.CLIENT)
 public class BlackHoleParticle extends Particle {
 
-    private static int captureTextureId = -1;
     private static final Vector3f COLOR_RIM = new Vector3f(1.0f, 0.43f, 0.04f);
     private static final Vector3f COLOR_LENS = new Vector3f(1.0f, 0.98f, 0.94f);
     private static final Vector3f COLOR_SPARKLES_BASE = new Vector3f(1.0f, 0.86f, 0.59f);
@@ -59,10 +61,6 @@ public class BlackHoleParticle extends Particle {
         this.r = r;
         this.g = g;
         this.b = b;
-
-        if (captureTextureId == -1) {
-            captureTextureId = GL11.glGenTextures();
-        }
     }
 
     private void updateScaleMath(float newSize) {
@@ -75,18 +73,15 @@ public class BlackHoleParticle extends Particle {
     @Override
     public void tick() {
         if (!isDynamic) {
-            // STANDARD MODE: Follow normal lifetime and disappear
             if (age++ >= lifetime) {
                 remove();
                 return;
             }
         } else {
-            // DYNAMIC PORTAL MODE: Prevent aging and monitor the BlockEntity
             this.xo = this.x;
             this.yo = this.y;
             this.zo = this.z;
             this.age++;
-
 
             BlockPos parentPos = BlockPos.containing(this.x, this.y - UnknownPortalBlockEntity.Y_OFFSET, this.z);
             if (this.level.getBlockEntity(parentPos) instanceof UnknownPortalBlockEntity portal) {
@@ -122,6 +117,10 @@ public class BlackHoleParticle extends Particle {
 
     @Override
     public void render(VertexConsumer ignored, Camera camera, float partialTicks) {
+        BlackHoleRenderManager.addBlackHole(this, camera, partialTicks);
+    }
+
+    public void doDeferredRender(Camera camera, float partialTicks, int screenTexId) {
         Vec3 camPos = camera.getPosition();
         double px = Mth.lerp(partialTicks, xo, x) - camPos.x;
         double py = Mth.lerp(partialTicks, yo, y) - camPos.y;
@@ -129,7 +128,6 @@ public class BlackHoleParticle extends Particle {
 
         float time = age + partialTicks;
 
-        // Dynamic portals are scaled mathematically by the Block Entity, so we lock their internal render scale to 1.0f
         float scale;
         if (!isDynamic) {
             float lifeRatio = time / (float) lifetime;
@@ -150,7 +148,43 @@ public class BlackHoleParticle extends Particle {
         RenderSystem.enableDepthTest();
         RenderSystem.depthMask(false);
 
-        ShaderUtils.renderGravitationalLens(poseStack, captureTextureId, vortexSize * scale, new Vector3f(1, 1, 1), 1.0f, time);
+        Minecraft mc = Minecraft.getInstance();
+        RenderSystem.setShader(() -> ModShaders.DISTORTION_SHADER);
+
+        if (ModShaders.DISTORTION_SHADER.getUniform("ScreenSize") != null) {
+            ModShaders.DISTORTION_SHADER.getUniform("ScreenSize").set((float)mc.getWindow().getWidth(), (float)mc.getWindow().getHeight());
+        }
+        if (ModShaders.DISTORTION_SHADER.getUniform("GameTime") != null) {
+            ModShaders.DISTORTION_SHADER.getUniform("GameTime").set(time);
+        }
+
+        RenderSystem.setShaderTexture(0, screenTexId);
+
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+
+        float lSize = vortexSize * scale;
+        Vector3f[] corners = {
+                new Vector3f(-lSize, -lSize, 0),
+                new Vector3f(-lSize, lSize, 0),
+                new Vector3f(lSize, lSize, 0),
+                new Vector3f(lSize, -lSize, 0)
+        };
+        float[][] uvs = {{0.0f, 0.0f}, {0.0f, 1.0f}, {1.0f, 1.0f}, {1.0f, 0.0f}};
+        Quaternionf camRot = camera.rotation();
+
+        for (int i = 0; i < 4; i++) {
+            Vector3f posVec = new Vector3f(corners[i]);
+            posVec.rotate(camRot);
+            Vector4f finalPos = new Vector4f(posVec.x(), posVec.y(), posVec.z(), 1.0f);
+            finalPos.mul(poseStack.last().pose());
+
+            buffer.vertex(finalPos.x(), finalPos.y(), finalPos.z())
+                    .uv(uvs[i][0], uvs[i][1])
+                    .color(1.0f, 1.0f, 1.0f, 1.0f)
+                    .endVertex();
+        }
+        tess.end();
+
 
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.enableBlend();
@@ -201,7 +235,6 @@ public class BlackHoleParticle extends Particle {
 
     private void renderSparkles(BufferBuilder buffer, PoseStack stack, float radius, float scale, float rot, Quaternionf camRot) {
         RandomSource rand = RandomSource.create(this.starSeed);
-
         for (int i = 0; i < 80; i++) {
             float radialFactor = (float) Math.pow(rand.nextFloat(), 0.7);
             double cRad = radius * radialFactor ;
@@ -219,10 +252,7 @@ public class BlackHoleParticle extends Particle {
             float alpha = (0.4f + 0.6f * Math.max(0, flicker)) * scale;
             float finalSize = (0.03f + (rand.nextFloat() * 0.04f)) * scale;
 
-            RenderHelper.renderBillboardQuad(buffer, stack.last().pose(),
-                    dx, dy, dz, finalSize,
-                    r, g, b,
-                    alpha, camRot, 15728880);
+            RenderHelper.renderBillboardQuad(buffer, stack.last().pose(), dx, dy, dz, finalSize, r, g, b, alpha, camRot, 15728880);
         }
     }
 
