@@ -4,6 +4,7 @@ package net.agusdropout.bloodyhell.block;
 import net.agusdropout.bloodyhell.BloodyHell;
 import net.agusdropout.bloodyhell.block.base.*;
 import net.agusdropout.bloodyhell.block.custom.*;
+import net.agusdropout.bloodyhell.block.custom.SanguiniteCondenserBlock;
 import net.agusdropout.bloodyhell.block.custom.mechanism.*;
 import net.agusdropout.bloodyhell.block.custom.mushroom.CrimsonLureMushroomBlock;
 import net.agusdropout.bloodyhell.block.custom.mushroom.VoraciousMushroomBlock;
@@ -498,6 +499,10 @@ public class ModBlocks {
     public static final RegistryObject<Block> SANGUINITE_INFUSOR = registerBlock("sanguinite_infusor",
             () -> new SanguiniteInfusorBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
                     .noOcclusion().strength(3f).noParticlesOnBreak().requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> SANGUINITE_CONDENSER = registerBlock("sanguinite_condenser",
+            () -> new SanguiniteCondenserBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion()));
+    public static final RegistryObject<Block> RHNULL_CONDENSER = registerBlock("rhnull_condenser",
+            () -> new RhnullCondenserBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion()));
     public static final RegistryObject<Block> SANGUINE_LAPIDARY = registerBlock("sanguine_lapidary",
             () -> new SanguineLapidaryBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)
                     .noOcclusion().strength(3f).noParticlesOnBreak().requiresCorrectToolForDrops()));

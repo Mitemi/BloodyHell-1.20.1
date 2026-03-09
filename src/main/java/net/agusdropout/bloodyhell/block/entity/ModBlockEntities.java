@@ -91,6 +91,14 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("unknown_portal_be", () ->
                     BlockEntityType.Builder.of(UnknownPortalBlockEntity::new,
                             ModBlocks.UNKNOWN_PORTAL_BLOCK.get()).build(null));
+    public static final RegistryObject<BlockEntityType<SanguiniteCondenserBlockEntity>> SANGUINITE_CONDENSER_BE =
+            BLOCK_ENTITIES.register("sanguinite_condenser_be", () ->
+                    BlockEntityType.Builder.of(SanguiniteCondenserBlockEntity::new,
+                            ModBlocks.SANGUINITE_CONDENSER.get()).build(null));
+    public static final RegistryObject<BlockEntityType<RhnullCondenserBlockEntity>> RHNULL_CONDENSER_BE =
+            BLOCK_ENTITIES.register("rhnull_condenser_be", () ->
+                    BlockEntityType.Builder.of(RhnullCondenserBlockEntity::new,
+                            ModBlocks.RHNULL_CONDENSER.get()).build(null));
 
 
     public static void register(IEventBus eventBus) {

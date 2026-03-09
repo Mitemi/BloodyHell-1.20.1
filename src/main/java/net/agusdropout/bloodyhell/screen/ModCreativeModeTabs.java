@@ -43,6 +43,8 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.SANGUINITE_PIPE_ITEM.get());
                         output.accept(ModItems.RHNULL_PIPE_ITEM.get());
                         output.accept(ModBlocks.SANGUINITE_INFUSOR.get());
+                        output.accept(ModBlocks.SANGUINITE_CONDENSER.get());
+                        output.accept(ModBlocks.RHNULL_CONDENSER.get());
                         output.accept(ModBlocks.SANGUINE_LAPIDARY.get());
                         output.accept(ModItems.BLOOD_GEM_SPROUT_SEED.get());
                         output.accept(ModBlocks.SANGUINITE_TANK.get());

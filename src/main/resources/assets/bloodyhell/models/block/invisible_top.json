@@ -1,0 +1,7 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "particle": "bloodyhell:block/sanguinite_condenser"
+  },
+  "elements": []
+}

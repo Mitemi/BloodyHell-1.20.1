@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "bloodyhell:block/sanguinite_condenser"
+    },
+    "half=upper": {
+      "model": "bloodyhell:block/invisible_top"
+    }
+  }
+}

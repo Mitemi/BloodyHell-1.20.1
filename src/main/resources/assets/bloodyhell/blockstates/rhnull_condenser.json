@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "bloodyhell:block/rhnull_condenser"
+    },
+    "half=upper": {
+      "model": "bloodyhell:block/invisible_top"
+    }
+  }
+}
