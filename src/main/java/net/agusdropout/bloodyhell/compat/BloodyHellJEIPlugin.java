@@ -7,7 +7,9 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.agusdropout.bloodyhell.BloodyHell;
 import net.agusdropout.bloodyhell.block.ModBlocks;
+import net.agusdropout.bloodyhell.recipe.BlasphemousBloodAltarRecipe;
 import net.agusdropout.bloodyhell.recipe.BloodAltarRecipe;
+import net.agusdropout.bloodyhell.recipe.CondenserRecipe;
 import net.agusdropout.bloodyhell.recipe.SanguiniteInfusorRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -27,13 +29,19 @@ public class BloodyHellJEIPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
 
+        registration.addRecipeCategories(new BlasphemousBloodAltarCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new BloodAltarCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new SanguiniteInfusorCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new CondenserCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
         RecipeManager recipeManager = Objects.requireNonNull(Minecraft.getInstance().level).getRecipeManager();
+
+
+        List<BlasphemousBloodAltarRecipe> blasphemousAltarRecipes = recipeManager.getAllRecipesFor(BlasphemousBloodAltarRecipe.Type.INSTANCE);
+        registration.addRecipes(BlasphemousBloodAltarCategory.RECIPE_TYPE, blasphemousAltarRecipes);
 
 
         List<BloodAltarRecipe> altarRecipes = recipeManager.getAllRecipesFor(BloodAltarRecipe.Type.INSTANCE);
@@ -42,11 +50,17 @@ public class BloodyHellJEIPlugin implements IModPlugin {
 
         List<SanguiniteInfusorRecipe> infusorRecipes = recipeManager.getAllRecipesFor(SanguiniteInfusorRecipe.Type.INSTANCE);
         registration.addRecipes(SanguiniteInfusorCategory.RECIPE_TYPE, infusorRecipes);
+
+        List<CondenserRecipe> condenserRecipes = recipeManager.getAllRecipesFor(CondenserRecipe.Type.INSTANCE);
+        registration.addRecipes(CondenserCategory.RECIPE_TYPE, condenserRecipes);
     }
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.MAIN_BLASPHEMOUS_BLOOD_ALTAR.get()), BloodAltarCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.MAIN_BLASPHEMOUS_BLOOD_ALTAR.get()), BlasphemousBloodAltarCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.MAIN_BLOOD_ALTAR.get()), BloodAltarCategory.RECIPE_TYPE);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.SANGUINITE_INFUSOR.get()), SanguiniteInfusorCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.SANGUINITE_CONDENSER.get()), CondenserCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.RHNULL_CONDENSER.get()), CondenserCategory.RECIPE_TYPE);
     }
 }

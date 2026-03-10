@@ -324,6 +324,8 @@ public class BloodyHell
             EntityRenderers.register(ModEntityTypes.WEEPING_TEAR_PROJECTILE.get(), SimpleColoredLineProjectileRenderer::new);
             EntityRenderers.register(ModEntityTypes.BLACK_HOLE.get(), BlackHoleRenderer::new);
             EntityRenderers.register(ModEntityTypes.HOSTILE_UNKNOWN_ENTITY_ARMS.get(), HostileUnknownEntityArmsRenderer::new);
+            BlockEntityRenderers.register(ModBlockEntities.BLOOD_ALTAR_BE.get(), BloodAltarRenderer::new);
+            BlockEntityRenderers.register(ModBlockEntities.MAIN_BLOOD_ALTAR_BE.get(), MainBloodAltarRenderer::new);
 
 
 

@@ -340,6 +340,14 @@ public class ModItems {
     //Crimson Veil Items
     public static final RegistryObject<Item> AMULET_OF_ANCESTRAL_BLOOD = ITEMS.register("amulet_of_ancestral_blood", () -> new AmuletOfAncestralBlood(
             new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> SANGUINITE_GEM_FRAME = ITEMS.register("sanguinite_gem_frame",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> SANGUINITE_GREAT_GEM_FRAME = ITEMS.register("sanguinite_great_gem_frame",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> RHNULL_GEM_FRAME = ITEMS.register("rhnull_gem_frame",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> RHNULL_GREAT_GEM_FRAME = ITEMS.register("rhnull_great_gem_frame",
+            () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> ANCIENT_GEM = ITEMS.register("ancient_gem", () -> new Item(
             new Item.Properties().stacksTo(64)));
     public static final RegistryObject<Item> ANCIENT_RHNULL_GEM = ITEMS.register("ancient_rhnull_gem", () -> new Item(

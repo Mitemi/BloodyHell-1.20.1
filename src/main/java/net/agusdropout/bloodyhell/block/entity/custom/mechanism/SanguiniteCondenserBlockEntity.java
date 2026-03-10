@@ -10,7 +10,7 @@ import net.minecraftforge.fluids.FluidStack;
 public class SanguiniteCondenserBlockEntity extends AbstractCondenserBlockEntity {
 
     public SanguiniteCondenserBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.SANGUINITE_CONDENSER_BE.get(), pos, state, 10000);
+        super(ModBlockEntities.SANGUINITE_CONDENSER_BE.get(), pos, state);
     }
 
     @Override
@@ -18,7 +18,5 @@ public class SanguiniteCondenserBlockEntity extends AbstractCondenserBlockEntity
         return true;
     }
 
-    @Override
-    protected void processRecipes() {
-    }
+
 }

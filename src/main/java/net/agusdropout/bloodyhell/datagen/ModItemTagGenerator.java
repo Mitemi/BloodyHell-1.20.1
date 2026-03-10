@@ -139,6 +139,12 @@ public class ModItemTagGenerator extends ItemTagsProvider {
                 .add(ModItems.BLASPHEMOUS_HULKING_MASS_OF_IRON.get())
                 .add(ModItems.BLASPHEMOUS_IMPALER.get())
                 .add(ModItems.BLASPHEMOUS_RING.get());
+
+        this.tag(ModTags.Items.GEM_FRAMES)
+                .add(ModItems.SANGUINITE_GEM_FRAME.get())
+                .add(ModItems.SANGUINITE_GREAT_GEM_FRAME.get())
+                .add(ModItems.RHNULL_GREAT_GEM_FRAME.get())
+                .add( ModItems.RHNULL_GEM_FRAME.get());
     }
 
 

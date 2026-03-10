@@ -17,12 +17,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BloodAltarRecipe implements Recipe<SimpleContainer> {
+public class BlasphemousBloodAltarRecipe implements Recipe<SimpleContainer> {
     private final ResourceLocation id;
     private final ItemStack output;
     private final NonNullList<Ingredient> recipeItems;
 
-    public BloodAltarRecipe(ResourceLocation id, ItemStack output, NonNullList<Ingredient> recipeItems) {
+    public BlasphemousBloodAltarRecipe(ResourceLocation id, ItemStack output, NonNullList<Ingredient> recipeItems) {
         this.id = id;
         this.output = output;
         this.recipeItems = recipeItems;
@@ -30,36 +30,23 @@ public class BloodAltarRecipe implements Recipe<SimpleContainer> {
 
     @Override
     public boolean matches(SimpleContainer pContainer, Level pLevel) {
-        if(pLevel.isClientSide()) {
-            return false;
-        }
+        if (pLevel.isClientSide()) return false;
 
+        List<Ingredient> missingIngredients = new ArrayList<>(recipeItems);
 
-        List<ItemStack> inputs = new ArrayList<>();
         for (int i = 0; i < pContainer.getContainerSize(); i++) {
-            ItemStack stack = pContainer.getItem(i);
-            if (!stack.isEmpty()) {
-                inputs.add(stack);
-            }
-        }
+            ItemStack itemInSlot = pContainer.getItem(i);
+            if (itemInSlot.isEmpty()) continue;
 
-
-        if (inputs.size() != this.recipeItems.size()) {
-            return false;
-        }
-
-
-        List<Ingredient> missingIngredients = new ArrayList<>(this.recipeItems);
-        for (ItemStack input : inputs) {
-            boolean matched = false;
-            for (int i = 0; i < missingIngredients.size(); i++) {
-                if (missingIngredients.get(i).test(input)) {
-                    missingIngredients.remove(i);
-                    matched = true;
+            boolean foundMatch = false;
+            for (int j = 0; j < missingIngredients.size(); j++) {
+                if (missingIngredients.get(j).test(itemInSlot)) {
+                    missingIngredients.remove(j);
+                    foundMatch = true;
                     break;
                 }
             }
-            if (!matched) return false;
+            if (!foundMatch) return false;
         }
 
         return missingIngredients.isEmpty();
@@ -81,18 +68,13 @@ public class BloodAltarRecipe implements Recipe<SimpleContainer> {
     }
 
     @Override
-    public NonNullList<Ingredient> getIngredients() {
-        return this.recipeItems;
-    }
-
-    @Override
     public ResourceLocation getId() {
         return id;
     }
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return Serializer.INSTANCE;
+        return ModRecipes.BLASPHEMOUS_BLOOD_ALTAR_SERIALIZER.get();
     }
 
     @Override
@@ -100,51 +82,49 @@ public class BloodAltarRecipe implements Recipe<SimpleContainer> {
         return Type.INSTANCE;
     }
 
-    public static class Type implements RecipeType<BloodAltarRecipe> {
+    public NonNullList<Ingredient> getIngredients() {
+        return recipeItems;
+    }
+
+    public static class Type implements RecipeType<BlasphemousBloodAltarRecipe> {
         private Type() { }
         public static final Type INSTANCE = new Type();
         public static final String ID = "blood_altar";
     }
 
-    public static class Serializer implements RecipeSerializer<BloodAltarRecipe> {
+    public static class Serializer implements RecipeSerializer<BlasphemousBloodAltarRecipe> {
         public static final Serializer INSTANCE = new Serializer();
         public static final ResourceLocation ID = new ResourceLocation(BloodyHell.MODID, "blood_altar");
 
         @Override
-        public BloodAltarRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
+        public BlasphemousBloodAltarRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
             ItemStack output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(pSerializedRecipe, "output"));
-
             JsonArray ingredients = GsonHelper.getAsJsonArray(pSerializedRecipe, "ingredients");
-            NonNullList<Ingredient> inputs = NonNullList.withSize(ingredients.size(), Ingredient.EMPTY);
-
-            for (int i = 0; i < inputs.size(); i++) {
-                inputs.set(i, Ingredient.fromJson(ingredients.get(i)));
+            NonNullList<Ingredient> inputs = NonNullList.create();
+            for (int i = 0; i < ingredients.size(); i++) {
+                inputs.add(Ingredient.fromJson(ingredients.get(i)));
             }
-
-            return new BloodAltarRecipe(pRecipeId, output, inputs);
+            return new BlasphemousBloodAltarRecipe(pRecipeId, output, inputs);
         }
 
         @Override
-        public @Nullable BloodAltarRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
-            NonNullList<Ingredient> inputs = NonNullList.withSize(pBuffer.readInt(), Ingredient.EMPTY);
-
-            for (int i = 0; i < inputs.size(); i++) {
-                inputs.set(i, Ingredient.fromNetwork(pBuffer));
+        public @Nullable BlasphemousBloodAltarRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
+            int size = pBuffer.readVarInt();
+            NonNullList<Ingredient> inputs = NonNullList.create();
+            for (int i = 0; i < size; i++) {
+                inputs.add(Ingredient.fromNetwork(pBuffer));
             }
-
             ItemStack output = pBuffer.readItem();
-            return new BloodAltarRecipe(pRecipeId, output, inputs);
+            return new BlasphemousBloodAltarRecipe(pRecipeId, output, inputs);
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf pBuffer, BloodAltarRecipe pRecipe) {
-            pBuffer.writeInt(pRecipe.recipeItems.size());
-
-            for (Ingredient ingredient : pRecipe.recipeItems) {
+        public void toNetwork(FriendlyByteBuf pBuffer, BlasphemousBloodAltarRecipe pRecipe) {
+            pBuffer.writeVarInt(pRecipe.getIngredients().size());
+            for (Ingredient ingredient : pRecipe.getIngredients()) {
                 ingredient.toNetwork(pBuffer);
             }
-
-            pBuffer.writeItemStack(pRecipe.output, false);
+            pBuffer.writeItemStack(pRecipe.getResultItem(null), false);
         }
     }
 }

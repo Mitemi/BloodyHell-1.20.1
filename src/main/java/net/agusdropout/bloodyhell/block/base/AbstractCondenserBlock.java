@@ -1,7 +1,11 @@
 package net.agusdropout.bloodyhell.block.base;
 
+import net.agusdropout.bloodyhell.block.entity.base.AbstractCondenserBlockEntity;
+import net.agusdropout.bloodyhell.datagen.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -12,11 +16,15 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractCondenserBlock extends Block implements EntityBlock {
@@ -80,5 +88,63 @@ public abstract class AbstractCondenserBlock extends Block implements EntityBloc
             return stateBelow.is(this) && stateBelow.getValue(HALF) == DoubleBlockHalf.LOWER;
         }
         return super.canSurvive(state, level, pos);
+    }
+
+    @Override
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (state.getValue(HALF) == DoubleBlockHalf.UPPER) {
+            BlockPos below = pos.below();
+            return level.getBlockState(below).use(level, player, hand, hit.withPosition(below));
+        }
+
+        if (!(level.getBlockEntity(pos) instanceof AbstractCondenserBlockEntity condenser)) {
+            return InteractionResult.PASS;
+        }
+
+        if (hand == InteractionHand.MAIN_HAND) {
+            ItemStack heldItem = player.getMainHandItem();
+
+            if (heldItem.is(ModTags.Items.GEM_FRAMES)) {
+                if (condenser.getItemHandler().getStackInSlot(0).isEmpty()) {
+                    if (!level.isClientSide()) {
+                        ItemStack toInsert = heldItem.copy();
+                        toInsert.setCount(1);
+                        condenser.getItemHandler().setStackInSlot(0, toInsert);
+                        if (!player.isCreative()) {
+                            heldItem.shrink(1);
+                        }
+                    }
+                    return InteractionResult.sidedSuccess(level.isClientSide());
+                }
+            } else if (heldItem.isEmpty()) {
+                ItemStack extracted = condenser.getItemHandler().getStackInSlot(0);
+                if (!extracted.isEmpty()) {
+                    if (!level.isClientSide()) {
+                        player.getInventory().placeItemBackInInventory(extracted.copy());
+                        condenser.getItemHandler().setStackInSlot(0, ItemStack.EMPTY);
+                    }
+                    return InteractionResult.sidedSuccess(level.isClientSide());
+                }
+            }
+        }
+
+        return InteractionResult.PASS;
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        if (level.isClientSide()) {
+            return null;
+        }
+
+        if (state.getValue(HALF) == DoubleBlockHalf.UPPER) {
+            return null;
+        }
+        return (lvl, pos, st, blockEntity) -> {
+            if (blockEntity instanceof net.agusdropout.bloodyhell.block.entity.base.AbstractCondenserBlockEntity condenser) {
+                condenser.tick();
+            }
+        };
     }
 }

@@ -219,7 +219,8 @@ public class ModCreativeModeTabs {
                         output.accept(ModBlocks.BLEEDING_BLOCK.get());
                         output.accept(ModBlocks.ONI_STATUE.get());
 
-
+                        output.accept(ModBlocks.BLOOD_ALTAR.get());
+                        output.accept(ModBlocks.MAIN_BLOOD_ALTAR.get());
                         output.accept(ModItems.BLASPHEMOUS_BLOOD_ALTAR_ITEM.get());
                         output.accept(ModItems.MAIN_BLASPHEMOUS_BLOOD_ALTAR_ITEM.get());
                         output.accept(ModItems.UNKNOWN_PORTAL_ITEM.get());
@@ -268,6 +269,10 @@ public class ModCreativeModeTabs {
 
                         // --- Crimson Blood Items ---
                         output.accept(ModItems.AMULET_OF_ANCESTRAL_BLOOD.get());
+                        output.accept(ModItems.SANGUINITE_GEM_FRAME.get());
+                        output.accept(ModItems.SANGUINITE_GREAT_GEM_FRAME.get());
+                        output.accept(ModItems.RHNULL_GEM_FRAME.get());
+                        output.accept(ModItems.RHNULL_GREAT_GEM_FRAME.get());
                         output.accept(ModItems.ANCIENT_GEM.get());
                         output.accept(ModItems.ANCIENT_RHNULL_GEM.get());
                         output.accept(ModItems.GREAT_AMULET_OF_ANCESTRAL_BLOOD.get());

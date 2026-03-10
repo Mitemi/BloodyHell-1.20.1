@@ -131,6 +131,10 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         //Crimson Veil Items
         normalItem(ModItems.AMULET_OF_ANCESTRAL_BLOOD);
+        normalItem(ModItems.SANGUINITE_GEM_FRAME);
+        normalItem(ModItems.SANGUINITE_GREAT_GEM_FRAME);
+        normalItem(ModItems.RHNULL_GEM_FRAME);
+        normalItem(ModItems.RHNULL_GREAT_GEM_FRAME);
         normalItem(ModItems.ANCIENT_GEM);
         normalItem(ModItems.ANCIENT_RHNULL_GEM);
         normalItem(ModItems.GREAT_AMULET_OF_ANCESTRAL_BLOOD);

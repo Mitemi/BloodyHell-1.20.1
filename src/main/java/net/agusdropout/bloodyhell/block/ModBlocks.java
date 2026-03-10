@@ -6,7 +6,9 @@ import net.agusdropout.bloodyhell.block.base.*;
 import net.agusdropout.bloodyhell.block.custom.*;
 import net.agusdropout.bloodyhell.block.custom.SanguiniteCondenserBlock;
 import net.agusdropout.bloodyhell.block.custom.altar.BlasphemousBloodAltarBlock;
+import net.agusdropout.bloodyhell.block.custom.altar.BloodAltarBlock;
 import net.agusdropout.bloodyhell.block.custom.altar.MainBlasphemousBloodAltarBlock;
+import net.agusdropout.bloodyhell.block.custom.altar.MainBloodAltarBlock;
 import net.agusdropout.bloodyhell.block.custom.mechanism.*;
 import net.agusdropout.bloodyhell.block.custom.mushroom.CrimsonLureMushroomBlock;
 import net.agusdropout.bloodyhell.block.custom.mushroom.VoraciousMushroomBlock;
@@ -341,6 +343,11 @@ public class ModBlocks {
             BlockBehaviour.Properties.copy(Blocks.DEEPSLATE_TILES).noOcclusion().lightLevel((state)->15).noParticlesOnBreak()));
     public static final RegistryObject<Block> MAIN_BLASPHEMOUS_BLOOD_ALTAR = BLOCKS.register("main_blasphemous_blood_altar", ()-> new MainBlasphemousBloodAltarBlock(
             BlockBehaviour.Properties.copy(Blocks.DEEPSLATE_TILES).noOcclusion().lightLevel((state)->15).noParticlesOnBreak()));
+    public static final RegistryObject<Block> BLOOD_ALTAR = registerBlock("blood_altar",
+            () -> new BloodAltarBlock(BlockBehaviour.Properties.copy(Blocks.STONE).noOcclusion()));
+    public static final RegistryObject<Block> MAIN_BLOOD_ALTAR = registerBlock("main_blood_altar",
+            () -> new MainBloodAltarBlock(BlockBehaviour.Properties.copy(Blocks.STONE).noOcclusion()));
+
     public static final RegistryObject<Block> UNKNOWN_PORTAL_BLOCK = registerBlock("unknown_portal_block",
             () -> new UnknownPortalBlock(BlockBehaviour.Properties.copy(net.minecraft.world.level.block.Blocks.STONE).noOcclusion()));
 

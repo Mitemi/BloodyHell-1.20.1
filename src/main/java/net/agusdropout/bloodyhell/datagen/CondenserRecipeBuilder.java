@@ -1,6 +1,5 @@
 package net.agusdropout.bloodyhell.datagen;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.agusdropout.bloodyhell.recipe.ModRecipes;
 import net.minecraft.advancements.Advancement;
@@ -15,52 +14,47 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
-public class BloodAltarRecipeBuilder implements RecipeBuilder {
+public class CondenserRecipeBuilder implements RecipeBuilder {
     private final Item result;
     private final int count;
-    private final List<Ingredient> ingredients = new ArrayList<>();
+    private Ingredient itemInput;
+    private FluidStack fluidInput;
     private final Advancement.Builder advancement = Advancement.Builder.advancement();
 
-    public BloodAltarRecipeBuilder(ItemLike result, int count) {
+    public CondenserRecipeBuilder(ItemLike result, int count) {
         this.result = result.asItem();
         this.count = count;
     }
 
-    public static BloodAltarRecipeBuilder ritual(ItemLike result) {
-        return new BloodAltarRecipeBuilder(result, 1);
+    public static CondenserRecipeBuilder condense(ItemLike result) {
+        return new CondenserRecipeBuilder(result, 1);
     }
 
-    public static BloodAltarRecipeBuilder ritual(ItemLike result, int count) {
-        return new BloodAltarRecipeBuilder(result, count);
-    }
-
-    public BloodAltarRecipeBuilder requires(Ingredient ingredient) {
-        if (this.ingredients.size() >= 4) {
-            throw new IllegalStateException("Max 4 items per recipe in Blood Altar recipes");
-        }
-        this.ingredients.add(ingredient);
+    public CondenserRecipeBuilder requiresItem(Ingredient ingredient) {
+        this.itemInput = ingredient;
         return this;
     }
 
-    public BloodAltarRecipeBuilder requires(ItemLike item) {
-        return requires(Ingredient.of(item));
+    public CondenserRecipeBuilder requiresFluid(Fluid fluid, int amount) {
+        this.fluidInput = new FluidStack(fluid, amount);
+        return this;
     }
 
     @Override
-    public BloodAltarRecipeBuilder unlockedBy(String criterionName, CriterionTriggerInstance criterionTrigger) {
+    public CondenserRecipeBuilder unlockedBy(String criterionName, CriterionTriggerInstance criterionTrigger) {
         this.advancement.addCriterion(criterionName, criterionTrigger);
         return this;
     }
 
     @Override
-    public BloodAltarRecipeBuilder group(@Nullable String groupName) {
+    public CondenserRecipeBuilder group(@Nullable String groupName) {
         return this;
     }
 
@@ -71,8 +65,8 @@ public class BloodAltarRecipeBuilder implements RecipeBuilder {
 
     @Override
     public void save(Consumer<FinishedRecipe> consumer, ResourceLocation id) {
-        if (this.ingredients.size() != 4) {
-            throw new IllegalStateException("Blood Altar recipes require exactly 4 ingredients.");
+        if (this.itemInput == null || this.fluidInput == null) {
+            throw new IllegalStateException("Condenser recipes require both an item input and a fluid input.");
         }
 
         this.advancement.parent(new ResourceLocation("recipes/root"))
@@ -80,7 +74,7 @@ public class BloodAltarRecipeBuilder implements RecipeBuilder {
                 .rewards(AdvancementRewards.Builder.recipe(id))
                 .requirements(RequirementsStrategy.OR);
 
-        consumer.accept(new Result(id, result, count, ingredients,
+        consumer.accept(new Result(id, result, count, itemInput, fluidInput,
                 this.advancement, new ResourceLocation(id.getNamespace(), "recipes/" + id.getPath())));
     }
 
@@ -88,26 +82,29 @@ public class BloodAltarRecipeBuilder implements RecipeBuilder {
         private final ResourceLocation id;
         private final Item result;
         private final int count;
-        private final List<Ingredient> ingredients;
+        private final Ingredient itemInput;
+        private final FluidStack fluidInput;
         private final Advancement.Builder advancement;
         private final ResourceLocation advancementId;
 
-        public Result(ResourceLocation id, Item result, int count, List<Ingredient> ingredients, Advancement.Builder advancement, ResourceLocation advancementId) {
+        public Result(ResourceLocation id, Item result, int count, Ingredient itemInput, FluidStack fluidInput, Advancement.Builder advancement, ResourceLocation advancementId) {
             this.id = id;
             this.result = result;
             this.count = count;
-            this.ingredients = ingredients;
+            this.itemInput = itemInput;
+            this.fluidInput = fluidInput;
             this.advancement = advancement;
             this.advancementId = advancementId;
         }
 
         @Override
         public void serializeRecipeData(JsonObject json) {
-            JsonArray jsonIngredients = new JsonArray();
-            for (Ingredient ingredient : ingredients) {
-                jsonIngredients.add(ingredient.toJson());
-            }
-            json.add("ingredients", jsonIngredients);
+            json.add("item_input", itemInput.toJson());
+
+            JsonObject jsonFluid = new JsonObject();
+            jsonFluid.addProperty("fluid", ForgeRegistries.FLUIDS.getKey(fluidInput.getFluid()).toString());
+            jsonFluid.addProperty("amount", fluidInput.getAmount());
+            json.add("fluid_input", jsonFluid);
 
             JsonObject jsonResult = new JsonObject();
             jsonResult.addProperty("item", ForgeRegistries.ITEMS.getKey(result).toString());
@@ -124,7 +121,7 @@ public class BloodAltarRecipeBuilder implements RecipeBuilder {
 
         @Override
         public RecipeSerializer<?> getType() {
-            return ModRecipes.BLOOD_ALTAR_SERIALIZER.get();
+            return ModRecipes.CONDENSER_SERIALIZER.get();
         }
 
         @Nullable

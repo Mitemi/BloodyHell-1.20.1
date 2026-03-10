@@ -4,7 +4,9 @@ import net.agusdropout.bloodyhell.BloodyHell;
 import net.agusdropout.bloodyhell.block.ModBlocks;
 import net.agusdropout.bloodyhell.block.entity.custom.*;
 import net.agusdropout.bloodyhell.block.entity.custom.altar.BlasphemousBloodAltarBlockEntity;
+import net.agusdropout.bloodyhell.block.entity.custom.altar.BloodAltarBlockEntity;
 import net.agusdropout.bloodyhell.block.entity.custom.altar.MainBlasphemousBloodAltarBlockEntity;
+import net.agusdropout.bloodyhell.block.entity.custom.altar.MainBloodAltarBlockEntity;
 import net.agusdropout.bloodyhell.block.entity.custom.mechanism.*;
 import net.agusdropout.bloodyhell.block.entity.custom.mushroom.CrimsonLureMushroomBlockEntity;
 import net.agusdropout.bloodyhell.block.entity.custom.mushroom.VoraciousMushroomBlockEntity;
@@ -34,6 +36,14 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("main_blasphemous_blood_altar_entity", () ->
                     BlockEntityType.Builder.of(MainBlasphemousBloodAltarBlockEntity::new,
                             ModBlocks.MAIN_BLASPHEMOUS_BLOOD_ALTAR.get()).build(null));
+    public static final RegistryObject<BlockEntityType<BloodAltarBlockEntity>> BLOOD_ALTAR_BE =
+            BLOCK_ENTITIES.register("blood_altar_be", () ->
+                    BlockEntityType.Builder.of(BloodAltarBlockEntity::new,
+                            ModBlocks.BLOOD_ALTAR.get()).build(null));
+    public static final RegistryObject<BlockEntityType<MainBloodAltarBlockEntity>> MAIN_BLOOD_ALTAR_BE =
+            BLOCK_ENTITIES.register("main_blood_altar_be", () ->
+                    BlockEntityType.Builder.of(MainBloodAltarBlockEntity::new,
+                            ModBlocks.MAIN_BLOOD_ALTAR.get()).build(null));
     public static final RegistryObject<BlockEntityType<SelioraRestingBlockEntity>> SELIORA_RESTING =
             BLOCK_ENTITIES.register("seliora_resting_block_entity", () ->
                     BlockEntityType.Builder.of(SelioraRestingBlockEntity::new,

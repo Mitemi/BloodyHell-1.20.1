@@ -7,9 +7,8 @@ import net.agusdropout.bloodyhell.datagen.ModTags;
 import net.agusdropout.bloodyhell.entity.ModEntityTypes;
 import net.agusdropout.bloodyhell.entity.custom.TentacleEntity;
 import net.agusdropout.bloodyhell.item.ModItems;
-import net.agusdropout.bloodyhell.particle.ModParticles;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.BlackHoleParticleOptions;
-import net.agusdropout.bloodyhell.recipe.BloodAltarRecipe;
+import net.agusdropout.bloodyhell.recipe.BlasphemousBloodAltarRecipe;
 import net.agusdropout.bloodyhell.util.VanillaPacketDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -26,7 +25,6 @@ import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -145,8 +143,8 @@ public class MainBlasphemousBloodAltarBlock extends AbstractMainAltarBlock {
                     inventory.setItem(i, new ItemStack(referenceSet.get(i)));
                 }
 
-                Optional<BloodAltarRecipe> recipe = level.getRecipeManager()
-                        .getRecipeFor(BloodAltarRecipe.Type.INSTANCE, inventory, level);
+                Optional<BlasphemousBloodAltarRecipe> recipe = level.getRecipeManager()
+                        .getRecipeFor(BlasphemousBloodAltarRecipe.Type.INSTANCE, inventory, level);
 
                 if (recipe.isPresent()) {
                     ItemStack result = recipe.get().getResultItem(level.registryAccess());

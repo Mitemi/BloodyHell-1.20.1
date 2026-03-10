@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "bloodyhell:block/main_blood_altar"
+    },
+    "half=upper": {
+      "model": "bloodyhell:block/invisible_top"
+    }
+  }
+}

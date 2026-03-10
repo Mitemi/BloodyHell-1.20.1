@@ -1,4 +1,4 @@
-// 1.20.1	2026-03-09T21:43:38.6079314	Loot Tables
+// 1.20.1	2026-03-10T11:37:50.3515454	Loot Tables
 bdc15ebc2a02a82e61a914b0bd6b6d56c3d69ab7 data/bloodyhell/loot_tables/blocks/ancient_bloody_lamp.json
 3e5464c67bd9f7358ce85ae0627c72b91b7537a6 data/bloodyhell/loot_tables/blocks/ancient_bloody_stone_bricks.json
 b5521909998c93d083cf6fe797817ca8fdad5feb data/bloodyhell/loot_tables/blocks/ancient_bloody_stone_bricks_column.json
@@ -33,6 +33,7 @@ e1e6bc6cb2033ec8e0ba67f15ad11a3858fd3f06 data/bloodyhell/loot_tables/blocks/bloo
 966171494637000bffb03841d3ab0a2ed55cb218 data/bloodyhell/loot_tables/blocks/bloody_stone_tiles_stairs.json
 919f119c07b08eeb19dec925bc71c3ba529fce96 data/bloodyhell/loot_tables/blocks/bloody_stone_tiles_wall.json
 18c6fdebb0e5ec5ddc996c16e4964629e91458c4 data/bloodyhell/loot_tables/blocks/bloody_stone_wall.json
+aad7ca2f554f23cb83866c81f16c6f7e2b153e63 data/bloodyhell/loot_tables/blocks/blood_altar.json
 7489d2b0c11607f70e425a11ca30ca904405f9fb data/bloodyhell/loot_tables/blocks/blood_bush.json
 98eebfb6345089a147b98d3482cae40e330347b9 data/bloodyhell/loot_tables/blocks/blood_dirt_block.json
 c354eeca291380a6de666eed3c7553a4cdff9ec2 data/bloodyhell/loot_tables/blocks/blood_flower.json
@@ -82,6 +83,7 @@ cf1ac83c140ea550f9fe5599e9e31e5cbfa02592 data/bloodyhell/loot_tables/blocks/hang
 0738d6bac0804e7fd86f0048d5a0b6bf9324b421 data/bloodyhell/loot_tables/blocks/jumpy_block.json
 13068a1ee0ef9b5ef387481d5f9f5366ce85bef9 data/bloodyhell/loot_tables/blocks/light_mushroom_block.json
 35f0e904b0ba700c9b3488ab758119e85090bf73 data/bloodyhell/loot_tables/blocks/main_blasphemous_blood_altar.json
+efbde252fc53646e432e33543c03bcb2a1b645d4 data/bloodyhell/loot_tables/blocks/main_blood_altar.json
 7b9823899a8c5dd9b04b7f045ce07a3145f85f79 data/bloodyhell/loot_tables/blocks/polished_bloody_stone_block.json
 89e6ebeaabed35a43b02733c25cc1cd750e87ff0 data/bloodyhell/loot_tables/blocks/polished_bloody_stone_fence.json
 158ee4d1eec75987ac5eb774b7a0d4857e83af14 data/bloodyhell/loot_tables/blocks/polished_bloody_stone_fence_gate.json

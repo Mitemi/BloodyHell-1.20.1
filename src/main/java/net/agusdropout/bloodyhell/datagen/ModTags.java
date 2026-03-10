@@ -17,6 +17,7 @@ public class ModTags {
         public static final TagKey<Item> CRIMSONVEIL_CONSUMER = tag("spell_books");
         public static final TagKey<Item> RELIQUARY_UPGRADE_ITEM = tag("reliquary_upgrade_item");
         public static final TagKey<Item> RELIQUARY_RUNE_ITEM = tag("reliquary_rune_item");
+        public static final TagKey<Item> GEM_FRAMES = tag("gem_frames");
 
 
         public static final TagKey<Item> SANGUINITE_TIER_ITEMS = tag("sanguinite_tier_items");
