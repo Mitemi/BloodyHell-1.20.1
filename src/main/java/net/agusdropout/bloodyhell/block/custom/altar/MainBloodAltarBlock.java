@@ -3,15 +3,18 @@ package net.agusdropout.bloodyhell.block.custom.altar;
 import net.agusdropout.bloodyhell.block.base.AbstractMainAltarBlock;
 import net.agusdropout.bloodyhell.block.entity.custom.altar.MainBloodAltarBlockEntity;
 import net.agusdropout.bloodyhell.item.ModItems;
-import net.agusdropout.bloodyhell.recipe.BlasphemousBloodAltarRecipe;
+import net.agusdropout.bloodyhell.particle.ParticleOptions.MagicParticleOptions;
 import net.agusdropout.bloodyhell.recipe.BloodAltarRecipe;
 import net.agusdropout.bloodyhell.util.VanillaPacketDispatcher;
+import net.agusdropout.bloodyhell.util.visuals.ParticleHelper;
+import net.agusdropout.bloodyhell.util.visuals.SpellPalette;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
@@ -29,9 +32,11 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,19 +44,23 @@ import java.util.Optional;
 public class MainBloodAltarBlock extends AbstractMainAltarBlock {
 
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
+    public static final BooleanProperty HAS_RESULT = BooleanProperty.create("has_result");
 
     private static final VoxelShape LOWER_SHAPE = Block.box(0, 0, 0, 16, 32, 16);
     private static final VoxelShape UPPER_SHAPE = Block.box(0, -16, 0, 16, 16, 16);
 
     public MainBloodAltarBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(HALF, DoubleBlockHalf.LOWER).setValue(ACTIVE, false));
+        this.registerDefaultState(this.stateDefinition.any()
+                .setValue(HALF, DoubleBlockHalf.LOWER)
+                .setValue(ACTIVE, false)
+                .setValue(HAS_RESULT, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(ACTIVE);
+        builder.add(ACTIVE, HAS_RESULT);
     }
 
     @Override
@@ -73,6 +82,36 @@ public class MainBloodAltarBlock extends AbstractMainAltarBlock {
         return null;
     }
 
+    @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof MainBloodAltarBlockEntity altar) {
+                if (altar.hasResultItem()) {
+                    ItemEntity itemEntity = new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5, altar.getResultItem());
+                    level.addFreshEntity(itemEntity);
+                }
+            }
+        }
+        super.onRemove(state, level, pos, newState, isMoving);
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (state.getValue(HALF) != DoubleBlockHalf.LOWER) return;
+
+        if (state.getValue(HAS_RESULT)) {
+            if (random.nextFloat() < 0.8f) {
+                double x = pos.getX() + 0.5 + (random.nextDouble() - 0.5) * 0.4;
+                double y = pos.getY() + 2.0 + (random.nextDouble() - 0.5) * 0.4;
+                double z = pos.getZ() + 0.5 + (random.nextDouble() - 0.5) * 0.4;
+
+                MagicParticleOptions options = new MagicParticleOptions(SpellPalette.RHNULL.getRandomColor(), 0.3f, false, 25, true);
+                level.addParticle(options, x, y, z, 0, 0.02, 0);
+            }
+        }
+    }
+
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         if (blockState.getValue(HALF) == DoubleBlockHalf.UPPER) {
             BlockPos below = blockPos.below();
@@ -86,9 +125,25 @@ public class MainBloodAltarBlock extends AbstractMainAltarBlock {
         if (interactionHand == InteractionHand.MAIN_HAND) {
             ItemStack heldItem = player.getMainHandItem();
 
-            // 1. ACTIVATION
+            if (altar.hasResultItem() && !heldItem.is(ModItems.CORRUPTED_BLOOD_FLASK.get())) {
+                if (!level.isClientSide()) {
+                    ItemStack result = altar.getResultItem();
+                    if (!player.getInventory().add(result)) {
+                        player.drop(result, false);
+                    }
+                    altar.clearResultItem();
+                    VanillaPacketDispatcher.dispatchTEToNearbyPlayers(altar);
+
+                    level.setBlock(blockPos, blockState.setValue(HAS_RESULT, false), 3);
+                    level.setBlock(blockPos.above(), level.getBlockState(blockPos.above()).setValue(HAS_RESULT, false), 3);
+
+                    level.playSound(null, blockPos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, 0.5F, 1.2F);
+                }
+                return InteractionResult.sidedSuccess(level.isClientSide());
+            }
+
             if (heldItem.is(ModItems.CORRUPTED_BLOOD_FLASK.get())) {
-                if(!level.isClientSide()) {
+                if (!level.isClientSide()) {
                     altar.setActive(true);
                     if (!player.isCreative()) {
                         heldItem.shrink(1);
@@ -100,16 +155,16 @@ public class MainBloodAltarBlock extends AbstractMainAltarBlock {
                         }
                     }
                     VanillaPacketDispatcher.dispatchTEToNearbyPlayers(altar);
+
                     level.setBlock(blockPos, blockState.setValue(ACTIVE, true), 3);
                     level.setBlock(blockPos.above(), level.getBlockState(blockPos.above()).setValue(ACTIVE, true), 3);
+
                     level.playSound(null, blockPos, SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    handleVisualEffects(level, blockPos);
                 }
                 return InteractionResult.sidedSuccess(level.isClientSide());
 
-
-                // 2. RITUAL CRAFTING
             } else if (altar.isActive() && isAltarSetupReady(level, blockPos, BloodAltarBlock.class)) {
-
                 if (level.isClientSide()) return InteractionResult.SUCCESS;
 
                 List<List<Item>> itemsFromAltars = getItemsFromAltars(level, blockPos);
@@ -123,23 +178,22 @@ public class MainBloodAltarBlock extends AbstractMainAltarBlock {
                     inventory.setItem(i, new ItemStack(pedestalItems.get(0)));
                 }
 
-
                 Optional<BloodAltarRecipe> recipe = level.getRecipeManager()
                         .getRecipeFor(BloodAltarRecipe.Type.INSTANCE, inventory, level);
 
                 if (recipe.isPresent()) {
                     ItemStack result = recipe.get().getResultItem(level.registryAccess());
 
+                    dischargeAltars(level, blockPos);
+
                     consumeItemsFromAltars(level, blockPos);
 
+                    altar.setResultItem(result.copy());
                     altar.setActive(false);
-                    level.setBlock(blockPos, blockState.setValue(ACTIVE, false), 3);
-                    level.setBlock(blockPos.above(), level.getBlockState(blockPos.above()).setValue(ACTIVE, false), 3);
-                    VanillaPacketDispatcher.dispatchTEToNearbyPlayers(altar);
 
-                    ItemEntity itemEntity = new ItemEntity(level, blockPos.getX() + 0.5, blockPos.getY() + 1.5, blockPos.getZ() + 0.5, result.copy());
-                    itemEntity.setDeltaMovement(0, 0.1, 0);
-                    level.addFreshEntity(itemEntity);
+                    level.setBlock(blockPos, blockState.setValue(ACTIVE, false).setValue(HAS_RESULT, true), 3);
+                    level.setBlock(blockPos.above(), level.getBlockState(blockPos.above()).setValue(ACTIVE, false).setValue(HAS_RESULT, true), 3);
+                    VanillaPacketDispatcher.dispatchTEToNearbyPlayers(altar);
 
                     level.playSound(null, blockPos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                     if (level instanceof ServerLevel serverLevel) {
@@ -160,4 +214,49 @@ public class MainBloodAltarBlock extends AbstractMainAltarBlock {
         }
         return InteractionResult.PASS;
     }
+
+    private void handleVisualEffects(Level level, BlockPos blockPos) {
+        if (!level.isClientSide()) {
+            ServerLevel serverLevel = (ServerLevel) level;
+            BlockPos[] altarPositions = {blockPos.north(4), blockPos.east(4), blockPos.south(4), blockPos.west(4)};
+
+            Vector3f colorStart = new Vector3f(0.4f, 0.0f, 0.0f);
+            Vector3f colorEnd = new Vector3f(1.0f, 0.1f, 0.1f);
+
+            for (BlockPos pPos : altarPositions) {
+                BlockState pState = level.getBlockState(pPos);
+
+                if (pState.hasProperty(BloodAltarBlock.MAINCHARGED)) {
+                    level.setBlock(pPos, pState.setValue(BloodAltarBlock.MAINCHARGED, true), 3);
+                }
+
+                Vec3 startVec = new Vec3(blockPos.getX() + 0.5, blockPos.getY() + 1.5, blockPos.getZ() + 0.5);
+                Vec3 endVec = new Vec3(pPos.getX() + 0.5, pPos.getY() + 0.8, pPos.getZ() + 0.5);
+
+                int particleCount = 12;
+                for (int i = 0; i < particleCount; i++) {
+                    float ratio = (float) i / (particleCount - 1);
+                    Vector3f currentColor = ParticleHelper.gradient3(ratio, colorStart, colorEnd, colorEnd);
+
+                    MagicParticleOptions options = new MagicParticleOptions(currentColor, 0.6f, false, 40, true);
+
+                    Vec3 spawnPos = startVec.lerp(endVec, ratio);
+                    ParticleHelper.spawn(serverLevel, options, spawnPos.x, spawnPos.y, spawnPos.z, 0, 0.01, 0);
+                }
+            }
+        }
+    }
+
+        private void dischargeAltars(Level level, BlockPos blockPos) {
+            if (!level.isClientSide()) {
+                BlockPos[] altarPositions = {blockPos.north(4), blockPos.east(4), blockPos.south(4), blockPos.west(4)};
+                for (BlockPos pPos : altarPositions) {
+                    BlockState pState = level.getBlockState(pPos);
+                    if (pState.hasProperty(BloodAltarBlock.MAINCHARGED)) {
+                        level.setBlock(pPos, pState.setValue(BloodAltarBlock.MAINCHARGED, false), 3);
+                    }
+                }
+            }
+        }
+
 }

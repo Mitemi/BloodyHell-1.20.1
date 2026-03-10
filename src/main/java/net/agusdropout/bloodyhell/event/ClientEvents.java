@@ -290,6 +290,7 @@ public class ClientEvents {
             event.registerSpriteSet(ModParticles.GLITTER_PARTICLE.get(), GlitterParticle.Provider::new);
             event.registerSpriteSet(ModParticles.SMALL_GLITTER_PARTICLE.get(), SmallGlitterParticle.Provider::new);
             event.registerSpriteSet(ModParticles.MAGICAL_RING_PARTICLE.get(), spriteSet -> new MagicalRingParticle.Provider());
+            event.registerSpecial(ModParticles.NOISE_SPHERE_PARTICLE.get(), new NoiseSphereParticle.Provider());
         }
 
         @SubscribeEvent

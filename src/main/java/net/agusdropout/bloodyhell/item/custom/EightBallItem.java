@@ -11,10 +11,7 @@ import net.agusdropout.bloodyhell.entity.projectile.spell.RhnullPainThroneEntity
 import net.agusdropout.bloodyhell.networking.ModMessages;
 import net.agusdropout.bloodyhell.networking.packet.S2CPainThronePacket;
 import net.agusdropout.bloodyhell.particle.ModParticles;
-import net.agusdropout.bloodyhell.particle.ParticleOptions.EtherealSwirlOptions;
-import net.agusdropout.bloodyhell.particle.ParticleOptions.HollowRectangleOptions;
-import net.agusdropout.bloodyhell.particle.ParticleOptions.MagicalRingParticleOptions;
-import net.agusdropout.bloodyhell.particle.ParticleOptions.TetherParticleOptions;
+import net.agusdropout.bloodyhell.particle.ParticleOptions.*;
 import net.agusdropout.bloodyhell.util.bones.BoneManipulation;
 import net.agusdropout.bloodyhell.util.capability.InsightHelper;
 import net.agusdropout.bloodyhell.util.visuals.ParticleHelper;
@@ -56,18 +53,21 @@ public class EightBallItem extends Item {
         //triggerSummoningRitual(level, player.getX(), player.getY(), player.getZ(), 1.5f, 3.0f, 120, COLOR_CORE);
 
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
-            InsightHelper.addInsight( serverPlayer,10);
+        //   InsightHelper.addInsight( serverPlayer,10);
 
 //
-            FailedSonOfTheUnknown son = new FailedSonOfTheUnknown(ModEntityTypes.FAILED_SON_OF_THE_UNKNOWN.get(), level);
-           son.setOwnerUUID(player.getUUID());
-           son.setPos(player.getX(), player.getY(), player.getZ());
-           level.addFreshEntity(son);
+         //   FailedSonOfTheUnknown son = new FailedSonOfTheUnknown(ModEntityTypes.FAILED_SON_OF_THE_UNKNOWN.get(), level);
+        //  son.setOwnerUUID(player.getUUID());
+        //  son.setPos(player.getX(), player.getY(), player.getZ());
+        //  level.addFreshEntity(son);
 
-            WeepingOcularEntity eye = new WeepingOcularEntity(ModEntityTypes.WEEPING_OCULAR.get(), level);
-              eye.setOwnerUUID(player.getUUID());
-              eye.setPos(player.getX(), player.getY(), player.getZ());
-            level.addFreshEntity(eye);
+        //   WeepingOcularEntity eye = new WeepingOcularEntity(ModEntityTypes.WEEPING_OCULAR.get(), level);
+        //     eye.setOwnerUUID(player.getUUID());
+        //     eye.setPos(player.getX(), player.getY(), player.getZ());
+        //   level.addFreshEntity(eye);
+
+
+
 
      //int quantity = 5;
 //
@@ -98,8 +98,13 @@ public class EightBallItem extends Item {
          //   float radius = 1.5f;
          //   float height = 3.0f;
          //   double maxLifeTime = 120.0;
-//
-//
+       org.joml.Vector3f color = new org.joml.Vector3f(0.8f, 0.1f, 0.1f);
+       NoiseSphereParticleOptions options =
+                new NoiseSphereParticleOptions(color, 1.5f, 60);
+
+        level.addParticle(options,
+                player.getX() + 0.5, player.getY() + 1.5, player.getZ() + 0.5, 0.0, 0.0, 0.0);
+
 //
          //   level.addParticle(new MagicalRingParticleOptions(color, radius, height),
          //           player.getX(), player.getY(), player.getZ(),

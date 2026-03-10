@@ -180,6 +180,48 @@ public class RenderHelper {
         }
     }
 
+    public static void renderTexturedSphereNoLight(VertexConsumer consumer, PoseStack poseStack, float radius, int rings, int sectors, int r, int g, int b, int a, float uOffset, float vOffset) {
+        Matrix4f pose = poseStack.last().pose();
+
+        float R = 1.0f / (float) (rings - 1);
+        float S = 1.0f / (float) (sectors - 1);
+
+        for (int r1 = 0; r1 < rings - 1; r1++) {
+            for (int s1 = 0; s1 < sectors - 1; s1++) {
+
+                float y0 = (float) Math.sin(-Math.PI / 2 + Math.PI * r1 * R);
+                float x0 = (float) Math.cos(2 * Math.PI * s1 * S) * (float) Math.sin(Math.PI * r1 * R);
+                float z0 = (float) Math.sin(2 * Math.PI * s1 * S) * (float) Math.sin(Math.PI * r1 * R);
+                float u0 = s1 * S + uOffset;
+                float v0 = r1 * R + vOffset;
+
+                float y1 = (float) Math.sin(-Math.PI / 2 + Math.PI * (r1 + 1) * R);
+                float x1 = (float) Math.cos(2 * Math.PI * s1 * S) * (float) Math.sin(Math.PI * (r1 + 1) * R);
+                float z1 = (float) Math.sin(2 * Math.PI * s1 * S) * (float) Math.sin(Math.PI * (r1 + 1) * R);
+                float u1 = s1 * S + uOffset;
+                float v1 = (r1 + 1) * R + vOffset;
+
+                float y2 = (float) Math.sin(-Math.PI / 2 + Math.PI * (r1 + 1) * R);
+                float x2 = (float) Math.cos(2 * Math.PI * (s1 + 1) * S) * (float) Math.sin(Math.PI * (r1 + 1) * R);
+                float z2 = (float) Math.sin(2 * Math.PI * (s1 + 1) * S) * (float) Math.sin(Math.PI * (r1 + 1) * R);
+                float u2 = (s1 + 1) * S + uOffset;
+                float v2 = (r1 + 1) * R + vOffset;
+
+                float y3 = (float) Math.sin(-Math.PI / 2 + Math.PI * r1 * R);
+                float x3 = (float) Math.cos(2 * Math.PI * (s1 + 1) * S) * (float) Math.sin(Math.PI * r1 * R);
+                float z3 = (float) Math.sin(2 * Math.PI * (s1 + 1) * S) * (float) Math.sin(Math.PI * r1 * R);
+                float u3 = (s1 + 1) * S + uOffset;
+                float v3 = r1 * R + vOffset;
+
+
+                consumer.vertex(pose, x0 * radius, y0 * radius, z0 * radius).color(r, g, b, a).uv(u0, v0).endVertex();
+                consumer.vertex(pose, x1 * radius, y1 * radius, z1 * radius).color(r, g, b, a).uv(u1, v1).endVertex();
+                consumer.vertex(pose, x2 * radius, y2 * radius, z2 * radius).color(r, g, b, a).uv(u2, v2).endVertex();
+                consumer.vertex(pose, x3 * radius, y3 * radius, z3 * radius).color(r, g, b, a).uv(u3, v3).endVertex();
+            }
+        }
+    }
+
 
     public static void renderTexturedAuroraRing(VertexConsumer consumer, Matrix4f pose,
                                                 float radius, float maxHeight, int segments, float time,

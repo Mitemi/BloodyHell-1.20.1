@@ -1,10 +1,13 @@
 package net.agusdropout.bloodyhell.block.custom.altar;
 
 import net.agusdropout.bloodyhell.block.entity.custom.altar.BloodAltarBlockEntity;
+import net.agusdropout.bloodyhell.particle.ParticleOptions.MagicParticleOptions;
 import net.agusdropout.bloodyhell.util.VanillaPacketDispatcher;
+import net.agusdropout.bloodyhell.util.visuals.ParticleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -19,19 +22,21 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 public class BloodAltarBlock extends BaseEntityBlock {
 
     public static final BooleanProperty ITEMINSIDE = BooleanProperty.create("iteminside");
+    public static final BooleanProperty MAINCHARGED = BooleanProperty.create("maincharged");
 
     public BloodAltarBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(ITEMINSIDE, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(ITEMINSIDE, false).setValue(MAINCHARGED, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(ITEMINSIDE);
+        builder.add(ITEMINSIDE, MAINCHARGED);
     }
 
     @Override
@@ -94,5 +99,26 @@ public class BloodAltarBlock extends BaseEntityBlock {
             }
         }
         return InteractionResult.PASS;
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+        if (!state.getValue(MAINCHARGED)) return;
+
+        double x = pos.getX() + 0.5;
+        double y = pos.getY() + 1.1;
+        double z = pos.getZ() + 0.5;
+
+
+        if (random.nextFloat() < 0.4f) {
+            Vector3f bloodColor = new Vector3f(0.6f + random.nextFloat() * 0.4f, 0f, 0f);
+            MagicParticleOptions options = new MagicParticleOptions(bloodColor, 0.3f,false, 30, true);
+
+
+            double offX = (random.nextDouble() - 0.5) * 0.4;
+            double offZ = (random.nextDouble() - 0.5) * 0.4;
+
+            ParticleHelper.spawn(level, options, x + offX, y, z + offZ, 0, 0.03, 0);
+        }
     }
 }

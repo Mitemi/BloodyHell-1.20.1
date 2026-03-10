@@ -174,6 +174,13 @@ public class ModParticles {
                 }
             });
 
+    public static final RegistryObject<ParticleType<NoiseSphereParticleOptions>> NOISE_SPHERE_PARTICLE =
+            PARTICLE_TYPES.register("noise_sphere_particle", () -> new ParticleType<NoiseSphereParticleOptions>(false, NoiseSphereParticleOptions.DESERIALIZER) {
+                @Override
+                public Codec<NoiseSphereParticleOptions> codec() {
+                    return NoiseSphereParticleOptions.CODEC;
+                }
+            });
 
 
     public static void register(IEventBus eventBus) {
