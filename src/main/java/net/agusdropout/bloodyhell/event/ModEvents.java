@@ -83,6 +83,7 @@ public class ModEvents {
             event.put(ModEntityTypes.FAILED_REMNANT.get(), FailedRemnantEntity.setAttributes().build());
             event.put(ModEntityTypes.FAILED_SON_OF_THE_UNKNOWN.get(), FailedSonOfTheUnknown.setAttributes().build());
             event.put(ModEntityTypes.WEEPING_OCULAR.get(), WeepingOcularEntity.setAttributes().build());
+            event.put(ModEntityTypes.UNKNOWN_LANTERN.get(), UnknownLanternEntity.setAttributes().build());
         }
 
         public static AttributeSupplier.Builder createGenericAttributes() {

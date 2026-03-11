@@ -292,6 +292,19 @@ public class ModEntityTypes {
                         .updateInterval(1)
                         .build("hostile_unknown_entity_arms"));
 
+    public static final RegistryObject<EntityType<UnknownLanternEntity>> UNKNOWN_LANTERN =
+            ENTITY_TYPES.register("unknown_lantern",
+                    () -> EntityType.Builder.of(UnknownLanternEntity::new, MobCategory.MONSTER)
+                            .sized(1.2f, 3.5f)
+                            .build(new ResourceLocation(BloodyHell.MODID, "unknown_lantern").toString()));
+    public static final RegistryObject<EntityType<UnknownLanternRiftEntity>> UNKNOWN_LANTERN_RIFT =
+            ENTITY_TYPES.register("unknown_lantern_rift",
+                    () -> EntityType.Builder.<UnknownLanternRiftEntity>of(UnknownLanternRiftEntity::new, MobCategory.MISC)
+                            .sized(1.5f, 0.5f)
+                            .clientTrackingRange(10)
+                            .build(new ResourceLocation(BloodyHell.MODID, "unknown_lantern_rift").toString()));
+
+
 
 
 

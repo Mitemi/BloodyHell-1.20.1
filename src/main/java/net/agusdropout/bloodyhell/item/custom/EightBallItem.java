@@ -1,6 +1,7 @@
 package net.agusdropout.bloodyhell.item.custom;
 
 import net.agusdropout.bloodyhell.entity.ModEntityTypes;
+import net.agusdropout.bloodyhell.entity.custom.UnknownLanternEntity;
 import net.agusdropout.bloodyhell.entity.effects.BlackHoleEntity;
 import net.agusdropout.bloodyhell.entity.minions.custom.FailedSonOfTheUnknown;
 import net.agusdropout.bloodyhell.entity.minions.custom.WeepingOcularEntity;
@@ -53,7 +54,15 @@ public class EightBallItem extends Item {
         //triggerSummoningRitual(level, player.getX(), player.getY(), player.getZ(), 1.5f, 3.0f, 120, COLOR_CORE);
 
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer) {
-        //   InsightHelper.addInsight( serverPlayer,10);
+           //InsightHelper.addInsight( serverPlayer,10);
+
+            UnknownLanternEntity lantern = new UnknownLanternEntity(ModEntityTypes.UNKNOWN_LANTERN.get(), level);
+            lantern.setTargetPlayer(player.getUUID());
+            lantern.setPos(player.getX(), player.getY(), player.getZ());
+            level.addFreshEntity(lantern);
+
+
+
 
 //
          //   FailedSonOfTheUnknown son = new FailedSonOfTheUnknown(ModEntityTypes.FAILED_SON_OF_THE_UNKNOWN.get(), level);

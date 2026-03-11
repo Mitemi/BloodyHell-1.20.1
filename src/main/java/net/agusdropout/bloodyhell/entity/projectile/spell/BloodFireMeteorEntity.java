@@ -73,8 +73,6 @@ public class BloodFireMeteorEntity extends Projectile implements IBloodFlammable
         this.setOwner(owner);
         this.damage = damage;
         this.speed = speed;
-
-        // Initialize Synched Data
         this.entityData.set(DATA_SCALE, size);
 
         calculateSmartSpawnPosition(owner, level);
@@ -89,8 +87,6 @@ public class BloodFireMeteorEntity extends Projectile implements IBloodFlammable
 
 
         this.setDataGrowTime(DEFAULT_GROW_TIME+ticksDelay);
-
-        // Initialize Synched Data
         this.entityData.set(DATA_SCALE, size);
         configureSpell(gems);
     }
@@ -99,8 +95,6 @@ public class BloodFireMeteorEntity extends Projectile implements IBloodFlammable
         Vec3 start = owner.getEyePosition();
         double targetHeight = 5.0;
         Vec3 end = start.add(0, targetHeight, 0);
-
-        // Raycast upwards to find the ceiling
         BlockHitResult result = level.clip(new ClipContext(start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner));
 
         double spawnY;
@@ -110,7 +104,6 @@ public class BloodFireMeteorEntity extends Projectile implements IBloodFlammable
             spawnY = start.y + targetHeight;
         }
 
-        // Safety check to prevent spawning inside the owner
         if (spawnY < owner.getEyeY()) {
             spawnY = owner.getEyeY() + 0.5;
         }
@@ -142,21 +135,18 @@ public class BloodFireMeteorEntity extends Projectile implements IBloodFlammable
         float currentScale = getScale();
         int growTime = getGrowTime();
 
-        // 1. Charging Phase
         if (!launched) {
             if (this.tickCount >= growTime) {
                 if (!this.level().isClientSide) {
                     launch();
                 }
             } else {
-                // Pitch rises as it gets closer to launch
                 if (this.tickCount % 5 == 0) {
                     float pitch = 1.0f + (tickCount / (float) growTime);
                     this.level().playSound(null, getX(), getY(), getZ(), SoundEvents.BEACON_AMBIENT, SoundSource.HOSTILE, pitch, 0.5f);
                 }
             }
         }
-        // 2. Flight Phase
         else {
             HitResult hitResult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
             if (hitResult.getType() != HitResult.Type.MISS) {
@@ -166,12 +156,10 @@ public class BloodFireMeteorEntity extends Projectile implements IBloodFlammable
             this.setPos(this.getX() + motion.x, this.getY() + motion.y, this.getZ() + motion.z);
         }
 
-        // 3. Visuals
         if (this.level().isClientSide) {
             spawnParticles(currentScale);
         }
 
-        // 4. Cleanup
         if (this.tickCount > 200 + growTime) discard();
     }
 
@@ -184,12 +172,10 @@ public class BloodFireMeteorEntity extends Projectile implements IBloodFlammable
             Vec3 dir;
 
             if (owner instanceof net.minecraft.world.entity.Mob mob && mob.getTarget() != null) {
-                // Robust AI Aiming
                 LivingEntity target = mob.getTarget();
                 Vec3 targetPos = target.getBoundingBox().getCenter();
                 dir = targetPos.subtract(this.position()).normalize();
             } else {
-                // Player / Default Aiming
                 Vec3 look = owner.getLookAngle();
                 Vec3 targetPos = owner.getEyePosition().add(look.scale(20.0));
                 dir = targetPos.subtract(this.position()).normalize();
@@ -211,12 +197,11 @@ public class BloodFireMeteorEntity extends Projectile implements IBloodFlammable
 
         float size = getScale();
 
-        // 1. Effects
         EntityCameraShake.cameraShake(this.level(), this.position(), 20.0f * size, 1.5f, 15, 10);
         this.level().playSound(null, getX(), getY(), getZ(), SoundEvents.GENERIC_EXPLODE, SoundSource.HOSTILE, 2.0f, 0.6f);
         this.level().broadcastEntityEvent(this, (byte) 3);
 
-        // 2. Interactions
+
         spawnFallingBlocks(size);
         spawnBloodStain(size);
         placeFire(size);
@@ -226,7 +211,6 @@ public class BloodFireMeteorEntity extends Projectile implements IBloodFlammable
     }
 
     private void damageArea(float size) {
-        // Area scales with size
         AABB area = this.getBoundingBox().inflate(explosionRadius * size);
         List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, area);
 

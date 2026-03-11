@@ -119,6 +119,7 @@ public class ClientEvents {
                 float shakeAmplitude = 0;
                 for (EntityCameraShake cameraShake : player.level().getEntitiesOfClass(EntityCameraShake.class, player.getBoundingBox().inflate(20, 20, 20))) {
                     if (cameraShake.distanceTo(player) < cameraShake.getRadius()) {
+                        System.out.println("Applying camera shake from " + cameraShake + " with radius " + cameraShake.getRadius() + " and shake amount " + cameraShake.getShakeAmount(player, delta));
                         shakeAmplitude += cameraShake.getShakeAmount(player, delta);
                     }
                 }

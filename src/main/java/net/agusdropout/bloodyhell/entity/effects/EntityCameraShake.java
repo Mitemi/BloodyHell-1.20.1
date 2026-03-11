@@ -117,4 +117,13 @@ public class EntityCameraShake extends Entity {
             world.addFreshEntity(cameraShake);
         }
     }
+
+    @OnlyIn(Dist.CLIENT)
+    public static void clientCameraShake(Level world, Vec3 position, float radius, float magnitude, int duration, int fadeDuration) {
+        if (world.isClientSide && world instanceof net.minecraft.client.multiplayer.ClientLevel clientLevel) {
+            EntityCameraShake cameraShake = new EntityCameraShake(world, position, radius, magnitude, duration, fadeDuration);
+            cameraShake.setId(-10000 - world.random.nextInt(100000));
+            clientLevel.putNonPlayerEntity(cameraShake.getId(), cameraShake);
+        }
+    }
 }

@@ -53,6 +53,10 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> WEEPING_OCULAR_WING = registerSoundEvents("weeping_ocular_wing");
     public static final RegistryObject<SoundEvent> WEEPING_TEAR_SHOOT = registerSoundEvents("weeping_tear_shoot");
     public static final RegistryObject<SoundEvent> HOSTILE_ARM_SCREAM = registerSoundEvents("hostile_arm_scream");
+    public static final RegistryObject<SoundEvent> UNKNOWN_LANTERN_HEARTBEAT = registerSoundEvents("unknown_lantern_heartbeat");
+    public static final RegistryObject<SoundEvent> UNKNOWN_LANTERN_AMBIENT_1 = registerSoundEvents("unknown_lantern_ambient_1");
+
+    public static final RegistryObject<SoundEvent> UNKNOWN_LANTERN_AMBIENT_2 = registerSoundEvents("unknown_lantern_ambient_2");
 
 
 

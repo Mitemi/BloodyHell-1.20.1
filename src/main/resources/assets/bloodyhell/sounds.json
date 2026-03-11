@@ -240,5 +240,39 @@
     "sounds": [
       "bloodyhell:hostile_arm_scream"
     ]
+  },
+  "unknown_lantern_heartbeat": {
+    "category": "hostile",
+    "subtitle": "subtitle.bloodyhell.unknown_lantern_heartbeat",
+    "sounds": [
+      {
+        "name": "bloodyhell:heartbeat",
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    ]
+  },
+  "unknown_lantern_ambient_1": {
+    "category": "hostile",
+    "subtitle": "subtitle.bloodyhell.unknown_lantern_ambient",
+    "sounds": [
+      {
+        "name": "bloodyhell:unknown_lantern_ambient_1",
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    ]
+  },
+  "unknown_lantern_ambient_2": {
+    "category": "hostile",
+    "subtitle": "subtitle.bloodyhell.unknown_lantern_ambient",
+    "sounds": [
+      {
+        "name": "bloodyhell:unknown_lantern_ambient_2",
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    ]
   }
+
 }
