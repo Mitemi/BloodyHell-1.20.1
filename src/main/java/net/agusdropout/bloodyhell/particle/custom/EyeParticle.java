@@ -1,15 +1,19 @@
 package net.agusdropout.bloodyhell.particle.custom;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import org.joml.Vector3f;
@@ -176,9 +180,35 @@ public class EyeParticle extends TextureSheetParticle {
 
     @Override
     public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        return IGNORE_FOG_RENDER_TYPE;
     }
 
+    public static final ParticleRenderType IGNORE_FOG_RENDER_TYPE = new ParticleRenderType() {
+        @Override
+        public void begin(BufferBuilder builder, TextureManager textureManager) {
+            RenderSystem.enableBlend();
+            RenderSystem.blendFunc(com.mojang.blaze3d.platform.GlStateManager.SourceFactor.SRC_ALPHA,
+                    com.mojang.blaze3d.platform.GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+
+
+            RenderSystem.setShader(GameRenderer::getParticleShader);
+            RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
+            RenderSystem.setShaderFogStart(Float.MAX_VALUE);
+            RenderSystem.setShaderFogEnd(Float.MAX_VALUE);
+
+            builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
+        }
+
+        @Override
+        public void end(Tesselator tesselator) {
+            tesselator.end();
+        }
+
+        @Override
+        public String toString() {
+            return "EYE_NO_FOG";
+        }
+    };
     @OnlyIn(Dist.CLIENT)
     public static class Provider implements ParticleProvider<SimpleParticleType> {
         private final SpriteSet spriteSet;

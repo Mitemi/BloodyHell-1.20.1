@@ -1,4 +1,4 @@
-// 1.20.1	2026-03-10T12:26:07.8106156	Item Models: bloodyhell
+// 1.20.1	2026-03-12T13:01:34.8772292	Item Models: bloodyhell
 e033c901896a75f6a136de4a515a0448261803b7 assets/bloodyhell/models/item/amulet_of_ancestral_blood.json
 0daad63d3db69ced8f0038465c04abe47a00815e assets/bloodyhell/models/item/ancient_bloody_lamp.json
 77c198480c0204d88a6582721584ec72818df45b assets/bloodyhell/models/item/ancient_bloody_stone_bricks.json
@@ -54,6 +54,7 @@ a1814ad5586de1a0eef7d19eb5a0429af9810f00 assets/bloodyhell/models/item/bloody_st
 c3448e8886690f83221cb730ea17f18aa3e5208b assets/bloodyhell/models/item/blood_boots.json
 186d7b68fa4662886920a7a127bfeced66f4b86d assets/bloodyhell/models/item/blood_bucket.json
 377fc4900ef4e80a5b08b2a4d6405f282e52a775 assets/bloodyhell/models/item/blood_chestplate.json
+81631f5fb56327395e396721ab092f657bd076cb assets/bloodyhell/models/item/blood_echo_shard.json
 7255c6cc57384344c27e12c485944b5d41c6711d assets/bloodyhell/models/item/blood_fire.json
 08f3e91ce44841765fe7d5adc04fefa92e86c213 assets/bloodyhell/models/item/blood_flask.json
 9d344eb71c2cf1433524bc33bbaa5e169f682648 assets/bloodyhell/models/item/blood_flower.json
@@ -91,6 +92,7 @@ a1131748ba8beba29ac09e37204117bcf71c8534 assets/bloodyhell/models/item/failed_re
 bbfff094130350ee848c3a6a2d8a5daa4de8d7a2 assets/bloodyhell/models/item/filled_blood_flask.json
 3b7697af93a6ede25bd0cd86fdccf46e2d9cc325 assets/bloodyhell/models/item/filled_rhnull_blood_flask.json
 65a6a5acefacc1ec9f8242afffab963e29c3afa2 assets/bloodyhell/models/item/fully_eroded_blasphemous_sandstone.json
+fd351c9ca8ade5011f83d21366e06d3991ae23cb assets/bloodyhell/models/item/gaze_of_the_unknown.json
 23982bc52544092e63c6cb8e97a5ebd535ca6ef9 assets/bloodyhell/models/item/glowing_crystal.json
 e1f78623e8a208ea87b34bf8c60bc34c8c7545f8 assets/bloodyhell/models/item/glowing_crystal_glass_block.json
 a397b608816eda99958178fd959e947a9106c880 assets/bloodyhell/models/item/glow_fruit.json

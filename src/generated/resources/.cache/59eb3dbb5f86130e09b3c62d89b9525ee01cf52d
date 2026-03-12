@@ -1,4 +1,4 @@
-// 1.20.1	2026-03-10T11:37:50.3515454	Loot Tables
+// 1.20.1	2026-03-12T13:01:34.8747249	Loot Tables
 bdc15ebc2a02a82e61a914b0bd6b6d56c3d69ab7 data/bloodyhell/loot_tables/blocks/ancient_bloody_lamp.json
 3e5464c67bd9f7358ce85ae0627c72b91b7537a6 data/bloodyhell/loot_tables/blocks/ancient_bloody_stone_bricks.json
 b5521909998c93d083cf6fe797817ca8fdad5feb data/bloodyhell/loot_tables/blocks/ancient_bloody_stone_bricks_column.json
@@ -168,6 +168,7 @@ a0b9b0834c7af1c258c45da6db8e9f55e9d1ec23 data/bloodyhell/loot_tables/entities/sm
 13b5d6c62ba6d428ba0de70185f90a1f2b7b7281 data/bloodyhell/loot_tables/entities/starfall_projectile.json
 5d531eef87f48765d037849a1e6284f6ad654933 data/bloodyhell/loot_tables/entities/unknown_entity_arms.json
 cdd2ccda583c4c805db621c06f7f46365c116a35 data/bloodyhell/loot_tables/entities/unknown_eye_entity.json
+d10572cb157f685cb1fcd05668cbeae04b416033 data/bloodyhell/loot_tables/entities/unknown_lantern.json
 3ed025abd19a455db4ee3ae060cb2f78ff40c71c data/bloodyhell/loot_tables/entities/veil_stalker.json
 302272df1bec74b8672bdd314e6c7bf0235d4646 data/bloodyhell/loot_tables/entities/veinraver_entity.json
 0e7c49e407c7e538f34945268d44e2946b04aeda data/bloodyhell/loot_tables/entities/vesper.json

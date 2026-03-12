@@ -1,12 +1,14 @@
 package net.agusdropout.bloodyhell.entity.custom;
 
 import net.agusdropout.bloodyhell.entity.ModEntityTypes;
+import net.agusdropout.bloodyhell.entity.ai.goals.LanternPersecutionGoal;
 import net.agusdropout.bloodyhell.entity.base.InsightEntity;
 import net.agusdropout.bloodyhell.entity.client.UnknownLanternRenderer;
 import net.agusdropout.bloodyhell.entity.effects.EntityCameraShake;
 import net.agusdropout.bloodyhell.entity.effects.UnknownLanternRiftEntity;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.BlackHoleParticleOptions;
 import net.agusdropout.bloodyhell.sound.ModSounds;
+import net.agusdropout.bloodyhell.util.capability.InsightHelper;
 import net.agusdropout.bloodyhell.util.visuals.ColorHelper;
 import net.agusdropout.bloodyhell.util.visuals.SpellPalette;
 import net.minecraft.client.Minecraft;
@@ -15,11 +17,16 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -29,6 +36,8 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -36,6 +45,7 @@ import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
@@ -49,6 +59,9 @@ public class UnknownLanternEntity extends Monster implements GeoEntity, InsightE
 
     private static final EntityDataAccessor<Boolean> IS_SUMMONING = SynchedEntityData.defineId(UnknownLanternEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Optional<UUID>> TARGET_PLAYER = SynchedEntityData.defineId(UnknownLanternEntity.class, EntityDataSerializers.OPTIONAL_UUID);
+    private static final EntityDataAccessor<Boolean> IS_GAZING = SynchedEntityData.defineId(UnknownLanternEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Float> GAZE_INTENSITY = SynchedEntityData.defineId(UnknownLanternEntity.class, EntityDataSerializers.FLOAT);
+
 
     private static final RawAnimation SUMMON_ANIM = RawAnimation.begin().thenPlay("summon");
     private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("walk");
@@ -63,6 +76,7 @@ public class UnknownLanternEntity extends Monster implements GeoEntity, InsightE
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.goalSelector.addGoal(2, new LanternPersecutionGoal(this));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 8.0F));
@@ -82,6 +96,8 @@ public class UnknownLanternEntity extends Monster implements GeoEntity, InsightE
         super.defineSynchedData();
         this.entityData.define(IS_SUMMONING, true);
         this.entityData.define(TARGET_PLAYER, Optional.empty());
+        this.entityData.define(IS_GAZING, false);
+        this.entityData.define(GAZE_INTENSITY, 0.0f);
     }
 
     public void setTargetPlayer(UUID uuid) {
@@ -124,7 +140,7 @@ public class UnknownLanternEntity extends Monster implements GeoEntity, InsightE
     @Override
     public void tick() {
         super.tick();
-
+        givePlayerEffects();
         if (this.isSummoning()) {
             this.summonTicks++;
             if (!this.level().isClientSide()) {
@@ -155,9 +171,24 @@ public class UnknownLanternEntity extends Monster implements GeoEntity, InsightE
             }
         }
 
+        manageCrouching();
+
         if (!this.level().isClientSide() && this.isAlive()) {
             if (this.tickCount % 40 == 10) {
                 this.playSound(ModSounds.UNKNOWN_LANTERN_HEARTBEAT.get(), 0.6F, 1.0F);
+            }
+        }
+    }
+
+
+    private void givePlayerEffects(){
+        if (this.tickCount % 20 == 0 && this.getTargetPlayer() != null) {
+            if (this.level() instanceof ServerLevel serverLevel) {
+                Entity target = serverLevel.getEntity(this.getTargetPlayer());
+                if (target instanceof Player player) {
+                    player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60, 0, false, false, false));
+                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 60, 2, false, false, false));
+                }
             }
         }
     }
@@ -170,6 +201,12 @@ public class UnknownLanternEntity extends Monster implements GeoEntity, InsightE
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         AnimationController<UnknownLanternEntity> controller = new AnimationController<>(this, "controller", 5, event -> {
             if (this.isSummoning()) return event.setAndContinue(SUMMON_ANIM);
+
+            if (this.getPose() == Pose.CROUCHING) {
+                event.getController().setAnimation(RawAnimation.begin().thenLoop("crouch_walk"));
+                return PlayState.CONTINUE;
+            }
+
             if (event.isMoving()) return event.setAndContinue(WALK_ANIM);
             return event.setAndContinue(IDLE_ANIM);
         });
@@ -224,11 +261,15 @@ public class UnknownLanternEntity extends Monster implements GeoEntity, InsightE
 
     public void success(Player player) {
         if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
-            // TODO: Call your server-side Insight capability/data modifier here!
+
+            if(player instanceof ServerPlayer serverPlayer) {
+                InsightHelper.addInsight(serverPlayer, 10);
+            }
 
             this.level().playSound(null, this.blockPosition(), SoundEvents.AMETHYST_CLUSTER_BREAK, this.getSoundSource(), 2.0F, 1.0F);
             this.level().playSound(null, this.blockPosition(), SoundEvents.EVOKER_CAST_SPELL, this.getSoundSource(), 1.5F, 1.2F);
-
+            player.removeEffect(MobEffects.BLINDNESS);
+            player.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
             serverLevel.sendParticles(ParticleTypes.END_ROD,
                     this.getX(), this.getY() + 0.5, this.getZ(),
                     40, 0.5, 0.5, 0.5, 0.1);
@@ -239,9 +280,17 @@ public class UnknownLanternEntity extends Monster implements GeoEntity, InsightE
 
     public void fail() {
         if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
-            List<Player> nearbyPlayers = this.level().getEntitiesOfClass(Player.class, this.getBoundingBox().inflate(32.0D));
-            for (Player victim : nearbyPlayers) {
-                // TODO: Call your server-side Insight modifier here!
+
+
+            if (this.getTargetPlayer() != null) {
+                Entity target = serverLevel.getEntity(this.getTargetPlayer());
+                if (target instanceof Player player) {
+                    player.removeEffect(MobEffects.BLINDNESS);
+                    player.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
+                }
+                if(target instanceof ServerPlayer serverPlayer) {
+                    InsightHelper.subInsight(serverPlayer, 5);
+                }
             }
 
             this.level().playSound(null, this.blockPosition(), SoundEvents.SCULK_SHRIEKER_SHRIEK, this.getSoundSource(), 2.0F, 0.5F);
@@ -256,6 +305,56 @@ public class UnknownLanternEntity extends Monster implements GeoEntity, InsightE
                     50, 0.5, 0.5, 0.5, 0.2);
 
             this.discard();
+        }
+    }
+
+    public void setGazing(boolean isGazing) {
+        this.entityData.set(IS_GAZING, isGazing);
+    }
+
+    public boolean isGazing() {
+        return this.entityData.get(IS_GAZING);
+    }
+
+    public void setGazeIntensity(float intensity) {
+        this.entityData.set(GAZE_INTENSITY, intensity);
+    }
+
+    public float getGazeIntensity() {
+        return this.entityData.get(GAZE_INTENSITY);
+    }
+
+    @Override
+    public EntityDimensions getDimensions(Pose pose) {
+
+        if (pose == Pose.CROUCHING) {
+            return EntityDimensions.scalable(0.8F, 1.9F);
+        }
+
+        return EntityDimensions.scalable(0.8F, 3.0F);
+    }
+
+    private void manageCrouching() {
+        if (!this.level().isClientSide() && this.isAlive()) {
+
+
+            Vec3 forward = Vec3.directionFromRotation(0, this.yBodyRot).normalize();
+            AABB headBox = this.getBoundingBox().setMinY(this.getY() + 1.9D).setMaxY(this.getY() + 3.0D);
+            AABB futureHeadBox = headBox.move(forward.x * 1.0D, 0.0D, forward.z * 1.0D);
+
+
+            boolean ceilingIsLow = !this.level().noCollision(this, headBox) ||
+                    !this.level().noCollision(this, futureHeadBox);
+
+            if (ceilingIsLow && this.getPose() != Pose.CROUCHING) {
+                this.setPose(Pose.CROUCHING);
+                this.refreshDimensions();
+            }
+            else if (!ceilingIsLow && this.getPose() == Pose.CROUCHING) {
+                this.setPose(Pose.STANDING);
+                this.refreshDimensions();
+            }
+
         }
     }
 

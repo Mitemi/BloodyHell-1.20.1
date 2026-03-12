@@ -41,6 +41,12 @@ public class BloodDimensionSkyRenderer {
     public static boolean renderSky(ClientLevel level, float partialTicks, PoseStack poseStack,
                                     Camera camera, Matrix4f projectionMatrix, Runnable setupFog) {
 
+        RenderSystem.setShaderFogStart(Float.MAX_VALUE);
+        RenderSystem.setShaderFogEnd(Float.MAX_VALUE);
+        setupFog.run();
+
+
+
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, SKY_TEXTURE);
 

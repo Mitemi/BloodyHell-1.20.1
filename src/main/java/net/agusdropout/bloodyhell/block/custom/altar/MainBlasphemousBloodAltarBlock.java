@@ -150,9 +150,6 @@ public class MainBlasphemousBloodAltarBlock extends AbstractMainAltarBlock {
                     ItemStack result = recipe.get().getResultItem(level.registryAccess());
                     Item resultItem = result.getItem();
                     consumeItemsFromAltars(level, blockPos);
-
-
-
                     return finalizeRitualServer(level, blockPos, player, blockState, altar, result);
 
                 } else {

@@ -273,6 +273,15 @@
         "pitch": 1.0
       }
     ]
+  },
+  "unknown_lantern_gaze": {
+    "category": "hostile",
+    "subtitle": "bloodyhell.subtitle.unknown_lantern_gaze",
+    "sounds": [
+      {
+        "name": "bloodyhell:unknown_lantern_gaze",
+        "stream": true
+      }
+    ]
   }
-
 }

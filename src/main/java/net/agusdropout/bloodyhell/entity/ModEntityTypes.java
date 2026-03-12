@@ -295,7 +295,7 @@ public class ModEntityTypes {
     public static final RegistryObject<EntityType<UnknownLanternEntity>> UNKNOWN_LANTERN =
             ENTITY_TYPES.register("unknown_lantern",
                     () -> EntityType.Builder.of(UnknownLanternEntity::new, MobCategory.MONSTER)
-                            .sized(1.2f, 3.5f)
+                            .sized(1.2f, 2.5f)
                             .build(new ResourceLocation(BloodyHell.MODID, "unknown_lantern").toString()));
     public static final RegistryObject<EntityType<UnknownLanternRiftEntity>> UNKNOWN_LANTERN_RIFT =
             ENTITY_TYPES.register("unknown_lantern_rift",

@@ -28,7 +28,7 @@ public class BloodDimensionRenderInfo extends DimensionSpecialEffects {
     }
 
     @Override
-    public Vec3 getBrightnessDependentFogColor(Vec3 biomeFogColor, float daylight) { // For modifying biome fog color with daycycle
+    public Vec3 getBrightnessDependentFogColor(Vec3 biomeFogColor, float daylight) {
         return biomeFogColor.multiply(0,0 , 0);
     }
 

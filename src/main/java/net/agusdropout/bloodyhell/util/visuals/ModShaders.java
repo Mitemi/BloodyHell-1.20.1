@@ -10,4 +10,5 @@ public class ModShaders {
     public static ShaderInstance ETHEREAL_SWIRL_SHADER;
     public static ShaderInstance INSIGHT_DISTORTION_SHADER;
     public static ShaderInstance BLACK_HOLE_SHADER;
+    public static ShaderInstance FRENZY_TENTACLES;
 }

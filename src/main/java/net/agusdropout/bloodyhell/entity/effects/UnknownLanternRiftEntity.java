@@ -62,6 +62,15 @@ public class UnknownLanternRiftEntity extends BlackHoleEntity {
             this.failRift();
             return;
         }
+        if(this.tickCount % 50 == 0 && !this.level().isClientSide()) {
+            Entity owner = this.level() instanceof ServerLevel serverLevel ? serverLevel.getEntity(this.getLanternOwner()) : null;
+            if(owner == null) {
+                this.failRift();
+                return;
+            }
+        }
+
+
         super.tick();
     }
 

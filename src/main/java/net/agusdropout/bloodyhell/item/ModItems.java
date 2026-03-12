@@ -370,8 +370,12 @@ public class ModItems {
             new Item( new Item.Properties()));
 
 
-    //public static final RegistryObject<Item> GAZE_OF_THE_UNKNOWN = ITEMS.register("gaze_of_the_unknown", () -> new GazeOfTheUnknown(
-    //        new Item.Properties().stacksTo(1).food(new FoodProperties.Builder().nutrition(0).alwaysEat().build())));
+    public static final RegistryObject<Item> GAZE_OF_THE_UNKNOWN = ITEMS.register("gaze_of_the_unknown",
+            () -> new GazeOfTheUnknownItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).alwaysEat().build()), 15.0D, 30.0D));
+
+
+    public static final RegistryObject<Item> BLOOD_ECHO_SHARD = ITEMS.register("blood_echo_shard",
+            () -> new BloodEchoShardItem(new Item.Properties().stacksTo(64)));
 
     public static final RegistryObject<Item> BLASPHEMITE_SWORD = ITEMS.register("blasphemite_sword",() -> new SwordItem(ModToolTiers.BLASPHEMITE,3,-2.4F,
             new Item.Properties().stacksTo(1)));

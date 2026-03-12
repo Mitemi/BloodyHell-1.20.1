@@ -429,6 +429,13 @@ public class ModLootTables extends LootTableProvider {
                     )
             );
 
+            this.add(ModEntityTypes.UNKNOWN_LANTERN.get(), LootTable.lootTable()
+                    .withPool(LootPool.lootPool()
+                            .setRolls(ConstantValue.exactly(1))
+                    )
+            );
+
+
             this.add(ModEntityTypes.BLOOD_SEEKER.get(), LootTable.lootTable()
                     .withPool(LootPool.lootPool()
                             .setRolls(ConstantValue.exactly(1))
@@ -574,15 +581,14 @@ public class ModLootTables extends LootTableProvider {
                     .withPool(LootPool.lootPool()
                             .setRolls(ConstantValue.exactly(1))
                             .add(LootItem.lootTableItem(ModItems.FAILED_REMNANT_ASHES.get())
-                                    // 1. Set base count to 1
                                     .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1.0F)))
-                                    // 2. Add the Chance Condition (0.45 = 45% chance)
                                     .when(LootItemRandomChanceCondition.randomChance(0.45F))
-                                    // 3. Looting Bonus
                                     .apply(LootingEnchantFunction.lootingMultiplier(UniformGenerator.between(0.0F, 1.0F)))
                             )
                     )
             );
+
+
 
 
 

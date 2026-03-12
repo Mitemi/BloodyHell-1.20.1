@@ -239,6 +239,8 @@ public class ModCreativeModeTabs {
 
                         // --- Unknown Entity ---
                         output.accept(ModItems.UNKNOWN_ENTITY_FINGER.get());
+                        output.accept(ModItems.GAZE_OF_THE_UNKNOWN.get());
+                        output.accept(ModItems.BLOOD_ECHO_SHARD.get());
 
                         // --- Spell Book ---
                         output.accept(ModItems.BLOOD_FIRE_METEOR_SPELLBOOK.get());
