@@ -4,10 +4,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.agusdropout.bloodyhell.BloodyHell;
 import net.agusdropout.bloodyhell.client.data.ClientInsightData;
+import net.agusdropout.bloodyhell.item.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
@@ -21,7 +24,13 @@ public class InsightHudOverlay {
     private static final Minecraft minecraft = Minecraft.getInstance();
 
     public static boolean shouldDisplayBar() {
-        return ClientInsightData.getPlayerInsight() > 0;
+        Minecraft mc = Minecraft.getInstance();
+        Player player = mc.player;
+        if (!(player == null) && player.getItemInHand(InteractionHand.MAIN_HAND).is(ModItems.HERETIC_SACRIFICIAL_DAGGER.get())) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static void renderOverlay(ForgeGui gui, GuiGraphics guiGraphics, float pt, int width, int height) {

@@ -2,7 +2,9 @@ package net.agusdropout.bloodyhell.item.custom;
 
 import net.agusdropout.bloodyhell.entity.ModEntityTypes;
 import net.agusdropout.bloodyhell.entity.custom.UnknownLanternEntity;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -28,7 +30,7 @@ public class GazeOfTheUnknownItem extends Item {
 
             double angle = level.random.nextDouble() * Math.PI * 2;
             double distance = this.minDistance + level.random.nextDouble() * (this.maxDistance - this.minDistance);
-
+            player.displayClientMessage(Component.literal("Your search of forbidden knowledge attracts a visitor").withStyle(ChatFormatting.GOLD), true);
             double spawnX = player.getX() + distance * Math.cos(angle);
             double spawnZ = player.getZ() + distance * Math.sin(angle);
 

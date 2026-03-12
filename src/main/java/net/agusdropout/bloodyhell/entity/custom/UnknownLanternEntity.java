@@ -12,7 +12,9 @@ import net.agusdropout.bloodyhell.util.capability.InsightHelper;
 import net.agusdropout.bloodyhell.util.visuals.ColorHelper;
 import net.agusdropout.bloodyhell.util.visuals.SpellPalette;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -36,6 +38,7 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -48,26 +51,27 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import net.minecraft.nbt.CompoundTag;
 
 public class UnknownLanternEntity extends Monster implements GeoEntity, InsightEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private final BlockMemoryManager blockMemoryManager = new BlockMemoryManager();
 
     private static final EntityDataAccessor<Boolean> IS_SUMMONING = SynchedEntityData.defineId(UnknownLanternEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Optional<UUID>> TARGET_PLAYER = SynchedEntityData.defineId(UnknownLanternEntity.class, EntityDataSerializers.OPTIONAL_UUID);
     private static final EntityDataAccessor<Boolean> IS_GAZING = SynchedEntityData.defineId(UnknownLanternEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Float> GAZE_INTENSITY = SynchedEntityData.defineId(UnknownLanternEntity.class, EntityDataSerializers.FLOAT);
 
-
     private static final RawAnimation SUMMON_ANIM = RawAnimation.begin().thenPlay("summon");
     private static final RawAnimation WALK_ANIM = RawAnimation.begin().thenLoop("walk");
     private static final RawAnimation IDLE_ANIM = RawAnimation.begin().thenLoop("idle");
 
     private int summonTicks = 0;
+    private Vec3 playerOriginPosition = null; // Stores where the player was when summoned
 
     public UnknownLanternEntity(EntityType<? extends Monster> type, Level level) {
         super(type, level);
@@ -108,11 +112,20 @@ public class UnknownLanternEntity extends Monster implements GeoEntity, InsightE
         return this.entityData.get(TARGET_PLAYER).orElse(null);
     }
 
+    public BlockMemoryManager getBlockMemoryManager() {
+        return this.blockMemoryManager;
+    }
+
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         if (this.getTargetPlayer() != null) {
             tag.putUUID("TargetPlayer", this.getTargetPlayer());
+        }
+        if (this.playerOriginPosition != null) {
+            tag.putDouble("OriginX", this.playerOriginPosition.x);
+            tag.putDouble("OriginY", this.playerOriginPosition.y);
+            tag.putDouble("OriginZ", this.playerOriginPosition.z);
         }
     }
 
@@ -122,14 +135,30 @@ public class UnknownLanternEntity extends Monster implements GeoEntity, InsightE
         if (tag.hasUUID("TargetPlayer")) {
             this.setTargetPlayer(tag.getUUID("TargetPlayer"));
         }
+        if (tag.contains("OriginX")) {
+            this.playerOriginPosition = new Vec3(
+                    tag.getDouble("OriginX"),
+                    tag.getDouble("OriginY"),
+                    tag.getDouble("OriginZ")
+            );
+        }
     }
-
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
         UUID targetId = this.getTargetPlayer();
         if (targetId != null) {
             Entity attacker = source.getEntity();
+
+            if(targetId.equals(attacker.getUUID())){
+                if(attacker instanceof ServerPlayer player) {
+                    float currentInsight = InsightHelper.getInsight(player);
+                    if (currentInsight < this.getMinimumInsight()) {
+                        return false;
+                    }
+                }
+            }
+
             if (attacker == null || !targetId.equals(attacker.getUUID())) {
                 return false;
             }
@@ -138,9 +167,16 @@ public class UnknownLanternEntity extends Monster implements GeoEntity, InsightE
     }
 
     @Override
+    public void remove(RemovalReason reason) {
+        this.blockMemoryManager.restoreBlocks(this.level());
+        super.remove(reason);
+    }
+
+    @Override
     public void tick() {
         super.tick();
         givePlayerEffects();
+
         if (this.isSummoning()) {
             this.summonTicks++;
             if (!this.level().isClientSide()) {
@@ -150,13 +186,21 @@ public class UnknownLanternEntity extends Monster implements GeoEntity, InsightE
                 if (this.summonTicks == 1) {
                     this.playSound(SoundEvents.WARDEN_EMERGE, 2.0F, 0.8F);
                     spawnRift();
+
+                    // Capture the player's starting position instantly
+                    if (this.playerOriginPosition == null && this.getTargetPlayer() != null) {
+                        Player p = this.level().getPlayerByUUID(this.getTargetPlayer());
+                        if (p != null) {
+                            this.playerOriginPosition = p.position();
+                        }
+                    }
                 }
 
                 if (this.summonTicks >= 40) {
                     this.entityData.set(IS_SUMMONING, false);
                 }
             } else {
-                if(summonTicks == 1) {
+                if (summonTicks == 1) {
                     BlackHoleParticleOptions goldBlackHole = new BlackHoleParticleOptions(2.0F, 1.0F, 0.84F, 0.0F, false);
                     this.level().addParticle(goldBlackHole, this.getX(), this.getY() + 0.05, this.getZ(), 0.0, 0.0, 0.0);
                 }
@@ -180,8 +224,7 @@ public class UnknownLanternEntity extends Monster implements GeoEntity, InsightE
         }
     }
 
-
-    private void givePlayerEffects(){
+    private void givePlayerEffects() {
         if (this.tickCount % 20 == 0 && this.getTargetPlayer() != null) {
             if (this.level() instanceof ServerLevel serverLevel) {
                 Entity target = serverLevel.getEntity(this.getTargetPlayer());
@@ -245,7 +288,7 @@ public class UnknownLanternEntity extends Monster implements GeoEntity, InsightE
         return this.cache;
     }
 
-    private void spawnRift(){
+    private void spawnRift() {
         UnknownLanternRiftEntity rift = ModEntityTypes.UNKNOWN_LANTERN_RIFT.get().create(this.level());
         if (rift != null) {
             rift.moveTo(this.getX(), this.getY(), this.getZ());
@@ -254,18 +297,15 @@ public class UnknownLanternEntity extends Monster implements GeoEntity, InsightE
             if (this.getTargetPlayer() != null) {
                 rift.setTargetPlayer(this.getTargetPlayer());
             }
-
             this.level().addFreshEntity(rift);
         }
     }
 
     public void success(Player player) {
         if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
-
-            if(player instanceof ServerPlayer serverPlayer) {
+            if (player instanceof ServerPlayer serverPlayer) {
                 InsightHelper.addInsight(serverPlayer, 10);
             }
-
             this.level().playSound(null, this.blockPosition(), SoundEvents.AMETHYST_CLUSTER_BREAK, this.getSoundSource(), 2.0F, 1.0F);
             this.level().playSound(null, this.blockPosition(), SoundEvents.EVOKER_CAST_SPELL, this.getSoundSource(), 1.5F, 1.2F);
             player.removeEffect(MobEffects.BLINDNESS);
@@ -274,32 +314,38 @@ public class UnknownLanternEntity extends Monster implements GeoEntity, InsightE
                     this.getX(), this.getY() + 0.5, this.getZ(),
                     40, 0.5, 0.5, 0.5, 0.1);
 
+
+            if (this.playerOriginPosition != null) {
+                player.teleportTo(this.playerOriginPosition.x, this.playerOriginPosition.y, this.playerOriginPosition.z);
+                serverLevel.playSound(null, player.blockPosition(), SoundEvents.ENDERMAN_TELEPORT, this.getSoundSource(), 1.0F, 1.0F);
+            }
+
             this.discard();
         }
     }
 
     public void fail() {
         if (!this.level().isClientSide() && this.level() instanceof ServerLevel serverLevel) {
-
-
             if (this.getTargetPlayer() != null) {
                 Entity target = serverLevel.getEntity(this.getTargetPlayer());
                 if (target instanceof Player player) {
                     player.removeEffect(MobEffects.BLINDNESS);
                     player.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
+
+                    if (this.playerOriginPosition != null) {
+                        player.teleportTo(this.playerOriginPosition.x, this.playerOriginPosition.y, this.playerOriginPosition.z);
+                        serverLevel.playSound(null, player.blockPosition(), SoundEvents.ENDERMAN_TELEPORT, this.getSoundSource(), 1.0F, 0.5F);
+                    }
                 }
-                if(target instanceof ServerPlayer serverPlayer) {
+                if (target instanceof ServerPlayer serverPlayer) {
                     InsightHelper.subInsight(serverPlayer, 5);
                 }
             }
-
             this.level().playSound(null, this.blockPosition(), SoundEvents.SCULK_SHRIEKER_SHRIEK, this.getSoundSource(), 2.0F, 0.5F);
             this.level().playSound(null, this.blockPosition(), SoundEvents.WARDEN_SONIC_BOOM, this.getSoundSource(), 1.5F, 0.8F);
-
             serverLevel.sendParticles(ParticleTypes.LARGE_SMOKE,
                     this.getX(), this.getY() + 0.5, this.getZ(),
                     50, 0.5, 0.5, 0.5, 0.2);
-
             serverLevel.sendParticles(ParticleTypes.SQUID_INK,
                     this.getX(), this.getY() + 0.5, this.getZ(),
                     50, 0.5, 0.5, 0.5, 0.2);
@@ -326,22 +372,17 @@ public class UnknownLanternEntity extends Monster implements GeoEntity, InsightE
 
     @Override
     public EntityDimensions getDimensions(Pose pose) {
-
         if (pose == Pose.CROUCHING) {
             return EntityDimensions.scalable(0.8F, 1.9F);
         }
-
         return EntityDimensions.scalable(0.8F, 3.0F);
     }
 
     private void manageCrouching() {
         if (!this.level().isClientSide() && this.isAlive()) {
-
-
             Vec3 forward = Vec3.directionFromRotation(0, this.yBodyRot).normalize();
             AABB headBox = this.getBoundingBox().setMinY(this.getY() + 1.9D).setMaxY(this.getY() + 3.0D);
             AABB futureHeadBox = headBox.move(forward.x * 1.0D, 0.0D, forward.z * 1.0D);
-
 
             boolean ceilingIsLow = !this.level().noCollision(this, headBox) ||
                     !this.level().noCollision(this, futureHeadBox);
@@ -354,12 +395,27 @@ public class UnknownLanternEntity extends Monster implements GeoEntity, InsightE
                 this.setPose(Pose.STANDING);
                 this.refreshDimensions();
             }
-
         }
     }
 
     @Override
     public float getMinimumInsight() {
         return 10;
+    }
+
+    public static class BlockMemoryManager {
+        private final Map<BlockPos, BlockState> memory = new HashMap<>();
+
+        public void rememberBlock(BlockPos pos, BlockState state) {
+            this.memory.putIfAbsent(pos.immutable(), state);
+        }
+
+        public void restoreBlocks(Level level) {
+            if (level.isClientSide) return;
+            for (Map.Entry<BlockPos, BlockState> entry : this.memory.entrySet()) {
+                level.setBlock(entry.getKey(), entry.getValue(), 3);
+            }
+            this.memory.clear();
+        }
     }
 }

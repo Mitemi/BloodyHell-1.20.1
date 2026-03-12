@@ -1,7 +1,9 @@
 package net.agusdropout.bloodyhell.entity.ai.goals;
 
 import net.agusdropout.bloodyhell.entity.custom.UnknownLanternEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
@@ -14,6 +16,9 @@ public class LanternPersecutionGoal extends Goal {
     private final UnknownLanternEntity lantern;
     private Player targetPlayer;
     private int gazeTicks = 0;
+    private Vec3 lastPosition = Vec3.ZERO;
+    private int checkTimer = 0;
+    private int stuckTicks = 0;
 
     private static final double MAX_VISIBLE_DISTANCE = 15.0D;
 
@@ -51,6 +56,9 @@ public class LanternPersecutionGoal extends Goal {
     public void start() {
         this.gazeTicks = 0;
         this.lantern.setTarget(this.targetPlayer);
+        this.lastPosition = this.lantern.position();
+        this.checkTimer = 0;
+        this.stuckTicks = 0;
     }
 
     @Override
@@ -70,8 +78,26 @@ public class LanternPersecutionGoal extends Goal {
 
         this.lantern.getNavigation().moveTo(this.targetPlayer, 1.07D);
 
-        boolean isPlayerLooking = this.isPlayerLookingAtMe(this.targetPlayer, this.lantern);
+        this.checkTimer++;
+        if (this.checkTimer >= 10) {
+            double distanceMovedSqr = this.lantern.position().distanceToSqr(this.lastPosition);
 
+            if (distanceMovedSqr < 0.05D) {
+                this.stuckTicks++;
+            } else {
+                this.stuckTicks = 0;
+            }
+
+            this.lastPosition = this.lantern.position();
+            this.checkTimer = 0;
+
+            if (this.stuckTicks >= 3) {
+                this.breakBlocksInPath();
+                this.stuckTicks = 0;
+            }
+        }
+
+        boolean isPlayerLooking = this.isPlayerLookingAtMe(this.targetPlayer, this.lantern);
 
         if (isPlayerLooking) {
             this.gazeTicks++;
@@ -96,26 +122,57 @@ public class LanternPersecutionGoal extends Goal {
         this.lantern.getNavigation().stop();
     }
 
+    private void breakBlocksInPath() {
+        if (!net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.lantern.level(), this.lantern)) return;
+
+        boolean brokeBlocks = false;
+        Vec3 directionToPlayer = this.targetPlayer.position().subtract(this.lantern.position()).normalize();
+        var destructionBox = this.lantern.getBoundingBox().move(directionToPlayer.scale(1.2D)).inflate(0.5D);
+
+        int minX = Mth.floor(destructionBox.minX);
+        int minY = Mth.floor(destructionBox.minY);
+        int minZ = Mth.floor(destructionBox.minZ);
+        int maxX = Mth.ceil(destructionBox.maxX);
+        int maxY = Mth.ceil(destructionBox.maxY);
+        int maxZ = Mth.ceil(destructionBox.maxZ);
+
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                for (int z = minZ; z <= maxZ; z++) {
+                    BlockPos pos = new BlockPos(x, y, z);
+                    var state = this.lantern.level().getBlockState(pos);
+
+                    if (!state.isAir() && state.getDestroySpeed(this.lantern.level(), pos) >= 0.0F && !state.hasBlockEntity()) {
+                        this.lantern.getBlockMemoryManager().rememberBlock(pos, state);
+                        this.lantern.level().destroyBlock(pos, false, this.lantern);
+                        brokeBlocks = true;
+                    }
+                }
+            }
+        }
+
+        if (brokeBlocks) {
+            this.lantern.playSound(SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR, 1.0F, 0.5F);
+        }
+    }
+
     private boolean isPlayerLookingAtMe(Player player, UnknownLanternEntity lantern) {
         Vec3 playerView = player.getViewVector(1.0F).normalize();
 
         Vec3 toLantern = new Vec3(
                 lantern.getX() - player.getX(),
-                lantern.getEyeY() - player.getEyeY(),
+                lantern.getEyeY() + 1 - player.getEyeY(),
                 lantern.getZ() - player.getZ()
         );
 
         double distance = toLantern.length();
-
 
         if (distance > MAX_VISIBLE_DISTANCE) {
             return false;
         }
 
         toLantern = toLantern.normalize();
-
         double dotProduct = playerView.dot(toLantern);
-
 
         if (dotProduct > 1.0D - 0.025D) {
             return player.hasLineOfSight(lantern);

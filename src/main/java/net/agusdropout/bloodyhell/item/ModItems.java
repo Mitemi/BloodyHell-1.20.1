@@ -371,7 +371,7 @@ public class ModItems {
 
 
     public static final RegistryObject<Item> GAZE_OF_THE_UNKNOWN = ITEMS.register("gaze_of_the_unknown",
-            () -> new GazeOfTheUnknownItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).alwaysEat().build()), 15.0D, 30.0D));
+            () -> new GazeOfTheUnknownItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).alwaysEat().build()), 30.0D, 55.0D));
 
 
     public static final RegistryObject<Item> BLOOD_ECHO_SHARD = ITEMS.register("blood_echo_shard",
