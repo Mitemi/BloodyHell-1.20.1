@@ -124,6 +124,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         normalItem(ModItems.CORRUPTED_BLOOD_FLASK);
         normalItem(ModItems.FILLED_BLOOD_FLASK);
         normalItem(ModItems.FILLED_RHNULL_BLOOD_FLASK);
+        normalItem(ModItems.FILLED_VISCOUS_BLASPHEMY_FLASK);
 
         //Dagger
         toolItem(ModItems.SACRIFICIAL_DAGGER);
@@ -143,8 +144,10 @@ public class ModItemModelProvider extends ItemModelProvider {
         normalItem(ModItems.RHNULL_GREAT_GEM_FRAME);
         normalItem(ModItems.ANCIENT_GEM);
         normalItem(ModItems.ANCIENT_RHNULL_GEM);
+        normalItem(ModItems.ANCIENT_BLASPHEMOUS_GEM);
         normalItem(ModItems.GREAT_AMULET_OF_ANCESTRAL_BLOOD);
         normalItem(ModItems.GREAT_ANCIENT_GEM);
+        normalItem(ModItems.GREAT_ANCIENT_BLASPHEMOUS_GEM);
         normalItem(ModItems.GREAT_ANCIENT_RHNULL_GEM);
         normalItem(ModItems.CRIMSON_WARD_RING);
         normalItem(ModItems.BLASPHEMOUS_RING);
@@ -154,6 +157,8 @@ public class ModItemModelProvider extends ItemModelProvider {
         normalItem(ModItems.BLASPHEMOUS_OCULAR_LENSE);
         normalItem(ModItems.MARK_OF_THE_RESTLESS_SLUMBER);
         normalItem(ModItems.RUNE_OF_THE_RAVENOUS_GAZE);
+
+        normalItem(ModItems.BLASPHEMOUS_EYE);
 
 
 

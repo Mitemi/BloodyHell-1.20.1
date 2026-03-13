@@ -34,32 +34,41 @@ public class ModItemTagGenerator extends ItemTagsProvider {
         this.tag(ItemTags.PLANKS)
                 .add(ModBlocks.SOUL_PLANKS.get().asItem())
                 .add(ModBlocks.BLOOD_PLANKS.get().asItem());
+
         this.tag(ItemTags.ARROWS)
                 .add(ModItems.BLOOD_ARROW.get());
+
         this.tag(ItemTags.SWORDS)
-                .add(ModItems.SANGUINITE_SWORD.get().asItem())
-                .add(ModItems.RHNULL_SWORD.get().asItem())
-                .add(ModItems.BLASPHEMITE_SWORD.get().asItem());
+                .add(ModItems.SANGUINITE_SWORD.get())
+                .add(ModItems.RHNULL_SWORD.get())
+                .add(ModItems.BLASPHEMITE_SWORD.get());
+
         this.tag(ItemTags.AXES)
-                .add(ModItems.SANGUINITE_AXE.get().asItem())
-                .add(ModItems.RHNULL_AXE.get().asItem())
-                .add(ModItems.BLASPHEMITE_AXE.get().asItem());
+                .add(ModItems.SANGUINITE_AXE.get())
+                .add(ModItems.RHNULL_AXE.get())
+                .add(ModItems.BLASPHEMITE_AXE.get());
+
         this.tag(ItemTags.PICKAXES)
-                .add(ModItems.SANGUINITE_PICKAXE.get().asItem())
-                .add(ModItems.RHNULL_PICKAXE.get().asItem())
-                .add(ModItems.BLASPHEMITE_PICKAXE.get().asItem());
+                .add(ModItems.SANGUINITE_PICKAXE.get())
+                .add(ModItems.RHNULL_PICKAXE.get())
+                .add(ModItems.BLASPHEMITE_PICKAXE.get());
+
         this.tag(ItemTags.SHOVELS)
-                .add(ModItems.SANGUINITE_SHOVEL.get().asItem())
-                .add(ModItems.RHNULL_SHOVEL.get().asItem())
-                .add(ModItems.BLASPHEMITE_SHOVEL.get().asItem());
+                .add(ModItems.SANGUINITE_SHOVEL.get())
+                .add(ModItems.RHNULL_SHOVEL.get())
+                .add(ModItems.BLASPHEMITE_SHOVEL.get());
+
         this.tag(ItemTags.HOES)
-                .add(ModItems.SANGUINITE_HOE.get().asItem())
-                .add(ModItems.RHNULL_HOE.get().asItem())
-                 .add(ModItems.BLASPHEMITE_HOE.get().asItem());
+                .add(ModItems.SANGUINITE_HOE.get())
+                .add(ModItems.RHNULL_HOE.get())
+                .add(ModItems.BLASPHEMITE_HOE.get());
+
         this.tag(ItemTags.STONE_CRAFTING_MATERIALS)
                 .add(ModBlocks.BLOODY_STONE_BLOCK.get().asItem());
+
         this.tag(ItemTags.STONE_TOOL_MATERIALS)
                 .add(ModBlocks.BLOODY_STONE_BLOCK.get().asItem());
+
         this.tag(ModTags.Items.BLOOD_LOGS)
                 .add(ModBlocks.STRIPPED_BLOOD_LOG.get().asItem())
                 .add(ModBlocks.BLOOD_LOG.get().asItem());
@@ -89,6 +98,11 @@ public class ModItemTagGenerator extends ItemTagsProvider {
                 .add(ModItems.RUNE_OF_THE_RAVENOUS_GAZE.get());
 
 
+        // =================================================================
+        // TOOLTIP TIERS
+        // =================================================================
+
+        // 1. Sanguinite Tier
         this.tag(ModTags.Items.SANGUINITE_TIER_ITEMS)
                 .add(ModItems.SANGUINITE.get())
                 .add(ModItems.RAW_SANGUINITE.get())
@@ -98,17 +112,36 @@ public class ModItemTagGenerator extends ItemTagsProvider {
                 .add(ModItems.SANGUINITE_AXE.get())
                 .add(ModItems.SANGUINITE_SHOVEL.get())
                 .add(ModItems.SANGUINITE_HOE.get())
+                .add(ModItems.BLOOD_HELMET.get())
+                .add(ModItems.BLOOD_CHESTPLATE.get())
+                .add(ModItems.BLOOD_LEGGINGS.get())
+                .add(ModItems.BLOOD_BOOTS.get())
+                .add(ModItems.BLOOD_BOW.get())
+                .add(ModItems.BLOOD_SCYTHE.get())
+                .add(ModItems.BLOOD_ARROW.get())
                 .add(ModBlocks.SANGUINITE_BLOCK.get().asItem())
                 .add(ModBlocks.SANGUINITE_ORE.get().asItem())
-                .add(ModBlocks.SANGUINITE_BLOOD_HARVESTER.get().asItem())
-                .add(ModBlocks.SANGUINITE_PIPE.get().asItem())
+                .add(ModItems.SANGUINITE_BLOOD_HARVESTER_ITEM.get())
+                .add(ModItems.SANGUINITE_PIPE_ITEM.get())
                 .add(ModBlocks.SANGUINITE_TANK.get().asItem())
-                .add(ModBlocks.SANGUINITE_INFUSOR.get().asItem());
+                .add(ModBlocks.SANGUINITE_INFUSOR.get().asItem())
+                .add(ModBlocks.SANGUINITE_CONDENSER.get().asItem())
+                .add(ModBlocks.SANGUINE_LAPIDARY.get().asItem())
+                .add(ModBlocks.SANGUINE_CRUCIBLE.get().asItem())
+                .add(ModItems.SANGUINITE_GEM_FRAME.get())
+                .add(ModItems.SANGUINITE_GREAT_GEM_FRAME.get())
+                .add(ModItems.ANCIENT_GEM.get())
+                .add(ModItems.GREAT_ANCIENT_GEM.get())
+                .add(ModItems.PURE_BLOOD_GEM.get())
+                .add(ModItems.CITRINE_BLOOD_GEM.get())
+                .add(ModItems.TANZARINE_BLOOD_GEM.get())
+                .add(ModItems.AVENTURINE_BLOOD_GEM.get());
 
-        // 2. Rhnull Tier (Reddish Gold Frame, Gold Text)
+        // 2. Rhnull Tier
         this.tag(ModTags.Items.RHNULL_TIER_ITEMS)
                 .add(ModItems.RHNULL.get())
                 .add(ModItems.RHNULL_NUGGET.get())
+                .add(ModBlocks.RHNULL_BLOCK.get().asItem())
                 .add(ModItems.RHNULL_SWORD.get())
                 .add(ModItems.RHNULL_PICKAXE.get())
                 .add(ModItems.RHNULL_AXE.get())
@@ -118,13 +151,24 @@ public class ModItemTagGenerator extends ItemTagsProvider {
                 .add(ModItems.RHNULL_CHESTPLATE.get())
                 .add(ModItems.RHNULL_LEGGINGS.get())
                 .add(ModItems.RHNULL_BOOTS.get())
-                .add(ModBlocks.RHNULL_BLOCK.get().asItem())
-                .add(ModItems.FILLED_RHNULL_BLOOD_FLASK.get());
+                .add(ModItems.FILLED_RHNULL_BLOOD_FLASK.get())
+                .add(ModItems.RHNULL_PIPE_ITEM.get())
+                .add(ModBlocks.RHNULL_TANK.get().asItem())
+                .add(ModBlocks.RHNULL_CONDENSER.get().asItem())
+                .add(ModItems.RHNULL_GEM_FRAME.get())
+                .add(ModItems.RHNULL_GREAT_GEM_FRAME.get())
+                .add(ModItems.ANCIENT_RHNULL_GEM.get())
+                .add(ModItems.GREAT_ANCIENT_RHNULL_GEM.get())
+                .add(ModItems.RHNULL_IMPALERS_SPELLBOOK.get())
+                .add(ModItems.RHNULL_HEAVY_SWORD_SPELLBOOK.get())
+                .add(ModItems.RHNULL_GOLDEN_THRONE_SPELLBOOK.get())
+                .add(ModItems.RHNULL_ORB_EMITTER_SPELLBOOK.get());
 
-        // 3. Blasphemous Tier (Gold Frame, Dark Yellow/Black BG)
+        // 3. Blasphemous Tier
         this.tag(ModTags.Items.BLASPHEMOUS_TIER_ITEMS)
                 .add(ModItems.BLASPHEMITE.get())
                 .add(ModItems.RAW_BLASPHEMITE.get())
+                .add(ModBlocks.BLASPHEMITE_ORE.get().asItem())
                 .add(ModItems.BLASPHEMITE_NUGGET.get())
                 .add(ModItems.BLASPHEMITE_SWORD.get())
                 .add(ModItems.BLASPHEMITE_PICKAXE.get())
@@ -138,20 +182,36 @@ public class ModItemTagGenerator extends ItemTagsProvider {
                 .add(ModItems.BLASPHEMOUS_TWIN_DAGGERS.get())
                 .add(ModItems.BLASPHEMOUS_HULKING_MASS_OF_IRON.get())
                 .add(ModItems.BLASPHEMOUS_IMPALER.get())
-                .add(ModItems.BLASPHEMOUS_RING.get());
+                .add(ModItems.BLASPHEMOUS_RING.get())
+                .add(ModItems.BLASPHEMOUS_EYE.get())
+                .add(ModItems.BLASPHEMOUS_OCULAR_LENSE.get())
+                .add(ModItems.ANCIENT_BLASPHEMOUS_GEM.get())
+                .add(ModItems.GREAT_ANCIENT_BLASPHEMOUS_GEM.get())
+                .add(ModItems.FILLED_VISCOUS_BLASPHEMY_FLASK.get())
+                .add(ModItems.VISCOUS_BLASPHEMY_BUCKET.get())
+                .add(ModItems.BLASPHEMOUS_BLOOD_ALTAR_ITEM.get())
+                .add(ModItems.MAIN_BLASPHEMOUS_BLOOD_ALTAR_ITEM.get())
+                .add(ModBlocks.BLASPHEMOUS_SAND_BLOCK.get().asItem())
+                .add(ModBlocks.BLASPHEMOUS_SANDSTONE_BLOCK.get().asItem())
+                .add(ModBlocks.SMOOTH_BLASPHEMOUS_SANDSTONE_BLOCK.get().asItem())
+                .add(ModBlocks.CUT_BLASPHEMOUS_SANDSTONE_BLOCK.get().asItem())
+                .add(ModBlocks.CHISELED_BLASPHEMOUS_SANDSTONE_BLOCK.get().asItem())
+                .add(ModBlocks.CHISELED_DETAILED_BLASPHEMOUS_SANDSTONE_BLOCK.get().asItem());
+
+
+        // =================================================================
+        // SYSTEM TAGS
+        // =================================================================
 
         this.tag(ModTags.Items.GEM_FRAMES)
                 .add(ModItems.SANGUINITE_GEM_FRAME.get())
                 .add(ModItems.SANGUINITE_GREAT_GEM_FRAME.get())
                 .add(ModItems.RHNULL_GREAT_GEM_FRAME.get())
-                .add( ModItems.RHNULL_GEM_FRAME.get());
+                .add(ModItems.RHNULL_GEM_FRAME.get());
 
         this.tag(ModTags.Items.CRIMSONVEIL_PASSIVE_RECHARGER)
                 .add(ModItems.AMULET_OF_ANCESTRAL_BLOOD.get())
                 .add(ModItems.GREAT_AMULET_OF_ANCESTRAL_BLOOD.get());
-
-
-
 
         this.tag(ModTags.Items.SPELLBOOKS)
                 .add(ModItems.BLOOD_DAGGERSRAIN_SPELLBOOK.get())
@@ -166,8 +226,5 @@ public class ModItemTagGenerator extends ItemTagsProvider {
                 .add(ModItems.RHNULL_GOLDEN_THRONE_SPELLBOOK.get())
                 .add(ModItems.RHNULL_ORB_EMITTER_SPELLBOOK.get());
     }
-
-
-
 
 }

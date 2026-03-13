@@ -101,6 +101,8 @@ public interface IFlaskInteractableBlock {
             return new ItemStack(ModItems.FILLED_BLOOD_FLASK.get());
         } else if (fluid == ModFluids.CORRUPTED_BLOOD_SOURCE.get()) {
             return new ItemStack(ModItems.CORRUPTED_BLOOD_FLASK.get());
+        } else if (fluid == ModFluids.VISCOUS_BLASPHEMY_SOURCE.get()) {
+            return new ItemStack(ModItems.FILLED_VISCOUS_BLASPHEMY_FLASK.get());
         }
 
         return ItemStack.EMPTY;
@@ -114,6 +116,8 @@ public interface IFlaskInteractableBlock {
             return new FluidStack(ModFluids.BLOOD_SOURCE.get(), FLASK_CAPACITY);
         } else if (stack.is(ModItems.CORRUPTED_BLOOD_FLASK.get())) {
             return new FluidStack(ModFluids.CORRUPTED_BLOOD_SOURCE.get(), FLASK_CAPACITY);
+        } else  if (stack.is(ModItems.FILLED_VISCOUS_BLASPHEMY_FLASK.get())) {
+            return new FluidStack(ModFluids.VISCOUS_BLASPHEMY_SOURCE.get(), FLASK_CAPACITY);
         }
 
         return FluidStack.EMPTY;

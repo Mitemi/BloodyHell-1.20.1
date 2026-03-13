@@ -1,5 +1,6 @@
 package net.agusdropout.bloodyhell.datagen;
 
+import com.eliotlash.mclib.math.functions.classic.Mod;
 import net.agusdropout.bloodyhell.BloodyHell;
 import net.agusdropout.bloodyhell.block.ModBlocks;
 import net.agusdropout.bloodyhell.fluid.ModFluids;
@@ -56,7 +57,7 @@ public class ModRecipes extends ModRecipesProvider {
         // ALTARS CRAFTING
         // =================================================================
 
-        // Standard Blood Altar
+        // Standard Blood Altar (Uses Corrupted Blood)
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.BLOOD_ALTAR.get(), 1)
                 .pattern("GDG")
                 .pattern("SCS")
@@ -69,7 +70,7 @@ public class ModRecipes extends ModRecipesProvider {
                 .unlockedBy("has_sanguinite", has(ModItems.SANGUINITE.get()))
                 .save(consumer, name("blood_altar"));
 
-        // Main Blood Altar
+        // Main Blood Altar (Uses Corrupted Blood)
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.MAIN_BLOOD_ALTAR.get(), 1)
                 .pattern("GDG")
                 .pattern("SCS")
@@ -82,31 +83,32 @@ public class ModRecipes extends ModRecipesProvider {
                 .unlockedBy("has_sanguinite", has(ModItems.SANGUINITE.get()))
                 .save(consumer, name("main_blood_altar"));
 
-        // Blasphemous Blood Altar
+        // Blasphemous Blood Altar (Uses Normal Blood, Blasphemite, and Fingers)
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.BLASPHEMOUS_BLOOD_ALTAR.get(), 1)
                 .pattern("BDB")
-                .pattern("SFS")
-                .pattern("UBU")
+                .pattern("SLS")
+                .pattern("F F")
                 .define('S', ModItems.SANGUINITE.get())
                 .define('B', ModItems.BLASPHEMITE.get())
-                .define('F', ModItems.FILLED_BLOOD_FLASK.get())
+                .define('L', ModItems.FILLED_BLOOD_FLASK.get())
                 .define('D', ModItems.BLOODY_SOUL_DUST.get())
-                .define('U', ModItems.UNKNOWN_ENTITY_FINGER.get())
+                .define('F', ModItems.UNKNOWN_ENTITY_FINGER.get())
                 .unlockedBy("has_blasphemite", has(ModItems.BLASPHEMITE.get()))
                 .save(consumer, name("blasphemous_blood_altar"));
 
-        // Main Blasphemous Blood Altar
+        // Main Blasphemous Blood Altar (Uses Normal Blood, Blasphemite, and Fingers)
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ModBlocks.MAIN_BLASPHEMOUS_BLOOD_ALTAR.get(), 1)
                 .pattern("BCB")
-                .pattern("SFS")
-                .pattern("UBU")
+                .pattern("SLS")
+                .pattern("F F")
                 .define('S', ModItems.SANGUINITE.get())
                 .define('B', ModItems.BLASPHEMITE.get())
-                .define('F', ModItems.FILLED_BLOOD_FLASK.get())
+                .define('L', ModItems.FILLED_BLOOD_FLASK.get())
                 .define('C', ModItems.CHALICE_OF_THE_DAMMED.get())
-                .define('U', ModItems.UNKNOWN_ENTITY_FINGER.get())
+                .define('F', ModItems.UNKNOWN_ENTITY_FINGER.get())
                 .unlockedBy("has_blasphemite", has(ModItems.BLASPHEMITE.get()))
                 .save(consumer, name("main_blasphemous_blood_altar"));
+
 
         // =================================================================
         // BLASPHEMOUS RITUALS
@@ -119,7 +121,6 @@ public class ModRecipes extends ModRecipesProvider {
                 .unlockedBy("has_dagger", has(ModItems.AUREAL_REVENANT_DAGGER.get()))
                 .save(consumer, name("ritual_find_mausoleum"));
 
-
         BlasphemousBloodAltarRecipeBuilder.ritual(ModItems.BLOOD_GEM_SPROUT_SEED.get())
                 .requires(ModBlocks.BLOOD_FLOWER.get())
                 .requires(ModItems.BLOODY_SOUL_DUST.get())
@@ -127,11 +128,7 @@ public class ModRecipes extends ModRecipesProvider {
                 .unlockedBy("has_dirty_blood_flower", has(ModItems.DIRTY_BLOOD_FLOWER.get()))
                 .save(consumer, name("ritual_blood_gem_sprout_seed"));
 
-
-        // =================================================================
-        // BLOOD FLORA (MUSHROOMS)
-        // =================================================================
-
+        // Blood Flora
         BlasphemousBloodAltarRecipeBuilder.ritual(ModItems.VORACIOUS_MUSHROOM.get())
                 .requires(ModItems.GLOW_MUSHROOM.get())
                 .requires(ModItems.UNKNOWN_ENTITY_FINGER.get())
@@ -145,6 +142,38 @@ public class ModRecipes extends ModRecipesProvider {
                 .requires(Items.ROTTEN_FLESH)
                 .unlockedBy("has_glow_mushroom", has(ModItems.GLOW_MUSHROOM.get()))
                 .save(consumer, name("ritual_crimson_lure_mushroom"));
+
+        // Blasphemous Eye
+        BlasphemousBloodAltarRecipeBuilder.ritual(ModItems.BLASPHEMOUS_EYE.get(), 4)
+                .requires(Items.ENDER_EYE)
+                .requires(ModItems.BLASPHEMITE.get())
+                .requires(ModItems.FILLED_BLOOD_FLASK.get())
+                .unlockedBy("has_ender_eye", has(Items.ENDER_EYE))
+                .save(consumer, name("ritual_blasphemous_eye"));
+
+
+        // Reliquary Runes
+        BlasphemousBloodAltarRecipeBuilder.ritual(ModItems.MARK_OF_THE_RESTLESS_SLUMBER.get())
+                .requires(ModItems.FILLED_VISCOUS_BLASPHEMY_FLASK.get())
+                .requires(ModItems.ANCIENT_BLASPHEMOUS_GEM.get())
+                .requires(ModItems.UNKNOWN_ENTITY_FINGER.get())
+                .unlockedBy("has_blasphemous_eye", has(ModItems.BLASPHEMOUS_EYE.get()))
+                .save(consumer, name("ritual_mark_of_restless_slumber"));
+
+        BlasphemousBloodAltarRecipeBuilder.ritual(ModItems.RUNE_OF_THE_RAVENOUS_GAZE.get())
+                .requires(ModItems.BLASPHEMOUS_EYE.get())
+                .requires(ModItems.ANCIENT_BLASPHEMOUS_GEM.get())
+                .requires(ModItems.UNKNOWN_ENTITY_FINGER.get())
+                .unlockedBy("has_blasphemous_eye", has(ModItems.BLASPHEMOUS_EYE.get()))
+                .save(consumer, name("ritual_rune_of_ravenous_gaze"));
+
+        //Gaze of the unknown
+        BlasphemousBloodAltarRecipeBuilder.ritual(ModItems.GAZE_OF_THE_UNKNOWN.get())
+                .requires(ModItems.BLASPHEMOUS_EYE.get())
+                .requires(ModItems.GREAT_ANCIENT_BLASPHEMOUS_GEM.get())
+                .requires(ModItems.FILLED_VISCOUS_BLASPHEMY_FLASK.get())
+                .unlockedBy("has_great_ancient_blasphemous_gem", has(ModItems.GREAT_ANCIENT_BLASPHEMOUS_GEM.get()))
+                .save(consumer, name("ritual_gaze_of_the_unknown"));
 
 
         // =================================================================
@@ -171,8 +200,8 @@ public class ModRecipes extends ModRecipesProvider {
         BloodAltarRecipeBuilder.ritual(ModItems.BLOOD_SPHERE_SPELLBOOK.get())
                 .requires(Items.BOOK)
                 .requires(ModItems.FILLED_BLOOD_FLASK.get())
+                .requires(ModItems.AUREAL_REVENANT_DAGGER.get())
                 .requires(ModItems.ANCIENT_GEM.get())
-                .requires(ModItems.BLOODY_SOUL_DUST.get())
                 .unlockedBy("has_book", has(Items.BOOK))
                 .save(consumer, name("ritual_spell_sphere"));
 
@@ -224,7 +253,7 @@ public class ModRecipes extends ModRecipesProvider {
                 .requires(Items.BOOK)
                 .requires(ModItems.GREAT_ANCIENT_RHNULL_GEM.get())
                 .requires(ModItems.FILLED_RHNULL_BLOOD_FLASK.get())
-                .requires(ModItems.RHNULL_PICKAXE.get())
+                .requires(ModItems.BLASPHEMITE.get())
                 .unlockedBy("has_great_ancient_rhnull_gem", has(ModItems.GREAT_ANCIENT_RHNULL_GEM.get()))
                 .save(consumer, name("ritual_spell_rhnull_impalers"));
 
@@ -248,7 +277,7 @@ public class ModRecipes extends ModRecipesProvider {
                 .requires(Items.BOOK)
                 .requires(ModItems.ANCIENT_RHNULL_GEM.get())
                 .requires(ModItems.FILLED_RHNULL_BLOOD_FLASK.get())
-                .requires(ModItems.RHNULL_HOE.get())
+                .requires(ModItems.BLASPHEMOUS_EYE.get())
                 .unlockedBy("has_ancient_rhnull_gem", has(ModItems.ANCIENT_RHNULL_GEM.get()))
                 .save(consumer, name("ritual_spell_rhnull_orb_emitter"));
 
@@ -491,7 +520,7 @@ public class ModRecipes extends ModRecipesProvider {
 
         //---------------------------------Flasks----------------------------------//
 
-        // Blood flask
+        // Blood flask (Increased Yield)
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.BLOOD_FLASK.get(), 3)
                 .pattern("G G")
                 .pattern(" G ")
@@ -566,6 +595,18 @@ public class ModRecipes extends ModRecipesProvider {
                 .unlockedBy("has_gold", has(Items.GOLD_INGOT))
                 .unlockedBy("has_ancient_gem", has(ModItems.ANCIENT_GEM.get()))
                 .save(consumer, name("crimson_ward_ring"));
+
+        //Blasphemous ring
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.BLASPHEMOUS_RING.get(), 1)
+                .pattern("GGG")
+                .pattern("G G")
+                .pattern("GAG")
+                .define('G', ModItems.BLASPHEMITE.get())
+                .define('A', ModItems.ANCIENT_BLASPHEMOUS_GEM.get())
+                .unlockedBy("has_blasphemite", has(ModItems.BLASPHEMITE.get()))
+                .unlockedBy("has_ancient_blasphemous_gem", has(ModItems.ANCIENT_BLASPHEMOUS_GEM.get()))
+                .save(consumer, name("blasphemous_ring"));
+
 
         //-------------------------------Cooking----------------------------------//
 
@@ -784,9 +825,9 @@ public class ModRecipes extends ModRecipesProvider {
 
         // Unknown Portal Block
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.UNKNOWN_PORTAL_ITEM.get(), 1)
-                .pattern("FRF")
-                .pattern("PTP")
-                .pattern("FRF")
+                .pattern("RPR")
+                .pattern("FTF")
+                .pattern("RPR")
                 .define('F', ModItems.UNKNOWN_ENTITY_FINGER.get())
                 .define('R', ModItems.RHNULL.get())
                 .define('T', ModBlocks.RHNULL_TANK.get())
@@ -796,9 +837,9 @@ public class ModRecipes extends ModRecipesProvider {
 
         // Reliquary
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.RELIQUARY.get(), 1)
-                .pattern(" F ")
+                .pattern("F F")
                 .pattern("RGR")
-                .pattern(" F ")
+                .pattern("FRF")
                 .define('F', ModItems.UNKNOWN_ENTITY_FINGER.get())
                 .define('R', ModItems.RHNULL.get())
                 .define('G', ModItems.GAZE_OF_THE_UNKNOWN.get())
@@ -810,7 +851,7 @@ public class ModRecipes extends ModRecipesProvider {
                 .pattern(" G ")
                 .pattern("GAG")
                 .pattern(" G ")
-                .define('G', Items.GOLD_NUGGET)
+                .define('G', Items.GOLD_INGOT)
                 .define('A', ModItems.ANCIENT_GEM.get())
                 .unlockedBy("has_ancient_gem", has(ModItems.ANCIENT_GEM.get()))
                 .save(consumer, name("ancient_ocular_lense"));
@@ -818,12 +859,11 @@ public class ModRecipes extends ModRecipesProvider {
         // Blasphemous Ocular Lense
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.BLASPHEMOUS_OCULAR_LENSE.get(), 1)
                 .pattern(" B ")
-                .pattern("GAG")
+                .pattern("BAB")
                 .pattern(" B ")
-                .define('B', ModItems.BLASPHEMITE_NUGGET.get())
-                .define('G', Items.GLASS_PANE)
-                .define('A', ModItems.ANCIENT_RHNULL_GEM.get())
-                .unlockedBy("has_ancient_rhnull_gem", has(ModItems.ANCIENT_RHNULL_GEM.get()))
+                .define('B', ModItems.BLASPHEMITE.get())
+                .define('A', ModItems.ANCIENT_BLASPHEMOUS_GEM.get())
+                .unlockedBy("has_ancient_blasphemous_gem", has(ModItems.ANCIENT_BLASPHEMOUS_GEM.get()))
                 .save(consumer, name("blasphemous_ocular_lense"));
 
         // Sanguinite Gem Frame
@@ -922,7 +962,7 @@ public class ModRecipes extends ModRecipesProvider {
                 .unlockedBy("has_rhnull", has(ModItems.RHNULL.get()))
                 .save(consumer, name("rhnull_condenser"));
 
-        // Sanguinite Blood Harvester (Reworked Iron -> Gold)
+        // Sanguinite Blood Harvester (Uses Gold)
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.SANGUINITE_BLOOD_HARVESTER_ITEM.get())
                 .pattern("GSG")
                 .pattern("RDR")
@@ -987,20 +1027,36 @@ public class ModRecipes extends ModRecipesProvider {
                 .unlockedBy("has_great_gem_frame", has(ModItems.SANGUINITE_GREAT_GEM_FRAME.get()))
                 .save(consumer, name("condense_great_ancient_gem"));
 
+        // 3. Ancient Blasphemous Gem
+
+        CondenserRecipeBuilder.condense(ModItems.ANCIENT_BLASPHEMOUS_GEM.get())
+                .requiresItem(Ingredient.of(ModItems.RHNULL_GEM_FRAME.get()))
+                .requiresFluid(ModFluids.VISCOUS_BLASPHEMY_SOURCE.get(), 1000)
+                .unlockedBy("has_gem_frame", has(ModItems.RHNULL_GEM_FRAME.get()))
+                .save(consumer, name("condense_ancient_blasphemous_gem"));
+
+
+        // 4. Great Ancient Blasphemous Gem
+
+        CondenserRecipeBuilder.condense(ModItems.GREAT_ANCIENT_BLASPHEMOUS_GEM.get())
+                .requiresItem(Ingredient.of(ModItems.RHNULL_GREAT_GEM_FRAME.get()))
+                .requiresFluid(ModFluids.VISCOUS_BLASPHEMY_SOURCE.get(), 2000)
+                .unlockedBy("has_great_gem_frame", has(ModItems.RHNULL_GREAT_GEM_FRAME.get()))
+                .save(consumer, name("condense_great_ancient_blasphemous_gem"));
+
     }
 
     private ResourceLocation name(String name) {
         return new ResourceLocation(BloodyHell.MODID, name);
     }
 }
+
 /*
 =========================================
 PENDING RECIPES / LOOT TABLES:
 =========================================
 1. Gaze of the Unknown:
    - Need to modify the EntityLootProvider so ModEntityTypes.UNKNOWN_LANTERN drops it.
-2. Reliquary Runes:
-   - ModItems.MARK_OF_THE_RESTLESS_SLUMBER (No recipe yet)
-   - ModItems.RUNE_OF_THE_RAVENOUS_GAZE (No recipe yet)
+   - User notes: "Gaze of the unknown is obtained from the blasphemous altars, leave it for later."
 =========================================
 */

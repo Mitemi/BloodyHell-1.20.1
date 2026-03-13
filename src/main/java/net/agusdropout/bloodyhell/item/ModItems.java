@@ -279,6 +279,9 @@ public class ModItems {
     public static final RegistryObject<Item> FILLED_RHNULL_BLOOD_FLASK = ITEMS.register("filled_rhnull_blood_flask", () -> new BloodPotionItem(
             new Item.Properties().stacksTo(64), 30)); // Grants more power
 
+    public static final RegistryObject<Item> FILLED_VISCOUS_BLASPHEMY_FLASK = ITEMS.register("filled_viscous_blasphemy_flask", () -> new BloodPotionItem(
+            new Item.Properties().stacksTo(64), 0)); // Grants more power
+
 
     public static final RegistryObject<Item> UNKNOWN_GUIDE_BOOK = ITEMS.register("unknown_guide_book",
             () -> new UnknownGuideBookItem(new Item.Properties().stacksTo(1)));
@@ -365,6 +368,10 @@ public class ModItems {
             new Item.Properties().stacksTo(64)));
     public static final RegistryObject<Item> GREAT_ANCIENT_RHNULL_GEM = ITEMS.register("great_ancient_rhnull_gem", () -> new Item(
             new Item.Properties().stacksTo(64)));
+    public static final RegistryObject<Item> GREAT_ANCIENT_BLASPHEMOUS_GEM = ITEMS.register("great_ancient_blasphemous_gem", () -> new Item(
+            new Item.Properties().stacksTo(64)));
+    public static final RegistryObject<Item> ANCIENT_BLASPHEMOUS_GEM = ITEMS.register("ancient_blasphemous_gem", () -> new Item(
+            new Item.Properties().stacksTo(64)));
     public static final RegistryObject<Item> CRIMSON_WARD_RING = ITEMS.register("crimson_ward_ring", () -> new CrimsonWardRing(
             new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> BLASPHEMOUS_RING = ITEMS.register("blasphemous_ring", () -> new BlasphemousRing(
@@ -374,6 +381,8 @@ public class ModItems {
     public static final RegistryObject<Item> RAW_BLASPHEMITE = ITEMS.register("raw_blasphemite", () -> new Item(
             new Item.Properties().stacksTo(64)));
     public static final RegistryObject<Item> BLASPHEMITE_NUGGET = ITEMS.register("blasphemite_nugget", () ->
+            new Item( new Item.Properties()));
+    public static final RegistryObject<Item> BLASPHEMOUS_EYE = ITEMS.register("blasphemous_eye", () ->
             new Item( new Item.Properties()));
 
 

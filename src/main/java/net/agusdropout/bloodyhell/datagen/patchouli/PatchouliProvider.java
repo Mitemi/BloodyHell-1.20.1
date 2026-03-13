@@ -242,6 +242,18 @@ public class PatchouliProvider implements DataProvider {
                         "- " + link("Sanguinite") + " -> Pure Blood Gem" + br() +
                         "- " + link("Gold Nugget") + " -> Citrine");
         saveEntry(cache, sprout);
+
+        // --- ENTRY: BLOOD FLORA (MUSHROOMS) ---
+        PatchouliEntryBuilder flora = PatchouliEntryBuilder.create("blood_flora", category.getId(), "Blood Flora", "bloodyhell:voracious_mushroom_item")
+                .addSpotlightPage("bloodyhell:voracious_mushroom_item", link("Voracious Mushroom") + br() + br() +
+                        "This hungry fungus must be constantly pumped with blood via pipes set to " + blood("Push") + " mode. " + br() + br() +
+                        "When satiated, it will actively infect nearby living mobs. These infected mobs can then be sacrificed to obtain " + entryLink("blood_fluids", "blood_variants", "Infected Blood") + ".")
+                .addMultiblockPage("Mushroom Setup", "A standard connection setup for both mushrooms.", createMushroomMultiblock("bloodyhell:voracious_mushroom_block"))
+                .addSpotlightPage("bloodyhell:crimson_lure_mushroom_item", link("Crimson Lure Mushroom") + br() + br() +
+                        "Similar to the Voracious Mushroom, this flora must be pumped with blood. " + br() + br() +
+                        "As it consumes the fluid, it emits a scent that heavily attracts nearby hostile monsters to its location.")
+                .addMultiblockPage("Mushroom Setup", "A standard connection setup for both mushrooms.", createMushroomMultiblock("bloodyhell:crimson_lure_mushroom_block"));
+        saveEntry(cache, flora);
     }
 
     private void generateBloodDimension(CachedOutput cache) {
@@ -395,7 +407,7 @@ public class PatchouliProvider implements DataProvider {
                 .addSpotlightPage("bloodyhell:corrupted_blood_bucket", link(corrupted("Corrupted Blood")) + br() +
                         "Extracted from the corpses of hostile foes, both mundane and otherworldly. (zombies, skeletons, endermen, etc. and mod mobs alike)")
                 .addSpotlightPage("bloodyhell:visceral_blood_bucket", link(infected("Infected Blood")) + br() +
-                        "A highly infectious substance, harvested from friend or foes infected with an otherworldy illness." + br() + br() + "(Further research required.)")
+                        "A highly infectious substance, harvested from friend or foes infected with an otherworldy illness." + br() + br() + "See " + entryLink("blood_mechanisms", "blood_flora", "Blood Flora") + " for collection methods.")
                 .addSpotlightPage("bloodyhell:viscous_blasphemy_bucket", link(blasphemous("Viscous Blasphemy")) + br() +
                         "A highly dangerous and complex substance. It is a byproduct generated exclusively by the " + entryLink("the_unknown", "unknown_portal", "Unknown Portal") + " when it consumes living flesh.");
         saveEntry(cache, variants);
@@ -430,6 +442,25 @@ public class PatchouliProvider implements DataProvider {
         mapping.addProperty("T", "bloodyhell:sanguinite_tank");
         mapping.addProperty("P", "bloodyhell:sanguinite_pipe");
         mapping.addProperty("0", "bloodyhell:unknown_portal_block");
+        multiblock.add("mapping", mapping);
+
+        return multiblock;
+    }
+
+    private JsonObject createMushroomMultiblock(String targetMushroom) {
+        JsonObject multiblock = new JsonObject();
+        com.google.gson.JsonArray pattern = new com.google.gson.JsonArray();
+
+        // 1x2 Layer
+        com.google.gson.JsonArray layer = new com.google.gson.JsonArray();
+        layer.add("P0");
+        pattern.add(layer);
+
+        multiblock.add("pattern", pattern);
+
+        JsonObject mapping = new JsonObject();
+        mapping.addProperty("P", "bloodyhell:sanguinite_pipe");
+        mapping.addProperty("0", targetMushroom);
         multiblock.add("mapping", mapping);
 
         return multiblock;
