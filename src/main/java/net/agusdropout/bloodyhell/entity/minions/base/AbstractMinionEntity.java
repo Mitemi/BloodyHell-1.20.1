@@ -48,7 +48,7 @@ public abstract class AbstractMinionEntity extends Monster implements GeoEntity,
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(DATA_OWNERUUID_ID, Optional.empty());
-        this.entityData.define(STRIPE_COLOR, 0xFFFFFF);
+        this.entityData.define(STRIPE_COLOR, 0xffbf00);
         this.entityData.define(IS_SUMMONING, true);
     }
 

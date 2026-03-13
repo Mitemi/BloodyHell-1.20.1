@@ -144,10 +144,6 @@ public class WeepingOcularEntity extends AbstractMinionEntity {
         return "the_weeping_ocular";
     }
 
-    @Override
-    public int getStripeColor() {
-        return 0x00f8fc;
-    }
 
     @Override
     public float getMinimumInsight() {

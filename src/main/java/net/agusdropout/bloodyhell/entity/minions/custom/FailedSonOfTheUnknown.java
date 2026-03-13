@@ -131,10 +131,6 @@ public class FailedSonOfTheUnknown extends AbstractMinionEntity {
         this.playSound(ModSounds.FAILED_SON_OF_THE_UNKNOWN_STEP.get(), 0.8F, 0.2F);
     }
 
-    @Override
-    public int getStripeColor() {
-        return 0xffbf00;
-    }
 
     @Override
     public float getMinimumInsight() {
