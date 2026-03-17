@@ -117,7 +117,7 @@ public class ClientEvents {
             Player player = Minecraft.getInstance().player;
             if (player == null) return;
 
-            if (ModClientConfigs.ENABLE_CAMERA_SHAKE.get()) return;
+            if (!ModClientConfigs.ENABLE_CAMERA_SHAKE.get()) return;
 
             float delta = Minecraft.getInstance().getFrameTime();
             float ticksExistedDelta = player.tickCount + delta;

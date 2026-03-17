@@ -3,7 +3,7 @@ package net.agusdropout.bloodyhell.block.custom.mechanism;
 import net.agusdropout.bloodyhell.block.base.IFlaskInteractableBlock;
 import net.agusdropout.bloodyhell.block.entity.ModBlockEntities;
 
-import net.agusdropout.bloodyhell.block.entity.custom.SanguiniteBloodHarvesterBlockEntity;
+import net.agusdropout.bloodyhell.block.entity.custom.mechanism.SanguiniteBloodHarvesterBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

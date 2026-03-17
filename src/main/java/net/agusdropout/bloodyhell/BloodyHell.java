@@ -200,13 +200,8 @@ public class BloodyHell
         ItemStack heldItem = player.getMainHandItem();
         if (heldItem.getItem() instanceof HoeItem && (block == ModBlocks.BLOOD_GRASS_BLOCK.get() || block == ModBlocks.BLOOD_DIRT_BLOCK.get())) {
             player.swing(InteractionHand.MAIN_HAND);
-            // Transformar el bloque en BLOODDIRT_FARMLAND
             level.setBlockAndUpdate(pos, ModBlocks.BLOODDIRT_FARMLAND.get().defaultBlockState());
-
-            // Dañar la azada
             heldItem.hurtAndBreak(1, player, (playerEntity) -> playerEntity.broadcastBreakEvent(playerEntity.getUsedItemHand()));
-
-            // Detener la propagación del evento para evitar que se realice la acción predeterminada de la azada
             event.setCanceled(true);
         }
 
@@ -214,7 +209,6 @@ public class BloodyHell
 
 
 
-    // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents
     {
@@ -224,6 +218,7 @@ public class BloodyHell
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event)
         {
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.SANGUINITE_BLOOD_HARVESTER.get(), RenderType.translucent());
             Minecraft.getInstance().particleEngine.register(ModParticles.CYLINDER_PARTICLE.get(), new CylinderParticle.Provider());
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.ANCIENT_BLOOD_CAPSULE.get(), RenderType.translucent());
             MenuScreens.register(ModMenuTypes.BLOOD_WORKBENCH_MENU.get(), BloodWorkBenchScreen::new);
@@ -287,7 +282,7 @@ public class BloodyHell
             BlockEntityRenderers.register(ModBlockEntities.RHNULL_PIPE_BE.get(), PipeRenderer::new);
             BlockEntityRenderers.register(ModBlockEntities.SANGUINITE_TANK_BE.get(), TankRenderer::new);
             BlockEntityRenderers.register(ModBlockEntities.RHNULL_TANK_BE.get(), TankRenderer::new);
-            BlockEntityRenderers.register(ModBlockEntities.SANGUINITE_BLOOD_HARVESTER_BE.get(), BaseGeckoBlockRenderer::new);
+            BlockEntityRenderers.register(ModBlockEntities.SANGUINITE_BLOOD_HARVESTER_BE.get(), SanguiniteHarvesterRenderer::new);
             BlockEntityRenderers.register(ModBlockEntities.STAR_LAMP.get(), StarLampRenderer::new);
             BlockEntityRenderers.register(ModBlockEntities.SELIORA_RESTING.get(), SelioraRestingBlockRenderer::new);
             BlockEntityRenderers.register(ModBlockEntities.BLASPHEMOUS_BLOOD_ALTAR.get(), BlasphemousBloodAltarRenderer::new);

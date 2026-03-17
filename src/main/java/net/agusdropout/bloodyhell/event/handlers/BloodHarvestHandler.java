@@ -1,6 +1,6 @@
 package net.agusdropout.bloodyhell.event.handlers;
 
-import net.agusdropout.bloodyhell.block.entity.custom.SanguiniteBloodHarvesterBlockEntity;
+import net.agusdropout.bloodyhell.block.entity.custom.mechanism.SanguiniteBloodHarvesterBlockEntity;
 import net.agusdropout.bloodyhell.datagen.ModTags;
 import net.agusdropout.bloodyhell.effect.ModEffects; // Don't forget this import!
 import net.agusdropout.bloodyhell.entity.soul.BloodSoulEntity;
@@ -20,14 +20,14 @@ public class BloodHarvestHandler {
 
         if (level.isClientSide) return;
 
-        // Check if entity is valid for sacrifice first
+
         if (!isValidSacrifice(entity)) return;
 
-        // Configuration: Radius
+
         int range = 10;
         BlockPos entityPos = entity.blockPosition();
 
-        // Find Harvester
+
         BlockPos harvesterPos = BlockPos.findClosestMatch(entityPos, range, range, pos ->
                 level.getBlockEntity(pos) instanceof SanguiniteBloodHarvesterBlockEntity
         ).orElse(null);
@@ -49,14 +49,11 @@ public class BloodHarvestHandler {
     }
 
     private static BloodSoulType determineBloodType(LivingEntity entity) {
-        // 1. PRIORITY CHECK: VISCERAL EFFECT
-        // If the entity is suffering from Visceral, it produces an INFECTED soul
-        // regardless of what mob it originally was.
         if (entity.hasEffect(ModEffects.VISCERAL_EFFECT.get())) {
             return BloodSoulType.INFECTED;
         }
 
-        // 2. Standard Tag Checks
+
         if (entity.getType().is(ModTags.Entities.CORRUPTED_SACRIFICEABLE_ENTITY)) {
             return BloodSoulType.CORRUPTED;
         }

@@ -1,6 +1,6 @@
 package net.agusdropout.bloodyhell.entity.soul;
 
-import net.agusdropout.bloodyhell.block.entity.custom.SanguiniteBloodHarvesterBlockEntity;
+import net.agusdropout.bloodyhell.block.entity.custom.mechanism.SanguiniteBloodHarvesterBlockEntity;
 import net.agusdropout.bloodyhell.entity.ModEntityTypes;
 import net.agusdropout.bloodyhell.util.capability.CrimsonVeilHelper;
 import net.minecraft.core.BlockPos;
@@ -26,18 +26,17 @@ public class BloodSoulEntity extends Entity {
 
     private static final EntityDataAccessor<Optional<BlockPos>> TARGET_POS = SynchedEntityData.defineId(BloodSoulEntity.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
     private static final EntityDataAccessor<Integer> TARGET_ENTITY_ID = SynchedEntityData.defineId(BloodSoulEntity.class, EntityDataSerializers.INT);
-
     private static final EntityDataAccessor<Integer> SOUL_TYPE = SynchedEntityData.defineId(BloodSoulEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> SOUL_SIZE = SynchedEntityData.defineId(BloodSoulEntity.class, EntityDataSerializers.INT);
 
     private static final double SPEED = 0.2;
+    private static final double ABSORPTION_RANGE = 4.0;
     private UUID targetUUID;
 
     public BloodSoulEntity(EntityType<?> type, Level level) {
         super(type, level);
         this.noCulling = true;
     }
-
 
     public BloodSoulEntity(Level level, BlockPos target, BloodSoulType soulType, BloodSoulSize size) {
         this(ModEntityTypes.BLOOD_SOUL.get(), level);
@@ -46,7 +45,6 @@ public class BloodSoulEntity extends Entity {
         this.setSoulSize(size);
         this.setPos(this.getX(), this.getY() + 0.5, this.getZ());
     }
-
 
     public BloodSoulEntity(Level level, LivingEntity targetEntity, BloodSoulType soulType, BloodSoulSize size) {
         this(ModEntityTypes.BLOOD_SOUL.get(), level);
@@ -60,7 +58,7 @@ public class BloodSoulEntity extends Entity {
     @Override
     protected void defineSynchedData() {
         this.entityData.define(TARGET_POS, Optional.empty());
-        this.entityData.define(TARGET_ENTITY_ID, -1); // -1 means no entity target
+        this.entityData.define(TARGET_ENTITY_ID, -1);
         this.entityData.define(SOUL_TYPE, 0);
         this.entityData.define(SOUL_SIZE, 0);
     }
@@ -70,29 +68,22 @@ public class BloodSoulEntity extends Entity {
         super.tick();
         BloodSoulSize size = getSoulSize();
 
-
         if (level().isClientSide) {
-            float spread = 0.2f * size.scale;
             getSoulType().spawnParticles(level(), this.position(), this.random, size.scale);
             return;
         }
 
-
         int targetId = this.entityData.get(TARGET_ENTITY_ID);
-
 
         if (targetId != -1) {
             Entity targetEntity = level().getEntity(targetId);
             if (targetEntity instanceof LivingEntity livingTarget && livingTarget.isAlive()) {
-                // Aim for their chest/center, not their toes
                 Vec3 targetVec = livingTarget.position().add(0, livingTarget.getBbHeight() / 2.0, 0);
                 moveTowardsTarget(targetVec, livingTarget, null);
             } else {
-                this.discard(); // Target died or logged off
+                this.discard();
             }
-        }
-
-        else {
+        } else {
             Optional<BlockPos> targetOpt = this.entityData.get(TARGET_POS);
             if (targetOpt.isPresent()) {
                 BlockPos target = targetOpt.get();
@@ -108,24 +99,39 @@ public class BloodSoulEntity extends Entity {
         Vec3 direction = targetVec.subtract(this.position());
         double distance = direction.length();
 
+        if (targetBlock != null) {
+            checkHarvesterInteraction(targetBlock, distance);
+        }
+
         if (distance < SPEED) {
-
-            BloodSoulSize size = getSoulSize();
-
-            if (targetEntity instanceof Player player) {
-                CrimsonVeilHelper.restore(player, 5 * size.ordinal() );
-
-            } else if (targetBlock != null) {
-                BlockEntity be = level().getBlockEntity(targetBlock);
-                if (be instanceof SanguiniteBloodHarvesterBlockEntity harvester) {
-                    harvester.receiveSoul(this.getSoulType(), size.fluidAmount);
-                }
-            }
+            handleCollision(targetEntity, targetBlock);
             this.discard();
         } else {
             Vec3 move = direction.normalize().scale(SPEED);
             this.setPos(this.position().add(move));
             this.setBoundingBox(this.getBoundingBox().move(move));
+        }
+    }
+
+    private void checkHarvesterInteraction(BlockPos pos, double distance) {
+        if (distance <= ABSORPTION_RANGE) {
+            BlockEntity be = level().getBlockEntity(pos);
+            if (be instanceof SanguiniteBloodHarvesterBlockEntity harvester) {
+                harvester.startAbsorbing();
+            }
+        }
+    }
+
+    private void handleCollision(LivingEntity targetEntity, BlockPos targetBlock) {
+        BloodSoulSize size = getSoulSize();
+
+        if (targetEntity instanceof Player player) {
+            CrimsonVeilHelper.restore(player, 5 * size.ordinal());
+        } else if (targetBlock != null) {
+            BlockEntity be = level().getBlockEntity(targetBlock);
+            if (be instanceof SanguiniteBloodHarvesterBlockEntity harvester) {
+                harvester.receiveSoul(this.getSoulType(), size.fluidAmount);
+            }
         }
     }
 

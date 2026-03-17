@@ -2,6 +2,8 @@ package net.agusdropout.bloodyhell.block.entity.custom.mechanism;
 
 import net.agusdropout.bloodyhell.block.entity.ModBlockEntities;
 import net.agusdropout.bloodyhell.block.entity.base.BaseGeckoBlockEntity;
+import net.agusdropout.bloodyhell.block.entity.base.IFluidBlockHolder;
+import net.agusdropout.bloodyhell.block.entity.base.IGeoFluidBlock;
 import net.agusdropout.bloodyhell.entity.ModEntityTypes;
 import net.agusdropout.bloodyhell.entity.custom.HostileUnknownEntityArms;
 import net.agusdropout.bloodyhell.fluid.ModFluids;
@@ -33,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class UnknownPortalBlockEntity extends BaseGeckoBlockEntity {
+public class UnknownPortalBlockEntity extends BaseGeckoBlockEntity implements IFluidBlockHolder, IGeoFluidBlock {
 
     private static final int BLOOD_PER_TICK = 5;
     private static final float PROGRESS_STEP = 0.5f;
@@ -225,5 +227,30 @@ public class UnknownPortalBlockEntity extends BaseGeckoBlockEntity {
             }
             this.summonedArmsIds.clear();
         }
+    }
+
+    @Override
+    public FluidTank getInputTank() {
+        return this.inputTank;
+    }
+
+    @Override
+    public float getFluidHeight() {
+        return 1.0f;
+    }
+
+    @Override
+    public float getFluidRadius() {
+        return 0.25f;
+    }
+
+    @Override
+    public float getFluidHeightOffset() {
+        return 0.15f;
+    }
+
+    @Override
+    public String getFluidBoneName() {
+        return "blood";
     }
 }

@@ -2,8 +2,9 @@ package net.agusdropout.bloodyhell.block.client.layer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
-import net.agusdropout.bloodyhell.block.entity.custom.mechanism.UnknownPortalBlockEntity;
+import net.agusdropout.bloodyhell.block.entity.base.BaseGeckoBlockEntity;
+import net.agusdropout.bloodyhell.block.entity.base.IGeoFluidBlock;
+import net.agusdropout.bloodyhell.block.entity.base.IFluidBlockHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -19,22 +20,22 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 import software.bernie.geckolib.util.RenderUtils;
 
-public class UnknownPortalFluidLayer extends GeoRenderLayer<UnknownPortalBlockEntity> {
+public class GeoFluidLayer <T extends BaseGeckoBlockEntity & IFluidBlockHolder & IGeoFluidBlock> extends GeoRenderLayer<T> {
 
-    public UnknownPortalFluidLayer(GeoRenderer<UnknownPortalBlockEntity> entityRendererIn) {
+    public GeoFluidLayer(GeoRenderer<T> entityRendererIn) {
         super(entityRendererIn);
     }
 
     @Override
-    public void render(PoseStack poseStack, UnknownPortalBlockEntity animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+    public void render(PoseStack poseStack, T animatable, BakedGeoModel bakedModel, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
 
-        GeoBone bloodBone = bakedModel.getBone("blood").orElse(null);
+        GeoBone bloodBone = bakedModel.getBone(animatable.getFluidBoneName()).orElse(null);
         if (bloodBone == null) return;
 
-        FluidStack fluidStack = animatable.inputTank.getFluid();
+        FluidStack fluidStack = animatable.getInputTank().getFluid();
         if (fluidStack.isEmpty()) return;
 
-        float fillPercentage = (float) animatable.inputTank.getFluidAmount() / animatable.inputTank.getCapacity();
+        float fillPercentage = (float) animatable.getInputTank().getFluidAmount() / animatable.getInputTank().getCapacity();
 
         IClientFluidTypeExtensions fluidProps = IClientFluidTypeExtensions.of(fluidStack.getFluid());
         ResourceLocation fluidStill = fluidProps.getStillTexture(fluidStack);
@@ -59,9 +60,9 @@ public class UnknownPortalFluidLayer extends GeoRenderLayer<UnknownPortalBlockEn
         poseStack.translate(0,0.9,0);
 
 
-        float radius = 0.25f;
-        float maxHeight = 1.0f / 16.0f;
-        float yOffset = 0.15f;
+        float radius = animatable.getFluidRadius();
+        float maxHeight = animatable.getFluidHeight() / 16.0f;
+        float yOffset = animatable.getFluidHeightOffset();
 
         float xMin = -radius;
         float xMax = radius;
@@ -130,3 +131,4 @@ public class UnknownPortalFluidLayer extends GeoRenderLayer<UnknownPortalBlockEn
                 .endVertex();
     }
 }
+

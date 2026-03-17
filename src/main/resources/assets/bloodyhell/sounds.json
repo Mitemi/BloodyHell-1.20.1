@@ -283,5 +283,16 @@
         "stream": true
       }
     ]
+  },
+
+  "harvester_pump": {
+    "subtitle": "subtitles.bloodyhell.harvester_pump",
+    "sounds": [
+      {
+        "name": "bloodyhell:harvester_pump",
+        "stream": false
+      }
+    ]
   }
+
 }

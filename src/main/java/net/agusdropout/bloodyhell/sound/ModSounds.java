@@ -57,6 +57,7 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> UNKNOWN_LANTERN_AMBIENT_1 = registerSoundEvents("unknown_lantern_ambient_1");
     public static final RegistryObject<SoundEvent> UNKNOWN_LANTERN_AMBIENT_2 = registerSoundEvents("unknown_lantern_ambient_2");
     public static final RegistryObject<SoundEvent> UNKNOWN_LANTERN_GAZE = registerSoundEvents("unknown_lantern_gaze");
+    public static final RegistryObject<SoundEvent> HARVESTER_PUMP = registerSoundEvents("harvester_pump");
 
 
 
