@@ -120,6 +120,7 @@ public class MainBlasphemousBloodAltarBlock extends AbstractMainAltarBlock {
                     level.setBlock(blockPos, blockState.setValue(ACTIVE, true), 3);
                     level.setBlock(blockPos.above(), level.getBlockState(blockPos.above()).setValue(ACTIVE, true), 3);
                     level.playSound(null, blockPos, SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    super.handleVisualEffects(level, blockPos);
                 }
                 return InteractionResult.sidedSuccess(level.isClientSide());
 
@@ -150,8 +151,10 @@ public class MainBlasphemousBloodAltarBlock extends AbstractMainAltarBlock {
                     ItemStack result = recipe.get().getResultItem(level.registryAccess());
                     Item resultItem = result.getItem();
                     consumeItemsFromAltars(level, blockPos);
-                    return finalizeRitualServer(level, blockPos, player, blockState, altar, result);
+                    super.dischargeAltars(level, blockPos);
 
+
+                    return finalizeRitualServer(level, blockPos, player, blockState, altar, result);
                 } else {
                     level.playSound(null, blockPos, SoundEvents.BASALT_BREAK, SoundSource.BLOCKS, 0.5F, 0.5F);
                     ((ServerLevel) level).sendParticles(ParticleTypes.SMOKE, blockPos.getX() + 0.5, blockPos.getY() + 1, blockPos.getZ() + 0.5, 10, 0.2, 0.2, 0.2, 0.05);
@@ -169,6 +172,7 @@ public class MainBlasphemousBloodAltarBlock extends AbstractMainAltarBlock {
         VanillaPacketDispatcher.dispatchTEToNearbyPlayers(altar);
 
         level.blockEvent(blockPos, this, 1, 0);
+        level.blockEvent(blockPos, this, 2, 0);
 
         if (level instanceof ServerLevel serverLevel) {
             BlockPos center = blockPos;
@@ -214,23 +218,8 @@ public class MainBlasphemousBloodAltarBlock extends AbstractMainAltarBlock {
         return copyB.isEmpty();
     }
 
-    private void performSummonCow(Level level, BlockPos pos) {
-        Cow cow = new Cow(EntityType.COW, level);
-        cow.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
-        level.addFreshEntity(cow);
-    }
 
-    private void performFindMausoleum(Level level, BlockPos pos, Player player) {
-        if (level instanceof ServerLevel serverLevel) {
-            BlockPos location = serverLevel.findNearestMapStructure(ModTags.Structures.MAUSOLEUM, pos, 100, false);
-            if (location != null) {
-                BlockPos safePos = serverLevel.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, location);
-                player.teleportTo(safePos.getX(), safePos.getY() + 1, safePos.getZ());
-                serverLevel.sendParticles(ParticleTypes.PORTAL, player.getX(), player.getY(), player.getZ(), 50, 0.5, 1, 0.5, 0.1);
-                player.sendSystemMessage(Component.literal("§cYou have been summoned to the mausoleum..."));
-            }
-        }
-    }
+
 
 
 

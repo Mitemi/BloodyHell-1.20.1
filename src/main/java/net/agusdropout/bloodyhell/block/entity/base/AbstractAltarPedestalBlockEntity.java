@@ -1,5 +1,6 @@
 package net.agusdropout.bloodyhell.block.entity.base;
 
+import net.agusdropout.bloodyhell.block.base.AbstractAltarBlock;
 import net.agusdropout.bloodyhell.block.base.IAltarPedestal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractAltarPedestalBlockEntity extends BlockEntity implements IAltarPedestal {
+public abstract class AbstractAltarPedestalBlockEntity extends BlockEntity implements IAltarPedestal, IAltarEntity, IChargableAltarEntity, IHoldingItemsAltar {
 
     protected final ItemStackHandler itemHandler;
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
@@ -106,6 +107,12 @@ public abstract class AbstractAltarPedestalBlockEntity extends BlockEntity imple
         return false;
     }
 
+    @Override
+    public boolean isMainCharged() {
+        BlockState state = this.getBlockState();
+        return state.getValue(AbstractAltarBlock.MAINCHARGED);
+    }
+
     public ItemStack retrieveItem() {
         for (int i = 0; i < itemHandler.getSlots(); i++) {
             if (!itemHandler.getStackInSlot(i).isEmpty()) {
@@ -117,6 +124,9 @@ public abstract class AbstractAltarPedestalBlockEntity extends BlockEntity imple
         }
         return ItemStack.EMPTY;
     }
+
+
+
 
     public boolean isSpace() {
         for (int i = 0; i < itemHandler.getSlots(); i++) {
@@ -154,4 +164,6 @@ public abstract class AbstractAltarPedestalBlockEntity extends BlockEntity imple
         }
         return true;
     }
+
+
 }

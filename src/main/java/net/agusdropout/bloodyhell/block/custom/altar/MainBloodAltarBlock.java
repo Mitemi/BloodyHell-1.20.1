@@ -160,7 +160,7 @@ public class MainBloodAltarBlock extends AbstractMainAltarBlock {
                     level.setBlock(blockPos.above(), level.getBlockState(blockPos.above()).setValue(ACTIVE, true), 3);
 
                     level.playSound(null, blockPos, SoundEvents.END_PORTAL_FRAME_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    handleVisualEffects(level, blockPos);
+                    super.handleVisualEffects(level, blockPos);
                 }
                 return InteractionResult.sidedSuccess(level.isClientSide());
 
@@ -214,49 +214,5 @@ public class MainBloodAltarBlock extends AbstractMainAltarBlock {
         }
         return InteractionResult.PASS;
     }
-
-    private void handleVisualEffects(Level level, BlockPos blockPos) {
-        if (!level.isClientSide()) {
-            ServerLevel serverLevel = (ServerLevel) level;
-            BlockPos[] altarPositions = {blockPos.north(4), blockPos.east(4), blockPos.south(4), blockPos.west(4)};
-
-            Vector3f colorStart = new Vector3f(0.4f, 0.0f, 0.0f);
-            Vector3f colorEnd = new Vector3f(1.0f, 0.1f, 0.1f);
-
-            for (BlockPos pPos : altarPositions) {
-                BlockState pState = level.getBlockState(pPos);
-
-                if (pState.hasProperty(BloodAltarBlock.MAINCHARGED)) {
-                    level.setBlock(pPos, pState.setValue(BloodAltarBlock.MAINCHARGED, true), 3);
-                }
-
-                Vec3 startVec = new Vec3(blockPos.getX() + 0.5, blockPos.getY() + 1.5, blockPos.getZ() + 0.5);
-                Vec3 endVec = new Vec3(pPos.getX() + 0.5, pPos.getY() + 0.8, pPos.getZ() + 0.5);
-
-                int particleCount = 12;
-                for (int i = 0; i < particleCount; i++) {
-                    float ratio = (float) i / (particleCount - 1);
-                    Vector3f currentColor = ParticleHelper.gradient3(ratio, colorStart, colorEnd, colorEnd);
-
-                    MagicParticleOptions options = new MagicParticleOptions(currentColor, 0.6f, false, 40, true);
-
-                    Vec3 spawnPos = startVec.lerp(endVec, ratio);
-                    ParticleHelper.spawn(serverLevel, options, spawnPos.x, spawnPos.y, spawnPos.z, 0, 0.01, 0);
-                }
-            }
-        }
-    }
-
-        private void dischargeAltars(Level level, BlockPos blockPos) {
-            if (!level.isClientSide()) {
-                BlockPos[] altarPositions = {blockPos.north(4), blockPos.east(4), blockPos.south(4), blockPos.west(4)};
-                for (BlockPos pPos : altarPositions) {
-                    BlockState pState = level.getBlockState(pPos);
-                    if (pState.hasProperty(BloodAltarBlock.MAINCHARGED)) {
-                        level.setBlock(pPos, pState.setValue(BloodAltarBlock.MAINCHARGED, false), 3);
-                    }
-                }
-            }
-        }
 
 }

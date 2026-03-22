@@ -4,7 +4,6 @@ import com.mojang.logging.LogUtils;
 
 import net.agusdropout.bloodyhell.block.client.renderer.BlasphemousBloodAltarRenderer;
 import net.agusdropout.bloodyhell.block.ModBlocks;
-import net.agusdropout.bloodyhell.block.client.generic.BaseGeckoBlockRenderer;
 import net.agusdropout.bloodyhell.block.client.renderer.*;
 import net.agusdropout.bloodyhell.block.entity.ModBlockEntities;
 import net.agusdropout.bloodyhell.capability.IBloodPortal;
