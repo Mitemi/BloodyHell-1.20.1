@@ -19,4 +19,8 @@ public class RhnullCondenserBlockEntity extends AbstractCondenserBlockEntity {
     }
 
 
+    @Override
+    public String getAssetPathName() {
+        return "rhnull_condenser";
+    }
 }

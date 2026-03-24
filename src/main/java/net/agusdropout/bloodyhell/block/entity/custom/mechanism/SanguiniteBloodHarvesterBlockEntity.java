@@ -10,6 +10,7 @@ import net.agusdropout.bloodyhell.fluid.ModFluids;
 import net.agusdropout.bloodyhell.particle.ModParticles;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.ChillFallingParticleOptions;
 import net.agusdropout.bloodyhell.sound.ModSounds;
+import net.agusdropout.bloodyhell.util.visuals.ColorHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -24,6 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -117,12 +119,17 @@ public class SanguiniteBloodHarvesterBlockEntity extends BaseGeckoBlockEntity im
                 double spreadX = (this.level.random.nextDouble() - 0.5) * 0.1;
                 double spreadZ = (this.level.random.nextDouble() - 0.5) * 0.1;
 
-                this.level.addParticle(new ChillFallingParticleOptions(new Vector3f(0.8f, 0f, 0.0f), 0.03f, 30, 0),
-                        posX, posY+0.2, posZ,
-                        (dir.getStepX() * 0.15) + spreadX,
-                        0.9 + (this.level.random.nextDouble() * 0.1),
-                        (dir.getStepZ() * 0.15) + spreadZ
-                );
+                FluidStack currentFluid = this.tank.getFluid();
+                if (!currentFluid.isEmpty()) {
+                    int fluidColorInt = IClientFluidTypeExtensions.of(currentFluid.getFluid()).getTintColor(currentFluid);
+
+                    this.level.addParticle(new ChillFallingParticleOptions(ColorHelper.hexToVector3f(fluidColorInt), 0.03f, 30, 0),
+                            posX, posY + 0.2, posZ,
+                            (dir.getStepX() * 0.15) + spreadX,
+                            0.9 + (this.level.random.nextDouble() * 0.1),
+                            (dir.getStepZ() * 0.15) + spreadZ
+                    );
+                }
             }
             this.level.playLocalSound(
                     this.worldPosition.getX() + 0.5,

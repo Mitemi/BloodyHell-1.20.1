@@ -1,0 +1,33 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"active": {
+			"animation_length": 4,
+			"bones": {
+				"pump": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"3.0": {
+							"vector": [0, -9, 0],
+							"easing": "easeOutExpo"
+						},
+						"4.0": {
+							"vector": [0, 0, 0],
+							"easing": "easeOutElastic"
+						}
+					}
+				}
+			},
+			"timeline": {
+				"0.0": "pumpStart;",
+				"3.3": "pump;"
+			}
+		},
+		"idle": {
+			"loop": true
+		}
+	},
+	"geckolib_format_version": 2
+}

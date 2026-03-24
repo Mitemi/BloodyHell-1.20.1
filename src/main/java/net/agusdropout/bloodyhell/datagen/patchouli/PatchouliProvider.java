@@ -78,7 +78,10 @@ public class PatchouliProvider implements DataProvider {
                         "A solidified chunk of raw essence. It is created by processing fluid inside a " + entryLink("blood_mechanisms", "blood_condensers", "Condenser") + ". " + br() + br() +
                         "The size of the gem (Standard or Great) depends on the " + entryLink("blood_mechanisms", "gem_frames", "Gem Frame") + " used.")
                 .addSpotlightPage("bloodyhell:ancient_rhnull_gem,bloodyhell:great_ancient_rhnull_gem", gold("Rhnull Gem & Great Rhnull Gem") + br() + br() +
-                        "A hyper-dense arcane core. It is obtained by taking a standard or great Ancient Gem and processing it further inside a " + entryLink("blood_mechanisms", "sanguinite_infusor", "Blood Infusor") + ".");
+                        "A hyper-dense arcane core. It is obtained by taking a standard or great Ancient Gem and processing it further inside a " + entryLink("blood_mechanisms", "sanguinite_infusor", "Blood Infusor") + ".")
+                 .addSpotlightPage("bloodyhell:ancient_blasphemous_gem,bloodyhell:great_ancient_blasphemous_gem", blasphemous("Blasphemous Gem & Great Blasphemous Gem") + br() + br() +
+                "A terrifying crystallization of cosmic dread. It is forged by condensing the highly volatile " + entryLink("blood_fluids", "blood_variants", "Viscous Blasphemy") + " fluid." + br() + br() +
+                "Due to the fluid's extreme and corrosive nature, this process can " + link("only") + " be safely performed inside a " + gold("Rhnull ") + entryLink("blood_mechanisms", "blood_condensers", "Condenser") + ".");
         saveEntry(cache, magicGems);
 
         // --- ENTRY: CRIMSON VEIL ---
@@ -106,6 +109,17 @@ public class PatchouliProvider implements DataProvider {
                 .addTextPage("The " + dagger() + " is more than just a weapon. It serves as a wrench and a catalyst for your mechanisms." + br() + br() +
                         "Right-clicking certain machines or pipes with this blade allows you to alter their configuration, such as applying fluid filters.");
         saveEntry(cache, daggerEntry);
+
+        // --- ENTRY: RHNULL INGOT ---
+        PatchouliEntryBuilder rhnullIngot = PatchouliEntryBuilder.create("rhnull_ingot", category.getId(), "Forging Rhnull", "bloodyhell:rhnull")
+                .addSpotlightPage("bloodyhell:rhnull", gold("Rhnull") + br() + br() +
+                        "An incredibly dense, arcane material capable of containing the most volatile energies without shattering.")
+                .addTextPage("To forge Rhnull, you must harness the power of a " + entryLink("blood_mechanisms", "sanguinite_infusor", "Sanguinite Infusor") + "." + br() + br() +
+                        "Place a standard " + blood("Sanguinite Ingot") + " into the Infusor as your base catalyst.")
+                .addTextPage("Next, you must connect pipes and simultaneously pump both " + blood("Normal Blood") + " and " + infected("Infected Blood") + " into the machine." + br() + br() +
+                        "The conflicting essences will aggressively compress the Sanguinite, transmuting it into Rhnull.")
+                .addTextPage("This highly resilient material is absolutely essential for crafting advanced machinery, high-tier Condenser frames, and pipes capable of transporting " + blasphemous("Viscous Blasphemy") + ".");
+        saveEntry(cache, rhnullIngot);
 
         // --- ENTRY: BLOOD ALTARS ---
         JsonObject altarMultiblock = new JsonObject();
@@ -204,11 +218,11 @@ public class PatchouliProvider implements DataProvider {
         saveEntry(cache, gemFrames);
 
         // --- ENTRY: CONDENSERS ---
-        PatchouliEntryBuilder condensers = PatchouliEntryBuilder.create("blood_condensers", category.getId(), "Blood Condensers", "bloodyhell:sanguinite_condenser")
+        PatchouliEntryBuilder condensers = PatchouliEntryBuilder.create("blood_condensers", category.getId(), "Blood Condensers", "bloodyhell:sanguinite_condenser_item")
                 .addTextPage("Condensers turn liquid blood into solid, crystallized fragments. The process requires a " + entryLink("blood_mechanisms", "gem_frames", "Gem Frame") + " to shape the crystal." + br() + br() +
                         "A condenser can " + link("only") + " be pumped with " + link("one") + " type of fluid at a time.")
-                .addSpotlightPage("bloodyhell:sanguinite_condenser", "Standard condenser." + br() + br() + "Can " + link("only") + " hold " + blood("Normal Blood") + " and " + infected("Infected Blood") + ".")
-                .addSpotlightPage("bloodyhell:rhnull_condenser", "A highly resilient condenser made of " + gold("Rhnull") + "." + br() + br() +
+                .addSpotlightPage("bloodyhell:sanguinite_condenser_item", "Standard condenser." + br() + br() + "Can " + link("only") + " hold " + blood("Normal Blood") + " and " + infected("Infected Blood") + ".")
+                .addSpotlightPage("bloodyhell:rhnull_condenser_item", "A highly resilient condenser made of " + gold("Rhnull") + "." + br() + br() +
                         "Can safely hold " + link("all") + " fluid types.");
         saveEntry(cache, condensers);
 

@@ -293,6 +293,15 @@
         "stream": false
       }
     ]
+  },
+  "condenser_pump": {
+    "subtitle": "subtitles.bloodyhell.condenser_pump",
+    "sounds": [
+      {
+        "name": "bloodyhell:condenser_pump",
+        "stream": false
+      }
+    ]
   }
 
 }

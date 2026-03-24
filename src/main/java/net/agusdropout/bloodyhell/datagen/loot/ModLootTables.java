@@ -71,8 +71,8 @@ public class ModLootTables extends LootTableProvider {
             this.dropSelf(ModBlocks.MAIN_BLASPHEMOUS_BLOOD_ALTAR.get());
             this.dropSelf(ModBlocks.BLOOD_ALTAR.get());
             this.dropSelf(ModBlocks.MAIN_BLOOD_ALTAR.get());
-            this.dropSelf(ModBlocks.SANGUINITE_CONDENSER.get());
-            this.dropSelf(ModBlocks.RHNULL_CONDENSER.get());
+            this.dropOther(ModBlocks.SANGUINITE_CONDENSER.get(), ModItems.SANGUINITE_CONDENSER_ITEM.get());
+            this.dropOther(ModBlocks.RHNULL_CONDENSER.get(), ModItems.RHNULL_CONDENSER_ITEM.get());
             this.dropSelf(ModBlocks.BLOOD_SAPLING.get());
             this.dropSelf(ModBlocks.STRIPPED_BLOOD_WOOD.get());
             this.dropSelf(ModBlocks.STRIPPED_BLOOD_LOG.get());

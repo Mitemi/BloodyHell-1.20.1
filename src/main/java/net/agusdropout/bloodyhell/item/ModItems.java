@@ -11,10 +11,7 @@ import net.agusdropout.bloodyhell.item.custom.OnlyAppendHoverText.*;
 import net.agusdropout.bloodyhell.item.custom.altar.BlasphemousBloodAltarItem;
 import net.agusdropout.bloodyhell.item.custom.altar.MainBlasphemousBloodAltarItem;
 import net.agusdropout.bloodyhell.item.custom.base.BasePowerGemItem;
-import net.agusdropout.bloodyhell.item.custom.mechanism.RhnullPipeItem;
-import net.agusdropout.bloodyhell.item.custom.mechanism.SanguiniteBloodHarvesterItem;
-import net.agusdropout.bloodyhell.item.custom.mechanism.SanguinitePipeItem;
-import net.agusdropout.bloodyhell.item.custom.mechanism.UnknownPortalItem;
+import net.agusdropout.bloodyhell.item.custom.mechanism.*;
 import net.agusdropout.bloodyhell.item.custom.reliquary.ReliquaryItem;
 import net.agusdropout.bloodyhell.item.custom.spellbooks.*;
 import net.agusdropout.bloodyhell.item.potions.BloodFlaskItem;
@@ -263,6 +260,10 @@ public class ModItems {
             () -> new RhnullPipeItem(ModBlocks.RHNULL_PIPE.get(), new Item.Properties()));
     public static final RegistryObject<Item> SANGUINITE_BLOOD_HARVESTER_ITEM = ITEMS.register("sanguinite_blood_harvester_item",
             () -> new SanguiniteBloodHarvesterItem(ModBlocks.SANGUINITE_BLOOD_HARVESTER.get(), new Item.Properties()));
+    public static final RegistryObject<Item> SANGUINITE_CONDENSER_ITEM = ITEMS.register("sanguinite_condenser_item",
+            () -> new SanguiniteCondernserItem(ModBlocks.SANGUINITE_CONDENSER.get(), new Item.Properties()));
+    public static final RegistryObject<Item> RHNULL_CONDENSER_ITEM = ITEMS.register("rhnull_condenser_item",
+            () -> new RhnullCondenserItem(ModBlocks.RHNULL_CONDENSER.get(), new Item.Properties()));
     public static final RegistryObject<Item> UNKNOWN_PORTAL_ITEM = ITEMS.register("unknown_portal_item",
             () -> new UnknownPortalItem(ModBlocks.UNKNOWN_PORTAL_BLOCK.get(), new Item.Properties()));
 

@@ -140,8 +140,8 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.MAIN_BLASPHEMOUS_BLOOD_ALTAR_ITEM.get());
                         //output.accept(ModBlocks.SANGUINE_CRUCIBLE.get());
                         output.accept(ModBlocks.SANGUINE_LAPIDARY.get());
-                        output.accept(ModBlocks.SANGUINITE_CONDENSER.get());
-                        output.accept(ModBlocks.RHNULL_CONDENSER.get());
+                        output.accept(ModItems.SANGUINITE_CONDENSER_ITEM.get());
+                        output.accept(ModItems.RHNULL_CONDENSER_ITEM.get());
                         output.accept(ModBlocks.SANGUINITE_INFUSOR.get());
                         output.accept(ModItems.SANGUINITE_BLOOD_HARVESTER_ITEM.get());
                         output.accept(ModBlocks.SANGUINITE_TANK.get());
