@@ -48,8 +48,11 @@ public class BurdenOfTheUnknownAttackGoal extends Goal {
         this.entity.getLookControl().setLookAt(target, 30.0F, 30.0F);
         this.updateCannonPitch(target);
 
-        if (--this.attackTime <= 0 && canSee) {
+        if(this.attackTime  == attackIntervalMin-1){
             this.entity.triggerAnim("controller", "shoot");
+        }
+
+        if (--this.attackTime <= 45 && canSee) {
             spawnProjectile(target);
             this.attackTime = this.attackIntervalMin;
         }

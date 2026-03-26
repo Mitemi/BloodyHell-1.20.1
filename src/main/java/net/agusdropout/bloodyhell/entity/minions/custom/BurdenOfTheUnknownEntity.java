@@ -38,7 +38,7 @@ public class BurdenOfTheUnknownEntity extends AbstractMinionEntity {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new BurdenOfTheUnknownAttackGoal(this, 1.0D, 60, 15.0F));
+        this.goalSelector.addGoal(1, new BurdenOfTheUnknownAttackGoal(this, 1.0D, 80, 50.0F));
         this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.8D));
         this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
