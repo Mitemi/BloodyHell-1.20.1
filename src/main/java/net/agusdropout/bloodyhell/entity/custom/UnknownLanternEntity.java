@@ -201,7 +201,7 @@ public class UnknownLanternEntity extends Monster implements GeoEntity, InsightE
                     this.playSound(SoundEvents.WARDEN_EMERGE, 2.0F, 0.8F);
                     spawnRift();
 
-                    // Capture the player's starting position instantly
+
                     if (this.playerOriginPosition == null && this.getTargetPlayer() != null) {
                         Player p = this.level().getPlayerByUUID(this.getTargetPlayer());
                         if (p != null) {

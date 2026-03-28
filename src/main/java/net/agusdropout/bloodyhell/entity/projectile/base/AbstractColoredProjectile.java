@@ -24,13 +24,18 @@ public abstract class AbstractColoredProjectile extends Projectile implements Si
 
     private static final EntityDataAccessor<Integer> BASE_COLOR = SynchedEntityData.defineId(AbstractColoredProjectile.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> HIGHLIGHT_COLOR = SynchedEntityData.defineId(AbstractColoredProjectile.class, EntityDataSerializers.INT);
-
+    protected boolean ages;
     protected float damage = 4.0f;
     protected int lifeTicks = 0;
     protected int maxLifeTicks = 60;
 
     protected AbstractColoredProjectile(EntityType<? extends Projectile> type, Level level) {
         super(type, level);
+    }
+
+    protected AbstractColoredProjectile(EntityType<? extends Projectile> type, Level level, boolean ages) {
+        super(type, level);
+        this.ages = ages;
     }
 
     @Override
@@ -78,7 +83,7 @@ public abstract class AbstractColoredProjectile extends Projectile implements Si
 
         this.setDeltaMovement(movement.scale(0.99f));
 
-        if (this.tickCount > this.maxLifeTicks) {
+        if (this.tickCount > this.maxLifeTicks && this.ages) {
             this.discard();
         }
     }
@@ -120,6 +125,8 @@ public abstract class AbstractColoredProjectile extends Projectile implements Si
         if (tag.contains("HighlightColor")) this.entityData.set(HIGHLIGHT_COLOR, tag.getInt("HighlightColor"));
         if (tag.contains("Damage")) this.damage = tag.getFloat("Damage");
     }
+
+
 
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {

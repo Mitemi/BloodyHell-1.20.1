@@ -302,6 +302,15 @@
         "stream": false
       }
     ]
+  },
+  "burden_shoot": {
+    "subtitle": "subtitles.bloodyhell.burden_shoot",
+    "sounds": [
+      {
+        "name": "bloodyhell:burden_shoot",
+        "stream": false
+      }
+    ]
   }
 
 }

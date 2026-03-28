@@ -1,11 +1,22 @@
 package net.agusdropout.bloodyhell.entity.projectile;
 
+import net.agusdropout.bloodyhell.effect.ModEffects;
+import net.agusdropout.bloodyhell.entity.effects.EntityCameraShake;
+import net.agusdropout.bloodyhell.entity.minions.base.AbstractMinionEntity;
 import net.agusdropout.bloodyhell.entity.projectile.base.AbstractColoredProjectile;
+import net.agusdropout.bloodyhell.entity.projectile.base.IAlliedProjectile;
+import net.agusdropout.bloodyhell.networking.ModMessages;
+import net.agusdropout.bloodyhell.networking.packet.SyncVisceralEffectPacket;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.ChillFallingParticleOptions;
 import net.agusdropout.bloodyhell.util.visuals.ParticleHelper;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AnimationState;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
@@ -15,13 +26,14 @@ import org.joml.Vector3f;
 
 import java.util.List;
 
-public class ViscousProjectileEntity extends AbstractColoredProjectile {
+public class ViscousProjectileEntity extends AbstractColoredProjectile implements IAlliedProjectile {
 
     public final AnimationState idleAnimationState = new AnimationState();
-    private final float explosionRadius = 3.0f;
+    private final float explosionRadius = 8.0f;
 
     public ViscousProjectileEntity(EntityType<? extends AbstractColoredProjectile> type, Level level) {
-        super(type, level);
+        super(type, level, false);
+        setNoGravity(true);
     }
 
     @Override
@@ -32,10 +44,9 @@ public class ViscousProjectileEntity extends AbstractColoredProjectile {
             this.idleAnimationState.startIfStopped(this.tickCount);
         }
 
-        if (!this.isNoGravity()) {
-            Vec3 currentMovement = this.getDeltaMovement();
-            this.setDeltaMovement(currentMovement.x, currentMovement.y - 0.05D, currentMovement.z);
-        }
+        Vec3 currentMovement = this.getDeltaMovement();
+        this.setDeltaMovement(currentMovement.x, currentMovement.y - 0.042D, currentMovement.z);
+
     }
 
     @Override
@@ -78,6 +89,8 @@ public class ViscousProjectileEntity extends AbstractColoredProjectile {
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
+        if(isAllied(result.getEntity())) return;
+
         if (!this.level().isClientSide) {
             this.detonate();
             this.discard();
@@ -87,6 +100,10 @@ public class ViscousProjectileEntity extends AbstractColoredProjectile {
     private void detonate() {
         Vec3 impactPos = this.position();
         Vector3f baseColor = this.getBaseColor();
+
+        EntityCameraShake.cameraShake(this.level(), this.position(), explosionRadius, 0.5f, 15, 5);
+        this.level().playSound(null, impactPos.x, impactPos.y, impactPos.z, SoundEvents.SLIME_BLOCK_BREAK, SoundSource.HOSTILE, 2.0F, 0.6F + this.random.nextFloat() * 0.2F);
+        this.level().playSound(null, impactPos.x, impactPos.y, impactPos.z, SoundEvents.GENERIC_EXPLODE, SoundSource.HOSTILE, 0.75F, 1.4F + this.random.nextFloat() * 0.2F);
 
         ChillFallingParticleOptions explosionParticle = new ChillFallingParticleOptions(
                 baseColor,
@@ -127,10 +144,27 @@ public class ViscousProjectileEntity extends AbstractColoredProjectile {
 
         for (LivingEntity target : targets) {
             if (this.distanceToSqr(target) <= (this.explosionRadius * this.explosionRadius)) {
+                if(isAllied(target)) continue;
 
                 target.hurt(this.damageSources().magic(), this.damage);
+                target.addEffect(new MobEffectInstance(ModEffects.VISCERAL_EFFECT.get(), 100, 1));
+                ModMessages.sendToClients(new SyncVisceralEffectPacket(target.getId(), 100, 0));
                 target.invulnerableTime = 0;
             }
         }
     }
+
+    @Override
+    public boolean isAllied(Entity target) {
+        if(target instanceof AbstractMinionEntity minion){
+            return this.getOwner() != null && minion.isAlliedTo(this.getOwner()) ;
+        }
+        if(target instanceof Player player){
+            return this.getOwner() != null && player.getUUID().equals(this.getOwner().getUUID());
+        }
+
+        return false;
+    }
+
+
 }

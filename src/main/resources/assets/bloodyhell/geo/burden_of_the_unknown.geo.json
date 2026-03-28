@@ -717,6 +717,11 @@
 					]
 				},
 				{
+					"name": "leftBackParticle",
+					"parent": "leg1P3",
+					"pivot": [28, -2, 11]
+				},
+				{
 					"name": "leg3",
 					"parent": "burdenOfTheUnknown",
 					"pivot": [6, 10, -4],
@@ -783,6 +788,11 @@
 							}
 						}
 					]
+				},
+				{
+					"name": "leftFrontParticle",
+					"parent": "leg1P9",
+					"pivot": [28, -2, -4]
 				},
 				{
 					"name": "leg4",
@@ -853,6 +863,11 @@
 					]
 				},
 				{
+					"name": "rightFrontParticle",
+					"parent": "leg1P12",
+					"pivot": [-29, -2, -4]
+				},
+				{
 					"name": "leg2",
 					"parent": "burdenOfTheUnknown",
 					"pivot": [-6, 9, 11],
@@ -919,6 +934,11 @@
 							}
 						}
 					]
+				},
+				{
+					"name": "rightBackParticle",
+					"parent": "leg1P6",
+					"pivot": [-28, -1, 11]
 				},
 				{
 					"name": "cannon",

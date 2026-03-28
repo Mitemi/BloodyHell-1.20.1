@@ -15,7 +15,7 @@ import net.agusdropout.bloodyhell.util.visuals.ColorHelper;
 public class RhnullDropletEntity extends AbstractColoredProjectile {
 
     public RhnullDropletEntity(EntityType<? extends Projectile> type, Level level) {
-        super(type, level);
+        super(type, level, true);
     }
 
     public RhnullDropletEntity(Level level, double x, double y, double z) {

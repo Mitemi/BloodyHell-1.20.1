@@ -33,7 +33,7 @@ public class WeepingTearEntity extends AbstractColoredProjectile {
     private UUID minionOwnerUUID;
 
     public WeepingTearEntity(EntityType<? extends Projectile> type, Level level) {
-        super(type, level);
+        super(type, level, true);
         this.setDamage(3.0f);
     }
 
