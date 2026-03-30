@@ -181,6 +181,13 @@ public class ModParticles {
                     return NoiseSphereParticleOptions.CODEC;
                 }
             });
+    public static final RegistryObject<ParticleType<SphericalShieldParticleOptions>> SPHERICAL_SHIELD_PARTICLE =
+            PARTICLE_TYPES.register("spherical_shield_particle", () -> new ParticleType<SphericalShieldParticleOptions>(false, SphericalShieldParticleOptions.DESERIALIZER) {
+                @Override
+                public Codec<SphericalShieldParticleOptions> codec() {
+                    return SphericalShieldParticleOptions.CODEC;
+                }
+            });
 
 
     public static void register(IEventBus eventBus) {

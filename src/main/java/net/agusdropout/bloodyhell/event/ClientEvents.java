@@ -229,6 +229,12 @@ public class ClientEvents {
             event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(BloodyHell.MODID, "shape_glitter"), DefaultVertexFormat.POSITION_COLOR), shaderInstance -> {
                 ModShaders.SHAPE_GLITTER_SHADER = shaderInstance;
             });
+            event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(BloodyHell.MODID, "shape_unknown_fire"), DefaultVertexFormat.POSITION_COLOR), shaderInstance -> {
+                ModShaders.SHAPE_UNKNOWN_FIRE_SHADER = shaderInstance;
+            });
+            event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(BloodyHell.MODID, "spherical_rim"), DefaultVertexFormat.POSITION_COLOR), shaderInstance -> {
+                ModShaders.SHAPE_SPHERICAL_RIM_SHADER = shaderInstance;
+            });
             event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(BloodyHell.MODID, "ethereal_swirl"), DefaultVertexFormat.POSITION_TEX_COLOR), shaderInstance -> {
                 ModShaders.ETHEREAL_SWIRL_SHADER = shaderInstance;
             });
@@ -301,6 +307,7 @@ public class ClientEvents {
             event.registerSpriteSet(ModParticles.SMALL_GLITTER_PARTICLE.get(), SmallGlitterParticle.Provider::new);
             event.registerSpriteSet(ModParticles.MAGICAL_RING_PARTICLE.get(), spriteSet -> new MagicalRingParticle.Provider());
             event.registerSpecial(ModParticles.NOISE_SPHERE_PARTICLE.get(), new NoiseSphereParticle.Provider());
+            event.registerSpecial(ModParticles.SPHERICAL_SHIELD_PARTICLE.get(), new SphericalShieldParticle.Provider());
         }
 
         @SubscribeEvent

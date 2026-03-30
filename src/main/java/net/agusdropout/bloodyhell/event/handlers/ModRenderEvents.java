@@ -29,6 +29,7 @@ public class ModRenderEvents {
             InsightRenderManager.renderAllAndClear();
             NoiseSphereRenderManager.renderAllAndClear();
             MagicRingRenderManager.renderAllAndClear();
+            SphericalShieldRenderManager.renderAllAndClear();
         }
     }
 }

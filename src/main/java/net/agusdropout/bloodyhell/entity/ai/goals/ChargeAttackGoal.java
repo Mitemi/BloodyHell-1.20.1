@@ -48,7 +48,7 @@ public class ChargeAttackGoal extends Goal {
     @Override
     public void tick() {
         if (chargeTicks > 0) {
-            // Fase de preparación
+
             entity.setDeltaMovement(Vec3.ZERO);
             LivingEntity target = entity.getTarget();
             if (target != null && target.isAlive()) {
@@ -56,20 +56,19 @@ public class ChargeAttackGoal extends Goal {
             }
             chargeTicks--;
 
-            // Sonido de "cargando energía"
             if(chargeTicks == 5) {
                 entity.level().playSound(null, entity.getOnPos(), SoundEvents.TRIDENT_THROW,
                         SoundSource.HOSTILE, 1.0F, 0.5F);
             }
 
         } else if (chargeTicks == 0 && !hasCharged) {
-            // Inicio de la carrera
+
             LivingEntity target = entity.getTarget();
             if (target != null) {
                 Vec3 targetDirection = target.position().subtract(entity.position()).normalize();
-                entity.setDeltaMovement(targetDirection.scale(4)); // Alta velocidad
+                entity.setDeltaMovement(targetDirection.scale(4));
 
-                // Sonidos iniciales
+
                 entity.level().playSound(null, entity.getOnPos(), ModSounds.SELIORA_CHARGE_ATTACK_SOUND.get(),
                         SoundSource.HOSTILE, 1.5F, 0.9F + entity.level().random.nextFloat() * 0.2F);
                 entity.level().playSound(null, entity.getOnPos(), SoundEvents.TRIDENT_RIPTIDE_3,
@@ -77,7 +76,7 @@ public class ChargeAttackGoal extends Goal {
             }
             hasCharged = true;
         } else if (this.minimunChargeTicks > 0) {
-            // Durante la carrera
+
             doAttackDamage();
             minimunChargeTicks--;
         } else {

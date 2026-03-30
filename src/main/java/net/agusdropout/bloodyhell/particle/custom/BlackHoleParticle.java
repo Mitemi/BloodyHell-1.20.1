@@ -256,6 +256,8 @@ public class BlackHoleParticle extends Particle {
         }
     }
 
+
+
     @Override
     public ParticleRenderType getRenderType() { return ParticleRenderType.CUSTOM; }
 

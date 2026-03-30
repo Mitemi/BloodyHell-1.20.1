@@ -71,7 +71,6 @@ public class EtherealSwirlParticle extends Particle {
         PoseStack poseStack = new PoseStack();
         poseStack.translate(renderX, renderY, renderZ);
 
-        // Rotates the quad to always face the player (billboarding)
         poseStack.mulPose(camera.rotation());
 
         float time = (float) this.level.getGameTime() + partialTicks;

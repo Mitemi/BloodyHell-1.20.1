@@ -12,10 +12,6 @@ import software.bernie.geckolib.model.data.EntityModelData;
 
 public class BastionOfTheUnknownModel extends GenericMinionModel<BastionOfTheUnknownEntity> {
 
-
-
-
-
     @Override
     public void setCustomAnimations(BastionOfTheUnknownEntity animatable, long instanceId, AnimationState<BastionOfTheUnknownEntity> animationState) {
 
@@ -24,8 +20,8 @@ public class BastionOfTheUnknownModel extends GenericMinionModel<BastionOfTheUnk
         if (head != null) {
             EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
 
-            head.setRotX(-entityData.headPitch() * Mth.DEG_TO_RAD);
-            head.setRotY(-entityData.netHeadYaw() * Mth.DEG_TO_RAD);
+            head.setRotX(entityData.headPitch() * Mth.DEG_TO_RAD);
+            head.setRotY(entityData.netHeadYaw() * Mth.DEG_TO_RAD);
 
         }
     }

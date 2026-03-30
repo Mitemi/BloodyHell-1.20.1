@@ -46,6 +46,7 @@ public class BastionShieldGoal extends Goal {
     public void stop() {
         this.entity.setShieldCooldown(100);
         this.entity.setBlocking(false);
+        this.entity.playSound(SoundEvents.SHIELD_BREAK, 1.0F, 0.5F);
     }
 
     @Override

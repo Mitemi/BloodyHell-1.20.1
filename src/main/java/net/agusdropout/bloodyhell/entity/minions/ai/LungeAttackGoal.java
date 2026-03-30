@@ -1,6 +1,9 @@
 package net.agusdropout.bloodyhell.entity.minions.ai;
 
 import net.agusdropout.bloodyhell.entity.minions.custom.BastionOfTheUnknownEntity;
+import net.agusdropout.bloodyhell.sound.ModSounds;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
@@ -37,7 +40,7 @@ public class LungeAttackGoal extends Goal {
         }
 
         double distance = this.entity.distanceToSqr(this.target);
-        return distance >= 3.0D && distance <= 100.0D ;
+        return distance >= 5.0D && distance <= 100.0D ;
     }
 
     @Override
@@ -51,7 +54,7 @@ public class LungeAttackGoal extends Goal {
         this.entity.setLunging(true);
         this.entity.getNavigation().stop();
         this.entity.triggerAnim("action_controller", "lunge");
-        this.entity.lookAt(this.target, 30.0F, 30.0F);
+
 
         Vec3 targetPos = this.target.position();
         Vec3 entityPos = this.entity.position();
@@ -59,14 +62,18 @@ public class LungeAttackGoal extends Goal {
 
         this.entity.setPos(this.entity.getX(), this.entity.getY(), this.entity.getZ());
 
-        double lungeStrength = 1.8D;
+        double lungeStrength = 1.9D;
         this.entity.setDeltaMovement(direction.x * lungeStrength, 0.00D, direction.z * lungeStrength);
     }
 
     @Override
     public void tick() {
         this.lungeTicks++;
-
+        this.entity.lookAt(this.target, 30.0F, 30.0F);
+        entity.level().playSound(null, entity.getOnPos(), ModSounds.SELIORA_CHARGE_ATTACK_SOUND.get(),
+                SoundSource.HOSTILE, 1.5F, 0.9F + entity.level().random.nextFloat() * 0.2F);
+        entity.level().playSound(null, entity.getOnPos(), SoundEvents.TRIDENT_RIPTIDE_3,
+                SoundSource.HOSTILE, 1.0F, 1.0F);
         if (this.entity.getBoundingBox().inflate(0.5D).intersects(this.target.getBoundingBox())) {
             this.entity.doHurtTarget(this.target);
         }

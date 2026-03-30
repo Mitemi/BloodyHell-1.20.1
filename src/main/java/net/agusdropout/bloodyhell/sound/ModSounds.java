@@ -60,6 +60,7 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> HARVESTER_PUMP = registerSoundEvents("harvester_pump");
     public static final RegistryObject<SoundEvent> CONDENSER_PUMP = registerSoundEvents("condenser_pump");
     public static final RegistryObject<SoundEvent> BURDEN_SHOOT = registerSoundEvents("burden_shoot");
+    public static final RegistryObject<SoundEvent> UNKNOWN_SHIELD_BOUNCE = registerSoundEvents("unknown_shield_bounce");
 
 
 

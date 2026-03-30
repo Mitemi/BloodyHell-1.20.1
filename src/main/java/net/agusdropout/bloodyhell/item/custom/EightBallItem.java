@@ -64,15 +64,15 @@ public class EightBallItem extends Item {
             //level.addFreshEntity(lantern);
 
 
-            BastionOfTheUnknownEntity son = new BastionOfTheUnknownEntity(ModEntityTypes.BASTION_OF_THE_UNKNOWN.get(), level);
-          son.setOwnerUUID(player.getUUID());
-          son.setPos(player.getX(), player.getY(), player.getZ());
-          level.addFreshEntity(son);
+           BastionOfTheUnknownEntity son = new BastionOfTheUnknownEntity(ModEntityTypes.BASTION_OF_THE_UNKNOWN.get(), level);
+         son.setOwnerUUID(player.getUUID());
+         son.setPos(player.getX(), player.getY(), player.getZ());
+         level.addFreshEntity(son);
 
-           // BurdenOfTheUnknownEntity son = new BurdenOfTheUnknownEntity(ModEntityTypes.BURDEN_OF_THE_UNKNOWN.get(), level);
-           // son.setOwnerUUID(player.getUUID());
-           // son.setPos(player.getX(), player.getY(), player.getZ());
-           // level.addFreshEntity(son);
+           //BurdenOfTheUnknownEntity son = new BurdenOfTheUnknownEntity(ModEntityTypes.BURDEN_OF_THE_UNKNOWN.get(), level);
+           //son.setOwnerUUID(player.getUUID());
+           //son.setPos(player.getX(), player.getY(), player.getZ());
+           //level.addFreshEntity(son);
 ////
          //  WeepingOcularEntity eye = new WeepingOcularEntity(ModEntityTypes.WEEPING_OCULAR.get(), level);
          //    eye.setOwnerUUID(player.getUUID());
@@ -111,12 +111,12 @@ public class EightBallItem extends Item {
          //   float radius = 1.5f;
          //   float height = 3.0f;
          //   double maxLifeTime = 120.0;
-      // org.joml.Vector3f color = new org.joml.Vector3f(0.8f, 0.1f, 0.1f);
-      // NoiseSphereParticleOptions options =
-      //          new NoiseSphereParticleOptions(color, 1.5f, 60);
-//
-      //  level.addParticle(options,
-      //          player.getX() + 0.5, player.getY() + 1.5, player.getZ() + 0.5, 0.0, 0.0, 0.0)  ;
+    //   org.joml.Vector3f color = new org.joml.Vector3f(0.8f, 0.1f, 0.1f);
+    //   SphericalShieldParticleOptions options =
+    //            new SphericalShieldParticleOptions(0.9f,0.3f,0, 5.0f, 500);
+ ////
+    //    level.addParticle(options,
+    //            player.getX() + 0.5, player.getY() + 1.5, player.getZ() + 0.5, 0.0, 0.0, 0.0)  ;
 //
 ////
       //   //   level.addParticle(new MagicalRingParticleOptions(color, radius, height),

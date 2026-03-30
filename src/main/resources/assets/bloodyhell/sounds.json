@@ -311,6 +311,15 @@
         "stream": false
       }
     ]
+  },
+  "unknown_shield_bounce": {
+    "subtitle": "subtitles.bloodyhell.unknown_shield_bounce",
+    "sounds": [
+      {
+        "name": "bloodyhell:unknown_shield_bounce",
+        "stream": false
+      }
+    ]
   }
 
 }
