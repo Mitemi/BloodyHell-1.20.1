@@ -17,6 +17,7 @@ public class LungeAttackGoal extends Goal {
     private final int cooldownDuration;
     private int currentCooldown;
     private int lungeTicks;
+    private static final float LUNGE_DAMAGE = 5.0F;
 
     public LungeAttackGoal(BastionOfTheUnknownEntity entity, int lungeDuration, int cooldownDuration) {
         this.entity = entity;
@@ -75,7 +76,7 @@ public class LungeAttackGoal extends Goal {
         entity.level().playSound(null, entity.getOnPos(), SoundEvents.TRIDENT_RIPTIDE_3,
                 SoundSource.HOSTILE, 1.0F, 1.0F);
         if (this.entity.getBoundingBox().inflate(0.5D).intersects(this.target.getBoundingBox())) {
-            this.entity.doHurtTarget(this.target);
+            target.hurt(this.entity.damageSources().generic(), LUNGE_DAMAGE);
         }
     }
 

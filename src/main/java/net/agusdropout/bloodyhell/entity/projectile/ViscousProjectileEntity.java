@@ -145,8 +145,11 @@ public class ViscousProjectileEntity extends AbstractColoredProjectile implement
         for (LivingEntity target : targets) {
             if (this.distanceToSqr(target) <= (this.explosionRadius * this.explosionRadius)) {
                 if(isAllied(target)) continue;
-
-                target.hurt(this.damageSources().magic(), this.damage);
+                if(this.getOwner() != null) {
+                    target.hurt(this.getOwner().damageSources().mobProjectile((Entity) this, (LivingEntity) this.getOwner()), this.damage);
+                } else {
+                    target.hurt(this.damageSources().magic(), this.damage);
+                }
                 target.addEffect(new MobEffectInstance(ModEffects.VISCERAL_EFFECT.get(), 100, 1));
                 ModMessages.sendToClients(new SyncVisceralEffectPacket(target.getId(), 100, 0));
                 target.invulnerableTime = 0;

@@ -7,6 +7,7 @@ import net.agusdropout.bloodyhell.util.visuals.ParticleHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -103,6 +104,13 @@ public class BastionSpecialShieldGoal extends Goal {
         if (entity == this.bastion) return true;
 
         if(entity instanceof Projectile projectile ) {
+
+            if(projectile.getOwner() != null && projectile.getOwner() instanceof OwnableEntity ownableEntity){
+                if(ownableEntity.getOwner() != null && ownableEntity.getOwner().equals(this.bastion.getOwner())){
+                    return true;
+                }
+            }
+
             if(projectile.getOwner() != null && projectile.getOwner().equals(this.bastion.getOwner())) {
                 return true;
             }

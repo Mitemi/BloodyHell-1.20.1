@@ -3,6 +3,7 @@ package net.agusdropout.bloodyhell.entity.minions.custom;
 import net.agusdropout.bloodyhell.entity.effects.EntityCameraShake;
 import net.agusdropout.bloodyhell.entity.minions.ai.BurdenOfTheUnknownAttackGoal;
 import net.agusdropout.bloodyhell.entity.minions.ai.FollowSummonerGoal;
+import net.agusdropout.bloodyhell.entity.minions.ai.RefugeUnderBastionShieldGoal;
 import net.agusdropout.bloodyhell.entity.minions.base.AbstractMinionEntity;
 import net.agusdropout.bloodyhell.sound.ModSounds;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -44,13 +45,14 @@ public class BurdenOfTheUnknownEntity extends AbstractMinionEntity {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new BurdenOfTheUnknownAttackGoal(this, 1.0D, 80, 120.0F));
+        this.goalSelector.addGoal(2, new BurdenOfTheUnknownAttackGoal(this, 1.0D, 80, 120.0F));
         this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.8D));
         this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(1, new RefugeUnderBastionShieldGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Monster.class, true,
                 entity -> entity != this.getOwner() && !(entity instanceof AbstractMinionEntity)));
-        this.targetSelector.addGoal(4, new FollowSummonerGoal(this, 1.1F, 7, 15));
+        this.goalSelector.addGoal(4, new FollowSummonerGoal(this, 1.1F, 7, 15));
     }
 
     @Override
@@ -116,6 +118,7 @@ public class BurdenOfTheUnknownEntity extends AbstractMinionEntity {
                 SoundEvents.WARDEN_STEP, this.getSoundSource(), 1.2F, 0.6F, false);
         EntityCameraShake.clientCameraShake(this.level(), this.position(), 5.0f, 0.3f, 10, 3);
     }
+
 
     public void triggerShootAnimation() {
         this.triggerAnim("controller", "shoot");

@@ -36,6 +36,7 @@ public class BurdenOfTheUnknownAttackGoal extends Goal {
         if (this.entity.distanceToSqr(target) > (attackRadius * attackRadius)) {
             return false;
         }
+
         return canReachTarget(target);
     }
 
@@ -109,7 +110,7 @@ public class BurdenOfTheUnknownAttackGoal extends Goal {
 
         int minionColor = entity.getStripeColor();
         projectile.setProjectileColors(minionColor, minionColor);
-        projectile.setOwner(entity.getOwner());
+        projectile.setOwner(entity);
         projectile.setDamage(8.0F);
         projectile.setDeltaMovement(calculateMortarVelocity(
                 new Vec3(startX, startY+1.5D, startZ),
