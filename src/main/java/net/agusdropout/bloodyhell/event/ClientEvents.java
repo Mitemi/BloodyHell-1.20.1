@@ -244,6 +244,9 @@ public class ClientEvents {
             event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(BloodyHell.MODID, "frenzy_tentacles"), DefaultVertexFormat.POSITION_TEX_COLOR), shaderInstance -> {
                 ModShaders.FRENZY_TENTACLES = shaderInstance;
             });
+            event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(BloodyHell.MODID, "frenzied_flame"), DefaultVertexFormat.POSITION_TEX_COLOR), shaderInstance -> {
+                ModShaders.FRENZIED_FLAME_SHADER = shaderInstance;
+            });
 
 
         }
@@ -308,6 +311,7 @@ public class ClientEvents {
             event.registerSpriteSet(ModParticles.MAGICAL_RING_PARTICLE.get(), spriteSet -> new MagicalRingParticle.Provider());
             event.registerSpecial(ModParticles.NOISE_SPHERE_PARTICLE.get(), new NoiseSphereParticle.Provider());
             event.registerSpecial(ModParticles.SPHERICAL_SHIELD_PARTICLE.get(), new SphericalShieldParticle.Provider());
+            event.registerSpecial(ModParticles.FRENZIED_FLAME_PARTICLE.get(), new FrenziedFlameParticle.Provider());
         }
 
         @SubscribeEvent

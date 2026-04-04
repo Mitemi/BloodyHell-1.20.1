@@ -30,6 +30,7 @@ public class ModRenderEvents {
             NoiseSphereRenderManager.renderAllAndClear();
             MagicRingRenderManager.renderAllAndClear();
             SphericalShieldRenderManager.renderAllAndClear();
+            FrenziedFlameRenderManager.renderAllAndClear();
         }
     }
 }

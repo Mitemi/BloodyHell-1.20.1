@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import net.agusdropout.bloodyhell.BloodyHell;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.*;
 
-import net.agusdropout.bloodyhell.particle.custom.RadialDistortionParticle;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -186,6 +185,14 @@ public class ModParticles {
                 @Override
                 public Codec<SphericalShieldParticleOptions> codec() {
                     return SphericalShieldParticleOptions.CODEC;
+                }
+            });
+
+    public static final RegistryObject<ParticleType<FrenziedFlameParticleOptions>> FRENZIED_FLAME_PARTICLE =
+            PARTICLE_TYPES.register("frenzied_flame_particle", () -> new ParticleType<FrenziedFlameParticleOptions>(false, FrenziedFlameParticleOptions.DESERIALIZER) {
+                @Override
+                public com.mojang.serialization.Codec<FrenziedFlameParticleOptions> codec() {
+                    return FrenziedFlameParticleOptions.CODEC;
                 }
             });
 

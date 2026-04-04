@@ -13,4 +13,5 @@ public class ModShaders {
     public static ShaderInstance INSIGHT_DISTORTION_SHADER;
     public static ShaderInstance BLACK_HOLE_SHADER;
     public static ShaderInstance FRENZY_TENTACLES;
+    public static ShaderInstance FRENZIED_FLAME_SHADER;
 }

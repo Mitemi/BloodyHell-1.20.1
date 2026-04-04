@@ -1,32 +1,17 @@
 package net.agusdropout.bloodyhell.item.custom;
 
 import net.agusdropout.bloodyhell.entity.ModEntityTypes;
-import net.agusdropout.bloodyhell.entity.custom.UnknownLanternEntity;
 import net.agusdropout.bloodyhell.entity.effects.BlackHoleEntity;
-import net.agusdropout.bloodyhell.entity.minions.custom.BastionOfTheUnknownEntity;
-import net.agusdropout.bloodyhell.entity.minions.custom.BurdenOfTheUnknownEntity;
-import net.agusdropout.bloodyhell.entity.minions.custom.FailedSonOfTheUnknown;
-import net.agusdropout.bloodyhell.entity.minions.custom.WeepingOcularEntity;
-import net.agusdropout.bloodyhell.entity.projectile.spell.RhnullHeavySwordEntity;
-import net.agusdropout.bloodyhell.entity.projectile.spell.RhnullImpalerEntity;
-import net.agusdropout.bloodyhell.entity.projectile.spell.RhnullOrbEmitter;
-import net.agusdropout.bloodyhell.entity.projectile.spell.RhnullPainThroneEntity;
 import net.agusdropout.bloodyhell.networking.ModMessages;
 import net.agusdropout.bloodyhell.networking.packet.S2CPainThronePacket;
-import net.agusdropout.bloodyhell.particle.ModParticles;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.*;
 import net.agusdropout.bloodyhell.util.bones.BoneManipulation;
 import net.agusdropout.bloodyhell.util.capability.InsightHelper;
 import net.agusdropout.bloodyhell.util.visuals.ParticleHelper;
-import net.agusdropout.bloodyhell.util.visuals.SpellPalette;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -64,15 +49,15 @@ public class EightBallItem extends Item {
             //level.addFreshEntity(lantern);
 
 
-           BastionOfTheUnknownEntity son = new BastionOfTheUnknownEntity(ModEntityTypes.BASTION_OF_THE_UNKNOWN.get(), level);
-         son.setOwnerUUID(player.getUUID());
-         son.setPos(player.getX(), player.getY(), player.getZ());
-         level.addFreshEntity(son);
+      //    BastionOfTheUnknownEntity son = new BastionOfTheUnknownEntity(ModEntityTypes.BASTION_OF_THE_UNKNOWN.get(), level);
+      //  son.setOwnerUUID(player.getUUID());
+      //  son.setPos(player.getX(), player.getY(), player.getZ());
+      //  level.addFreshEntity(son);
 
-           BurdenOfTheUnknownEntity son2 = new BurdenOfTheUnknownEntity(ModEntityTypes.BURDEN_OF_THE_UNKNOWN.get(), level);
-            son2.setOwnerUUID(player.getUUID());
-            son2.setPos(player.getX(), player.getY(), player.getZ());
-           level.addFreshEntity(son2);
+      //    BurdenOfTheUnknownEntity son2 = new BurdenOfTheUnknownEntity(ModEntityTypes.BURDEN_OF_THE_UNKNOWN.get(), level);
+      //     son2.setOwnerUUID(player.getUUID());
+      //     son2.setPos(player.getX(), player.getY(), player.getZ());
+      //    level.addFreshEntity(son2);
 ////
          //  WeepingOcularEntity eye = new WeepingOcularEntity(ModEntityTypes.WEEPING_OCULAR.get(), level);
          //    eye.setOwnerUUID(player.getUUID());
@@ -106,24 +91,15 @@ public class EightBallItem extends Item {
             //level.addFreshEntity(orb);
         } else {
 
-            // Visual Feedback (Client Side)
-         //   Vector3f color = new Vector3f(1f, 0.9f, 0.0f);
-         //   float radius = 1.5f;
-         //   float height = 3.0f;
-         //   double maxLifeTime = 120.0;
-    //   org.joml.Vector3f color = new org.joml.Vector3f(0.8f, 0.1f, 0.1f);
-    //   SphericalShieldParticleOptions options =
-    //            new SphericalShieldParticleOptions(0.9f,0.3f,0, 5.0f, 500);
- ////
-    //    level.addParticle(options,
-    //            player.getX() + 0.5, player.getY() + 1.5, player.getZ() + 0.5, 0.0, 0.0, 0.0)  ;
-//
-////
-      //   //   level.addParticle(new MagicalRingParticleOptions(color, radius, height),
-      //   //           player.getX(), player.getY(), player.getZ(),
-      //   //           maxLifeTime, 0.0D, 0.0D);
-      //     // System.out.println("Spawned Ethereal Swirl Particle at " + player.getX() + ", " + player.getY() + ", " + player.getZ());
-      //      //ParticleHelper.spawn(level, new EtherealSwirlOptions(SpellPalette.RHNULL.getColor(1), 300, 1.0f), player.position().add(0,1.5,0), 0, 0, 0);
+            Vec3 look = player.getLookAngle();
+            Vec3 pos = player.getEyePosition().add(look.scale(2.0D));
+
+            level.addParticle(
+                    new FrenziedFlameParticleOptions(0.0F, 0.9F, 9.0F, 500),
+                    pos.x, pos.y, pos.z,
+                    0.0D, 0.0D, 0.0D
+            );
+
         }
 //
 
