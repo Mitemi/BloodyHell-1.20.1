@@ -14,4 +14,9 @@ public class ModShaders {
     public static ShaderInstance BLACK_HOLE_SHADER;
     public static ShaderInstance FRENZY_TENTACLES;
     public static ShaderInstance FRENZIED_FLAME_SHADER;
+    public static ShaderInstance LINEAR_FRENZIED_FLAME_SHADER;
+    public static ShaderInstance TINY_BLOOM_SHADER;
+    public static ShaderInstance RADIANT_ENERGY_SHADER;
+    public static ShaderInstance FRENZIED_EXPLOSION_SHADER;
+
 }

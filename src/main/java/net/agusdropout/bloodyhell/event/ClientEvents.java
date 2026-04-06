@@ -247,6 +247,19 @@ public class ClientEvents {
             event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(BloodyHell.MODID, "frenzied_flame"), DefaultVertexFormat.POSITION_TEX_COLOR), shaderInstance -> {
                 ModShaders.FRENZIED_FLAME_SHADER = shaderInstance;
             });
+            event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(BloodyHell.MODID, "linear_frenzied_flame"), DefaultVertexFormat.POSITION_TEX_COLOR), shaderInstance -> {
+                ModShaders.LINEAR_FRENZIED_FLAME_SHADER = shaderInstance;
+            });
+            event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(BloodyHell.MODID, "tiny_bloom"), DefaultVertexFormat.POSITION_TEX_COLOR), shaderInstance -> {
+                ModShaders.TINY_BLOOM_SHADER = shaderInstance;
+            });
+            event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(BloodyHell.MODID, "radiant_energy"), DefaultVertexFormat.POSITION_TEX_COLOR), shaderInstance -> {
+                ModShaders.RADIANT_ENERGY_SHADER = shaderInstance;
+            });
+
+            event.registerShader(new ShaderInstance(event.getResourceProvider(), new ResourceLocation(BloodyHell.MODID, "frenzied_explosion"), DefaultVertexFormat.POSITION_TEX_COLOR), shaderInstance -> {
+                ModShaders.FRENZIED_EXPLOSION_SHADER = shaderInstance;
+            });
 
 
         }
@@ -312,6 +325,12 @@ public class ClientEvents {
             event.registerSpecial(ModParticles.NOISE_SPHERE_PARTICLE.get(), new NoiseSphereParticle.Provider());
             event.registerSpecial(ModParticles.SPHERICAL_SHIELD_PARTICLE.get(), new SphericalShieldParticle.Provider());
             event.registerSpecial(ModParticles.FRENZIED_FLAME_PARTICLE.get(), new FrenziedFlameParticle.Provider());
+            event.registerSpecial(ModParticles.LINEAR_FRENZIED_FLAME.get(), new LinearFrenziedFlameParticle.Provider());
+            event.registerSpecial(ModParticles.FRENZIED_TRAIL_PARTICLE.get(), new FrenziedTrailParticle.Provider());
+            event.registerSpecial(ModParticles.TINY_BLOOM.get(), new TinyBloomParticle.Provider());
+            event.registerSpecial(ModParticles.RADIANT_ENERGY_PARTICLE.get(), new RadiantEnergyParticle.Provider());
+            event.registerSpecial(ModParticles.ORBITAL_FRENZIED_PARTICLE.get(), new OrbitalFrenziedParticle.Provider());
+            event.registerSpecial(ModParticles.FRENZIED_EXPLOSION.get(), new FrenziedExplosionParticle.Provider());
         }
 
         @SubscribeEvent

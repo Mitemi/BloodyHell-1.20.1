@@ -1,0 +1,79 @@
+package net.agusdropout.bloodyhell.particle.custom;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.agusdropout.bloodyhell.particle.ParticleOptions.FrenziedExplosionParticleOptions;
+import net.agusdropout.bloodyhell.util.visuals.manager.FrenziedExplosionRenderManager;
+import net.minecraft.client.Camera;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+
+public class FrenziedExplosionParticle extends Particle {
+    private final float baseScale;
+
+    protected FrenziedExplosionParticle(ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, FrenziedExplosionParticleOptions options) {
+        super(level, x, y, z);
+        this.xd = xSpeed;
+        this.yd = ySpeed;
+        this.zd = zSpeed;
+
+        this.hasPhysics = false;
+        this.baseScale = options.getSize();
+        this.lifetime = 30; // 1.5 seconds at 20 ticks
+    }
+
+    @Override
+    public void tick() {
+        this.xo = this.x;
+        this.yo = this.y;
+        this.zo = this.z;
+
+        if (this.age++ >= this.lifetime) {
+            this.remove();
+        } else {
+            this.move(this.xd, this.yd, this.zd);
+            this.xd *= 0.85D;
+            this.yd *= 0.85D;
+            this.zd *= 0.85D;
+        }
+    }
+
+    @Override
+    public void render(VertexConsumer buffer, Camera camera, float partialTicks) {
+        Vec3 cameraPos = camera.getPosition();
+        float renderX = (float) (Mth.lerp(partialTicks, this.xo, this.x) - cameraPos.x());
+        float renderY = (float) (Mth.lerp(partialTicks, this.yo, this.y) - cameraPos.y());
+        float renderZ = (float) (Mth.lerp(partialTicks, this.zo, this.z) - cameraPos.z());
+
+        PoseStack poseStack = new PoseStack();
+        poseStack.translate(renderX, renderY, renderZ);
+        poseStack.mulPose(camera.rotation());
+        //poseStack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(180.0F));
+
+        float time = (System.currentTimeMillis() % 100000L) / 1000.0F;
+        float lifeProgress = 1.0F - ((float)this.age / (float)this.lifetime);
+
+        FrenziedExplosionRenderManager.addExplosion(
+                poseStack.last().pose(),
+                this.baseScale,
+                lifeProgress,
+                time
+        );
+    }
+
+    @Override
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.CUSTOM;
+    }
+
+    public static class Provider implements ParticleProvider<FrenziedExplosionParticleOptions> {
+        @Override
+        public Particle createParticle(FrenziedExplosionParticleOptions type, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+            return new FrenziedExplosionParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, type);
+        }
+    }
+}

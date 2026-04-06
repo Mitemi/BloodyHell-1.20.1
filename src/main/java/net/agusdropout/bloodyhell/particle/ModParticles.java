@@ -196,6 +196,38 @@ public class ModParticles {
                 }
             });
 
+    public static final RegistryObject<SimpleParticleType> LINEAR_FRENZIED_FLAME =
+            PARTICLE_TYPES.register("linear_frenzied_flame", () -> new SimpleParticleType(true));
+
+    public static final RegistryObject<SimpleParticleType> FRENZIED_TRAIL_PARTICLE =
+            PARTICLE_TYPES.register("franzied_trail_particle", () -> new SimpleParticleType(true));
+
+    public static final RegistryObject<SimpleParticleType> RADIANT_ENERGY_PARTICLE =
+            PARTICLE_TYPES.register("radiant_energy_particle", () -> new SimpleParticleType(true));
+
+    public static final RegistryObject<SimpleParticleType> ORBITAL_FRENZIED_PARTICLE =
+            PARTICLE_TYPES.register("orbital_frenzied_particle", () -> new SimpleParticleType(true));
+
+    public static final RegistryObject<ParticleType<TinyBloomParticleOptions>> TINY_BLOOM =
+            PARTICLE_TYPES.register("tiny_bloom", () -> new ParticleType<>(false, TinyBloomParticleOptions.DESERIALIZER) {
+                @Override
+                public Codec<TinyBloomParticleOptions> codec() {
+                    return TinyBloomParticleOptions.CODEC;
+                }
+            });
+
+    public static final RegistryObject<ParticleType<FrenziedExplosionParticleOptions>> FRENZIED_EXPLOSION =
+            PARTICLE_TYPES.register("frenzied_explosion", () ->
+                    new ParticleType<FrenziedExplosionParticleOptions>(false, FrenziedExplosionParticleOptions.DESERIALIZER) {
+                        @Override
+                        public Codec<FrenziedExplosionParticleOptions> codec() {
+                            return FrenziedExplosionParticleOptions.CODEC;
+                        }
+                    });
+
+
+
+
 
     public static void register(IEventBus eventBus) {
         PARTICLE_TYPES.register(eventBus);

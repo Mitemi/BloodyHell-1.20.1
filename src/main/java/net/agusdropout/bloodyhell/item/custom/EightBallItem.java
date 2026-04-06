@@ -4,6 +4,7 @@ import net.agusdropout.bloodyhell.entity.ModEntityTypes;
 import net.agusdropout.bloodyhell.entity.effects.BlackHoleEntity;
 import net.agusdropout.bloodyhell.networking.ModMessages;
 import net.agusdropout.bloodyhell.networking.packet.S2CPainThronePacket;
+import net.agusdropout.bloodyhell.particle.ModParticles;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.*;
 import net.agusdropout.bloodyhell.util.bones.BoneManipulation;
 import net.agusdropout.bloodyhell.util.capability.InsightHelper;
@@ -91,15 +92,31 @@ public class EightBallItem extends Item {
             //level.addFreshEntity(orb);
         } else {
 
-            Vec3 look = player.getLookAngle();
-            Vec3 pos = player.getEyePosition().add(look.scale(2.0D));
+            //Vec3 look = player.getLookAngle();
+            //Vec3 pos = player.getEyePosition().add(look.scale(2.0D));//
+            //level.addParticle(
+            //        new FrenziedFlameParticleOptions(1.0F, 0.7F, 0.0F, 500),
+            //        pos.x, pos.y, pos.z,
+            //        0.0D, 0.0D, 0.0D
+            //);
 
-            level.addParticle(
-                    new FrenziedFlameParticleOptions(1.0F, 0.7F, 0.0F, 500),
-                    pos.x, pos.y, pos.z,
-                    0.0D, 0.0D, 0.0D
-            );
+           // for (int i = 0; i < 8; i++) {
+           //     double offsetX = (level.random.nextDouble() - 0.5D) * 1.2D;
+           //     double offsetZ = (level.random.nextDouble() - 0.5D) * 1.2D;
+//
+           //     level.addParticle(ModParticles.LINEAR_FRENZIED_FLAME.get(),
+           //             player.getX() + offsetX,
+           //             player.getY() + 0.5D,
+           //             player.getZ() + offsetZ,
+           //             0.0D,
+           //             0.08D + (level.random.nextDouble() * 0.05D),
+           //             0.0D);
+           // }
 
+           // executeFrenzyBurst(level, player.position().add(0, 1.0D, 0));
+
+            executeOrbitalBurst(level, player.position().add(0, 1.0D, 0));
+            executeFrenziedExplosion(level, player.position().add(0, 1.0D, 0), 4.5f);
         }
 //
 
@@ -161,6 +178,51 @@ public class EightBallItem extends Item {
             level.addFreshEntity(blackHole);
         } else {
             level.addParticle(new MagicalRingParticleOptions(color, radius, height), x, y, z, duration, 0.0D, 0.0D);
+        }
+    }
+
+    public void executeFrenzyBurst(Level level, Vec3 sourcePos) {
+        if (level.isClientSide) {
+            int beamCount = 6;
+            for (int i = 0; i < beamCount; i++) {
+                /* Circular distribution offset */
+                double angle = (i / (double) beamCount) * Math.PI * 2.0D;
+                double offsetX = Math.cos(angle) * 0.5D;
+                double offsetZ = Math.sin(angle) * 0.5D;
+
+                /* Outward and upward velocity */
+                double velX = Math.cos(angle) * 0.4D;
+                double velY = 0.6D + (level.random.nextDouble() * 0.4D);
+                double velZ = Math.sin(angle) * 0.4D;
+
+                level.addParticle(ModParticles.FRENZIED_TRAIL_PARTICLE.get(),
+                        sourcePos.x() + offsetX,
+                        sourcePos.y() + 1.0D,
+                        sourcePos.z() + offsetZ,
+                        velX, velY, velZ
+                );
+            }
+        }
+    }
+
+    public static void executeFrenziedExplosion(Level level, Vec3 targetPos, float size) {
+        if (level.isClientSide) {
+            FrenziedExplosionParticleOptions options = new FrenziedExplosionParticleOptions(size);
+
+            level.addParticle(options,
+                    targetPos.x(), targetPos.y(), targetPos.z(),
+                    0.0D, 0.0D, 0.0D);
+        }
+    }
+
+    public void executeOrbitalBurst(Level level, Vec3 sourcePos) {
+        if (level.isClientSide) {
+            level.addParticle(ModParticles.ORBITAL_FRENZIED_PARTICLE.get(),
+                    sourcePos.x(),
+                    sourcePos.y() + 1.0D,
+                    sourcePos.z(),
+                    0.0D, 0.4D, 0.0D
+            );
         }
     }
 

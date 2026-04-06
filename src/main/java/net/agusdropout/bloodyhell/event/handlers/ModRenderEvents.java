@@ -31,6 +31,11 @@ public class ModRenderEvents {
             MagicRingRenderManager.renderAllAndClear();
             SphericalShieldRenderManager.renderAllAndClear();
             FrenziedFlameRenderManager.renderAllAndClear();
+            LinearFrenziedFlameRenderManager.renderAllAndClear();
+            FrenziedTrailRenderManager.renderAllAndClear();
+            TinyBloomRenderManager.renderAllAndClear();
+            RadiantEnergyRenderManager.renderAllAndClear();
+            FrenziedExplosionRenderManager.renderAllAndClear();
         }
     }
 }
