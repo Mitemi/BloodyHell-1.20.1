@@ -139,6 +139,10 @@ public class EightBallItem extends Item {
 public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
     ItemStack itemStack = player.getItemInHand(hand);
 
+    if(player instanceof ServerPlayer serverPlayer) InsightHelper.addInsight( serverPlayer,10);
+
+
+
     level.playSound(null, player.getX(), player.getY(), player.getZ(),
             SoundEvents.BLAZE_SHOOT, SoundSource.NEUTRAL, 0.5F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
 

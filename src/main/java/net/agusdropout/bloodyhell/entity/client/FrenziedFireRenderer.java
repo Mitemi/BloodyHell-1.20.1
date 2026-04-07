@@ -19,14 +19,11 @@ public class FrenziedFireRenderer extends EntityRenderer<FrenziedFireEntity> {
     public void render(FrenziedFireEntity entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         poseStack.pushPose();
 
-        /* Billboard transformation mathematics */
         poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
-        //poseStack.mulPose(com.mojang.math.Axis.YP.rotationDegrees(180.0F));
 
         float time = (System.currentTimeMillis() % 100000L) / 1000.0F;
         float progress = entity.getLifeProgress();
 
-        /* Smooth scale-in and fade-out calculations */
         float scale = Mth.sin(progress * (float) Math.PI) * 1.5F;
         float alpha = 1.0F - (float) Math.pow(progress, 3.0);
 
@@ -44,7 +41,6 @@ public class FrenziedFireRenderer extends EntityRenderer<FrenziedFireEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(FrenziedFireEntity entity) {
-        /* Texture binding is handled by the shader render manager */
         return null;
     }
 }

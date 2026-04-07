@@ -27,11 +27,11 @@ public class FrenziedFlameRenderManager {
     public static void renderAllAndClear() {
         if (ACTIVE_FLAMES.isEmpty()) return;
 
-        RenderSystem.disableDepthTest();
+        //RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
 
-        // Pre-multiplied alpha blending required for the flame's void core
+
         RenderSystem.blendFunc(
                 com.mojang.blaze3d.platform.GlStateManager.SourceFactor.ONE,
                 com.mojang.blaze3d.platform.GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA
@@ -88,7 +88,7 @@ public class FrenziedFlameRenderManager {
         RenderSystem.setProjectionMatrix(currentProj, VertexSorting.ORTHOGRAPHIC_Z);
 
         RenderSystem.depthMask(true);
-        RenderSystem.enableDepthTest();
+       // RenderSystem.enableDepthTest();
         RenderSystem.disableBlend();
         RenderSystem.defaultBlendFunc();
 

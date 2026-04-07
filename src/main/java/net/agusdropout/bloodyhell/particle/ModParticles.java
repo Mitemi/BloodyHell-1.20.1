@@ -232,6 +232,9 @@ public class ModParticles {
                         }
                     });
 
+    public static final RegistryObject<SimpleParticleType> FRENZIED_SUN =
+            PARTICLE_TYPES.register("frenzied_sun", () -> new SimpleParticleType(true));
+
 
 
 

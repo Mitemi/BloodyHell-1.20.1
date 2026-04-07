@@ -331,6 +331,7 @@ public class ClientEvents {
             event.registerSpecial(ModParticles.RADIANT_ENERGY_PARTICLE.get(), new RadiantEnergyParticle.Provider());
             event.registerSpecial(ModParticles.ORBITAL_FRENZIED_PARTICLE.get(), new OrbitalFrenziedParticle.Provider());
             event.registerSpecial(ModParticles.FRENZIED_EXPLOSION.get(), new FrenziedExplosionParticle.Provider());
+            event.registerSpecial(ModParticles.FRENZIED_SUN.get(), new FrenziedSunSkyParticle.Provider());
         }
 
         @SubscribeEvent

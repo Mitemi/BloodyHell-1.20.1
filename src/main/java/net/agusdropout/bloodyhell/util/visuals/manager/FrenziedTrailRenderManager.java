@@ -29,7 +29,7 @@ public class FrenziedTrailRenderManager {
     public static void renderAllAndClear() {
         if (ACTIVE_TRAILS.isEmpty()) return;
 
-        RenderSystem.disableDepthTest();
+
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(
@@ -134,7 +134,6 @@ public class FrenziedTrailRenderManager {
         RenderSystem.setProjectionMatrix(currentProj, VertexSorting.ORTHOGRAPHIC_Z);
 
         RenderSystem.depthMask(true);
-        RenderSystem.enableDepthTest();
         RenderSystem.disableBlend();
         RenderSystem.defaultBlendFunc();
 
