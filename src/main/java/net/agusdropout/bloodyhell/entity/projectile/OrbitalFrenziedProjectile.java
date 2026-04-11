@@ -1,17 +1,21 @@
 package net.agusdropout.bloodyhell.entity.projectile;
 
-
-import net.agusdropout.bloodyhell.entity.ModEntityTypes;
-import net.agusdropout.bloodyhell.entity.effects.FrenziedFireEntity;
+import net.agusdropout.bloodyhell.block.ModBlocks;
+import net.agusdropout.bloodyhell.block.entity.custom.FrenziedFireBlockEntity;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.FrenziedExplosionParticleOptions;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.TinyBloomParticleOptions;
 import net.agusdropout.bloodyhell.util.visuals.ParticleHelper;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.ThrowableProjectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
@@ -96,10 +100,26 @@ public class OrbitalFrenziedProjectile extends ThrowableProjectile {
 
         if (!this.level().isClientSide) {
             Vec3 impactPos = result.getLocation();
+            BlockPos posToSet = BlockPos.containing(impactPos);
 
-            FrenziedFireEntity fireHazard = new FrenziedFireEntity(ModEntityTypes.FRENZIED_FIRE.get(), this.level());
-            fireHazard.setPos(impactPos.x, impactPos.y, impactPos.z);
-            this.level().addFreshEntity(fireHazard);
+            if (result.getType() == HitResult.Type.BLOCK) {
+                BlockHitResult blockResult = (BlockHitResult) result;
+                posToSet = blockResult.getBlockPos().relative(blockResult.getDirection());
+            } else if (result.getType() == HitResult.Type.ENTITY) {
+                EntityHitResult entityResult = (EntityHitResult) result;
+                posToSet = entityResult.getEntity().blockPosition();
+            }
+
+            BlockState currentState = this.level().getBlockState(posToSet);
+            if (currentState.canBeReplaced()) {
+                this.level().setBlockAndUpdate(posToSet, ModBlocks.FRENZIED_FIRE_BLOCK.get().defaultBlockState());
+
+                if (this.level().getBlockEntity(posToSet) instanceof FrenziedFireBlockEntity fireEntity) {
+                    if (this.getOwner() instanceof LivingEntity owner) {
+                        fireEntity.setOwner(owner);
+                    }
+                }
+            }
 
             if (this.level() instanceof ServerLevel serverLevel) {
                 serverLevel.sendParticles(new FrenziedExplosionParticleOptions(2.5F),
@@ -110,8 +130,6 @@ public class OrbitalFrenziedProjectile extends ThrowableProjectile {
             this.discard();
         }
     }
-
-
 
     @Override
     public Packet<ClientGamePacketListener> getAddEntityPacket() {

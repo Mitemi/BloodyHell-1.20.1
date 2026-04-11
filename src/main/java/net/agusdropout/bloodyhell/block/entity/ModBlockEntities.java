@@ -111,6 +111,10 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("rhnull_condenser_be", () ->
                     BlockEntityType.Builder.of(RhnullCondenserBlockEntity::new,
                             ModBlocks.RHNULL_CONDENSER.get()).build(null));
+    public static final RegistryObject<BlockEntityType<FrenziedFireBlockEntity>> FRENZIED_FIRE_BE =
+            BLOCK_ENTITIES.register("frenzied_fire_be",
+                    () -> BlockEntityType.Builder.of(FrenziedFireBlockEntity::new,
+                            ModBlocks.FRENZIED_FIRE_BLOCK.get()).build(null));
 
 
     public static void register(IEventBus eventBus) {

@@ -53,7 +53,10 @@ public class SunParticleSpawnerEvent {
                     }
                 }
             } else {
-                activeSunParticle = null;
+                if ((activeSunParticle != null)) {
+                    activeSunParticle.remove();
+                    activeSunParticle = null;
+                }
             }
         }
     }

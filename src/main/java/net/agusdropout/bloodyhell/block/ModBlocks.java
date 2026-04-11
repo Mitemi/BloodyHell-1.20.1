@@ -435,12 +435,18 @@ public class ModBlocks {
                     BlockBehaviour.Properties.copy(Blocks.FIRE)
                             .noCollission()
                             .instabreak()
-                            .sound(SILENT) // <--- APPLY THE FIX HERE
-                            .lightLevel(state -> 15) // Ensure it still emits light if needed
+                            .sound(SILENT)
+                            .lightLevel(state -> 15)
                             .replaceable()
                             .noLootTable()
 
             ));
+
+    public static final RegistryObject<Block> FRENZIED_FIRE_BLOCK = BLOCKS.register("frenzied_fire_block",
+            () -> new FrenziedFireBlock(BlockBehaviour.Properties.copy(Blocks.FIRE)
+                    .lightLevel(state -> 15)
+                    .noOcclusion()
+                    .noLootTable()));
 
     public static final RegistryObject<Block> BLASPHEMITE_ORE = registerBlock("blasphemite_ore",
             () -> new DropExperienceBlock(BlockBehaviour.Properties.copy(Blocks.STONE)

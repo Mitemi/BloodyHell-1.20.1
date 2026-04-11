@@ -28,7 +28,6 @@ public class CrawlingDelusionRenderer extends InsightCreatureRenderer<CrawlingDe
 
     @Override
     public RenderType getRenderType(CrawlingDelusionEntity animatable, ResourceLocation texture, @Nullable MultiBufferSource bufferSource, float partialTick) {
-        /* Bypasses the default cutout render type to allow partial transparency */
         if (ClientInsightData.getPlayerInsight() >= animatable.getMinimumInsight()) {
             return RenderType.entityTranslucent(texture);
         }
@@ -87,7 +86,7 @@ public class CrawlingDelusionRenderer extends InsightCreatureRenderer<CrawlingDe
 
                     float size = 0.01F + entity.getRandom().nextFloat() * 0.05F;
 
-                    /* Calculates the gradient color based on a randomized float */
+
                     Vector3f colorStart = new Vector3f(1.0F, 0.9F, 0.1F);
                     Vector3f colorMid = new Vector3f(1.0F, 0.5F, 0.0F);
                     Vector3f colorEnd = new Vector3f(0.8F, 0.1F, 0.0F);

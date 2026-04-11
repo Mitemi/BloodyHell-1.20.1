@@ -56,6 +56,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
         crossBlock(ModBlocks.BLOOD_GLOWING_CHAINS_BLOCK);
         crossBlock(ModBlocks.BLOOD_FIRE);
+        crossBlock(ModBlocks.FRENZIED_FIRE_BLOCK);
 
         veinBlock(ModBlocks.VISCERAL_INFECTED_VEIN);
 
