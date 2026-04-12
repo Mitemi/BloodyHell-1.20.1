@@ -320,6 +320,24 @@
         "stream": false
       }
     ]
+  },
+  "crawling_delusion_ambience": {
+    "subtitle": "subtitles.bloodyhell.crawling_delusion_ambience",
+    "sounds": [
+      {
+        "name": "bloodyhell:crawling_delusion_ambience",
+        "stream": false
+      }
+    ]
+  },
+  "crawling_delusion_scared": {
+    "subtitle": "subtitles.bloodyhell.crawling_delusion_scared",
+    "sounds": [
+      {
+        "name": "bloodyhell:crawling_delusion_scared",
+        "stream": false
+      }
+    ]
   }
 
 }

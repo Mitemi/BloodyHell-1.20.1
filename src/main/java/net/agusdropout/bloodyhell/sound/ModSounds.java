@@ -61,6 +61,8 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> CONDENSER_PUMP = registerSoundEvents("condenser_pump");
     public static final RegistryObject<SoundEvent> BURDEN_SHOOT = registerSoundEvents("burden_shoot");
     public static final RegistryObject<SoundEvent> UNKNOWN_SHIELD_BOUNCE = registerSoundEvents("unknown_shield_bounce");
+    public static final RegistryObject<SoundEvent> CRAWLING_DELUSION_AMBIENCE = registerSoundEvents("crawling_delusion_ambience");
+    public static final RegistryObject<SoundEvent> CRAWLING_DELUSION_SCARED = registerSoundEvents("crawling_delusion_scared");
 
 
 

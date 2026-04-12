@@ -3,6 +3,8 @@ package net.agusdropout.bloodyhell.entity.unknown.custom;
 import net.agusdropout.bloodyhell.entity.ModEntityTypes;
 import net.agusdropout.bloodyhell.entity.base.AbstractInsightMonster;
 import net.agusdropout.bloodyhell.entity.projectile.OrbitalFrenziedProjectile;
+import net.agusdropout.bloodyhell.particle.ParticleOptions.MagicParticleOptions;
+import net.agusdropout.bloodyhell.sound.ModSounds;
 import net.agusdropout.bloodyhell.util.visuals.ParticleHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -11,21 +13,26 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.ai.navigation.WallClimberNavigation;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -40,6 +47,8 @@ public class CrawlingDelusionEntity extends AbstractInsightMonster implements Ge
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(CrawlingDelusionEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> IS_SCARED = SynchedEntityData.defineId(CrawlingDelusionEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Byte> CLIMBING_FLAGS = SynchedEntityData.defineId(CrawlingDelusionEntity.class, EntityDataSerializers.BYTE);
 
     private static final int STATE_NORMAL = 0;
     private static final int STATE_UNBURROWING = 1;
@@ -52,38 +61,72 @@ public class CrawlingDelusionEntity extends AbstractInsightMonster implements Ge
 
     private int stateTicks = 0;
     private int deathCooldown = 50;
-
     private UUID lockedTargetUuid = null;
 
     public CrawlingDelusionEntity(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
+        this.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
                 .add(Attributes.MAX_HEALTH, 30.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.15D)
-                .add(Attributes.ATTACK_DAMAGE, 5.0D);
+                .add(Attributes.ATTACK_DAMAGE, 1.0D); // Kept low because the danger is the grapple effect
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(STATE, STATE_UNBURROWING);
+        this.entityData.define(IS_SCARED, false);
+        this.entityData.define(CLIMBING_FLAGS, (byte) 0);
+    }
+
+    @Override
+    protected PathNavigation createNavigation(Level level) {
+        return new WallClimberNavigation(this, level);
     }
 
     public void setLockedTarget(UUID uuid) {
         this.lockedTargetUuid = uuid;
     }
 
+    public boolean isScared() {
+        return this.entityData.get(IS_SCARED);
+    }
+
+    public void setScared(boolean scared) {
+        this.entityData.set(IS_SCARED, scared);
+    }
+
+    public boolean isClimbing() {
+        return (this.entityData.get(CLIMBING_FLAGS) & 1) != 0;
+    }
+
+    public void setClimbing(boolean climbing) {
+        byte b0 = this.entityData.get(CLIMBING_FLAGS);
+        if (climbing) {
+            b0 = (byte) (b0 | 1);
+        } else {
+            b0 = (byte) (b0 & -2);
+        }
+        this.entityData.set(CLIMBING_FLAGS, b0);
+    }
+
+    @Override
+    public boolean onClimbable() {
+        return this.isClimbing();
+    }
+
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
 
-        this.goalSelector.addGoal(2, new net.minecraft.world.entity.ai.goal.AvoidEntityGoal<>(
+        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(
                 this,
                 EchoOfTheNamelessEntity.class,
-                10.0F,
+                EchoOfTheNamelessEntity.REPEALING_LAMP_RADIUS,
                 1.3D,
                 1.6D,
                 (entity) -> {
@@ -92,15 +135,51 @@ public class CrawlingDelusionEntity extends AbstractInsightMonster implements Ge
                     }
                     return false;
                 }
-        ));
+        ) {
+            @Override
+            public void start() {
+                super.start();
+                CrawlingDelusionEntity.this.setScared(true);
+                CrawlingDelusionEntity.this.playSound(ModSounds.CRAWLING_DELUSION_SCARED.get(), 1.0F, 1.0F);
+            }
+
+            @Override
+            public void stop() {
+                super.stop();
+                CrawlingDelusionEntity.this.setScared(false);
+            }
+        });
 
         this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.2D, false));
-        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(4, new RandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
 
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false,
                 livingEntity -> this.lockedTargetUuid == null || livingEntity.getUUID().equals(this.lockedTargetUuid)));
+    }
+
+    @Override
+    public boolean doHurtTarget(Entity target) {
+        if (target instanceof Player player && !this.level().isClientSide()) {
+
+            MobEffectInstance currentEffect = player.getEffect(net.agusdropout.bloodyhell.effect.ModEffects.DELUSION_GRASP.get());
+            int currentAmp = currentEffect != null ? currentEffect.getAmplifier() : -1;
+
+            // Limit to 3 max attachments (Amplifier 2)
+            int newAmp = Math.min(2, currentAmp + 1);
+
+            // Effect lasts 8 seconds (160 ticks)
+            player.addEffect(new MobEffectInstance(net.agusdropout.bloodyhell.effect.ModEffects.DELUSION_GRASP.get(), 160, newAmp, false, true, true));
+
+            this.playSound(SoundEvents.SLIME_SQUISH, 1.0F, 0.5F);
+            this.playSound(SoundEvents.SCULK_SHRIEKER_STEP, 1.0F, 1.5F);
+
+            // Discard the physical entity as it has "attached" to the player
+            this.discard();
+            return true;
+        }
+        return super.doHurtTarget(target);
     }
 
     private int getEntityState() {
@@ -125,11 +204,38 @@ public class CrawlingDelusionEntity extends AbstractInsightMonster implements Ge
             this.setTarget(null);
             this.setDeltaMovement(0, this.getDeltaMovement().y, 0);
         }
+
+        if (this.isScared()) {
+            if (this.level().isClientSide() && this.random.nextFloat() < 0.4f) {
+                double xOffset = (this.random.nextDouble() - 0.5D) * this.getBbWidth();
+                double yOffset = this.random.nextDouble() * this.getBbHeight();
+                double zOffset = (this.random.nextDouble() - 0.5D) * this.getBbWidth();
+
+                this.level().addParticle(
+                        new MagicParticleOptions(new Vector3f(1.0F, 0.84F, 0.0F), 0.5F, true, 20, true),
+                        this.getX() + xOffset, this.getY() + yOffset, this.getZ() + zOffset,
+                        0.0D, 0.05D, 0.0D
+                );
+            }
+
+            if (!this.level().isClientSide() && this.tickCount % 10 == 0) {
+                this.playSound(SoundEvents.AMETHYST_BLOCK_CHIME, 0.5F, 1.5F + (this.random.nextFloat() * 0.5F));
+            }
+        }
+    }
+
+    @Override
+    public boolean canAttack(LivingEntity target) {
+        return true;
     }
 
     @Override
     public void tick() {
         super.tick();
+
+        if (!this.level().isClientSide()) {
+            this.setClimbing(this.horizontalCollision);
+        }
 
         int currentState = this.getEntityState();
 
@@ -256,6 +362,11 @@ public class CrawlingDelusionEntity extends AbstractInsightMonster implements Ge
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
+    }
+
+    @Override
+    protected @Nullable SoundEvent getAmbientSound() {
+        return ModSounds.CRAWLING_DELUSION_AMBIENCE.get();
     }
 
     @Override

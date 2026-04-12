@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -30,6 +31,8 @@ import java.util.UUID;
 
 public class EchoOfTheNamelessEntity extends PathfinderMob implements GeoEntity, InsightEntity {
 
+    public static final float REPEALING_LAMP_RADIUS = 5.0F;
+
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     private static final EntityDataAccessor<Integer> STATE = SynchedEntityData.defineId(EchoOfTheNamelessEntity.class, EntityDataSerializers.INT);
@@ -46,6 +49,7 @@ public class EchoOfTheNamelessEntity extends PathfinderMob implements GeoEntity,
     private static final RawAnimation ANIM_BURROWING = RawAnimation.begin().thenPlay("burrowing");
 
     private int stateTicks = 0;
+    private int resonanceTick = -1;
 
     public EchoOfTheNamelessEntity(EntityType<? extends PathfinderMob> type, Level level) {
         super(type, level);
@@ -108,6 +112,10 @@ public class EchoOfTheNamelessEntity extends PathfinderMob implements GeoEntity,
         return this.getEnergy() > 30.0F;
     }
 
+    public void triggerResonance(int delay) {
+        this.resonanceTick = delay;
+    }
+
     @Override
     public boolean hurt(DamageSource source, float amount) {
         return false;
@@ -168,8 +176,51 @@ public class EchoOfTheNamelessEntity extends PathfinderMob implements GeoEntity,
             }
         }
 
-        if (!this.level().isClientSide() && currentState == STATE_IDLE) {
-            this.handleSafeZoneLogic();
+        if (!this.level().isClientSide()) {
+            if (currentState == STATE_IDLE) {
+                this.handleSafeZoneLogic();
+            }
+
+            if (this.resonanceTick >= 0) {
+                if (this.resonanceTick == 0) {
+                    this.executeResonance();
+                }
+                this.resonanceTick--;
+            }
+        }
+    }
+
+    private void executeResonance() {
+        ServerLevel serverLevel = (ServerLevel) this.level();
+
+
+        serverLevel.sendParticles(ParticleTypes.FIREWORK, this.getX(), this.getY() + 1.0D, this.getZ(), 15, 0.2D, 0.2D, 0.2D, 0.05D);
+        this.playSound(net.minecraft.sounds.SoundEvents.AMETHYST_BLOCK_CHIME, 1.0F, 1.2F);
+
+        UUID nextId = this.getNextLampUUID();
+        if (nextId != null) {
+            Entity nextEntity = serverLevel.getEntity(nextId);
+
+            if (nextEntity != null) {
+
+                net.minecraft.world.phys.Vec3 start = this.position().add(0, 1.0D, 0);
+                net.minecraft.world.phys.Vec3 end = nextEntity.position().add(0, 1.0D, 0);
+                net.minecraft.world.phys.Vec3 direction = end.subtract(start).normalize();
+                double distance = start.distanceTo(end);
+
+                for (double d = 0; d < distance; d += 0.5) {
+                    net.minecraft.world.phys.Vec3 point = start.add(direction.scale(d));
+                    serverLevel.sendParticles(ParticleTypes.END_ROD, point.x, point.y, point.z, 1, 0, 0, 0, 0.01);
+                }
+
+
+                if (nextEntity instanceof EchoOfTheNamelessEntity nextLamp) {
+                    nextLamp.triggerResonance(10);
+                } else if (nextEntity instanceof net.agusdropout.bloodyhell.entity.effects.NamelessTrialRiftEntity rift) {
+                    serverLevel.sendParticles(ParticleTypes.FIREWORK, rift.getX(), rift.getY() + 1.0D, rift.getZ(), 30, 0.5D, 0.5D, 0.5D, 0.1D);
+                    rift.playSound(net.minecraft.sounds.SoundEvents.AMETHYST_CLUSTER_BREAK, 1.5F, 1.0F);
+                }
+            }
         }
     }
 
@@ -191,7 +242,7 @@ public class EchoOfTheNamelessEntity extends PathfinderMob implements GeoEntity,
 
                         if (frenzy != null) {
                             int currentAmp = frenzy.getAmplifier();
-                            int newAmp = currentAmp - 10;
+                            int newAmp = currentAmp - 30;
 
                             if (newAmp < 0) {
                                 player.removeEffect(net.agusdropout.bloodyhell.effect.ModEffects.FRENZY.get());

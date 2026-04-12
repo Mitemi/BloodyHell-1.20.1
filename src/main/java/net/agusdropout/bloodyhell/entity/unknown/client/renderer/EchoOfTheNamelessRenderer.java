@@ -43,14 +43,22 @@ public class EchoOfTheNamelessRenderer extends InsightCreatureRenderer<EchoOfThe
         float rCol = 1.0F;
         float gCol = 0.84F;
         float bCol = 0.0F;
-        float radius = 10.0F;
+        float radius = EchoOfTheNamelessEntity.REPEALING_LAMP_RADIUS;
 
         float baseAlpha = 0.3F * energyRatio;
 
         SphericalShieldRenderManager.queueRender(() -> {
+
+            // --- 1. SETUP OPENGL STATE ---
+            RenderSystem.enableBlend();
+            RenderSystem.defaultBlendFunc();
+            RenderSystem.enableDepthTest();
+            RenderSystem.depthMask(false);
+
             Tesselator tesselator = Tesselator.getInstance();
             BufferBuilder builder = tesselator.getBuilder();
 
+            // --- 2. RENDER SPHERES ---
             RenderSystem.setShader(() -> ModShaders.SHAPE_UNKNOWN_FIRE_SHADER);
             if (ModShaders.SHAPE_UNKNOWN_FIRE_SHADER != null) {
                 Uniform timeUniform = ModShaders.SHAPE_UNKNOWN_FIRE_SHADER.getUniform("AnimTime");
@@ -77,6 +85,11 @@ public class EchoOfTheNamelessRenderer extends InsightCreatureRenderer<EchoOfThe
             builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
             RenderHelper.renderColorSphere(builder, capturedPose, radius * 1.01f, 32, 32, rCol * 0.05f, gCol * 0.05f, bCol * 0.05f, baseAlpha);
             tesselator.end();
+
+            // --- 3. RESTORE OPENGL STATE ---
+            RenderSystem.depthMask(true); // Turn depth writing back on for the rest of the game
+            RenderSystem.disableBlend();
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F); // Reset color to prevent tinting other textures
         });
     }
 }

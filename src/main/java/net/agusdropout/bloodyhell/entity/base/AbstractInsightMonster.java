@@ -17,7 +17,7 @@ public abstract class AbstractInsightMonster extends Monster implements InsightE
         super(entityType, level);
     }
 
-    /* Resolves the effective insight level of any given entity. */
+
     protected float getEntityInsightPlane(Entity entity) {
         if (entity instanceof ServerPlayer player) {
             return InsightHelper.getInsight(player);

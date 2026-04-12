@@ -400,5 +400,17 @@
   "effect.bloodyhell.visceral_effect": "Visceral Effect",
   "effect.bloodyhell.blood_fire": "Blood Fire Effect",
   "sounds.bloodyhell.grawl_drown": "Drowning Sound",
-  "message.bloodyhell.not_enough_veil": "Not enough Crimson Veil!"
+  "message.bloodyhell.not_enough_veil": "Not enough Crimson Veil!",
+
+  "item.bloodyhell.nameless_whisper": "Nameless Whisper",
+  "item.bloodyhell.nameless_echo_shard": "Nameless Echo Shard",
+
+  "entity.bloodyhell.echo_of_the_nameless": "Echo of the Nameless",
+  "entity.bloodyhell.crawling_delusion": "Crawling Delusion",
+  "entity.bloodyhell.nameless_trial_rift": "Nameless Trial Rift",
+
+  "effect.bloodyhell.frenzy": "Frenzy",
+  "effect.bloodyhell.delusion_grasp": "Delusion Grasp",
+
+  "message.bloodyhell.whispers_fade": "The whispers fade into silence..."
 }

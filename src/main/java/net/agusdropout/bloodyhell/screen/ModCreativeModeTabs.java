@@ -96,6 +96,7 @@ public class ModCreativeModeTabs {
                         output.accept(ModItems.CRIMSON_IDOL_COIN.get());
                         output.accept(ModItems.Eight_ball.get());
                         output.accept(ModItems.BLOOD_ECHO_SHARD.get());
+                        output.accept(ModItems.NAMELESS_ECHO_SHARD.get());
 
                         // --- Magic, Spell Books & Reliquary ---
                         output.accept(ModItems.BLOOD_SCRATCH_SPELLBOOK.get());

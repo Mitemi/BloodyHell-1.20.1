@@ -398,6 +398,8 @@ public class ModItems {
 
     public static final RegistryObject<Item> BLOOD_ECHO_SHARD = ITEMS.register("blood_echo_shard",
             () -> new BloodEchoShardItem(new Item.Properties().stacksTo(64)));
+    public static final RegistryObject<Item> NAMELESS_ECHO_SHARD = ITEMS.register("nameless_echo_shard",
+            () -> new NamelessEchoShardItem(new Item.Properties().stacksTo(64)));
 
     public static final RegistryObject<Item> BLASPHEMITE_SWORD = ITEMS.register("blasphemite_sword",() -> new SwordItem(ModToolTiers.BLASPHEMITE,3,-2.4F,
             new Item.Properties().stacksTo(1)));

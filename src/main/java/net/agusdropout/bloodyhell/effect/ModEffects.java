@@ -24,6 +24,8 @@ public class ModEffects {
             () -> new BloodFireEffect(MobEffectCategory.HARMFUL, 0x990000));
     public static final RegistryObject<MobEffect> FRENZY = MOB_EFFECTS.register("frenzy",
             FrenzyEffect::new);
+    public static final RegistryObject<MobEffect> DELUSION_GRASP = MOB_EFFECTS.register("delusion_grasp",
+            DelusionGraspEffect::new);
 
     public static void register(IEventBus eventBus) {
         MOB_EFFECTS.register(eventBus);

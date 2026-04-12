@@ -20,12 +20,10 @@ void main() {
     float radius = length(uv);
     float angle = atan(uv.y, uv.x);
 
-
     float bend = sin(radius * 2.0 - Time * 1.5) * 0.5;
     float wiggledAngle = angle + (bend * Intensity);
 
     float tentacles = 0.0;
-
 
     tentacles += abs(sin(wiggledAngle * 5.0 + Time)) * 0.3;
 
@@ -34,13 +32,11 @@ void main() {
 
     tentacles += abs(sin(wiggledAngle * 25.0 + Time * 5.0)) * 0.05;
 
-
     float distortedRadius = radius + (tentacles * Intensity);
-    float safeZone = 2.0 - (Intensity * 1.3);
 
+    float safeZone = 2.0 - (Intensity * 0.8);
 
     float alpha = smoothstep(safeZone - 0.2, safeZone + 0.1, distortedRadius);
-
 
     vec3 color = vec3(0.0);
     if (distortedRadius > safeZone + 0.2) {
