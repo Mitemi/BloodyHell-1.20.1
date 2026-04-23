@@ -7,6 +7,7 @@ import net.agusdropout.bloodyhell.entity.effects.EntityFallingBlock;
 import net.agusdropout.bloodyhell.entity.interfaces.IGemSpell;
 import net.agusdropout.bloodyhell.item.custom.base.Gem;
 import net.agusdropout.bloodyhell.item.custom.base.GemType;
+import net.agusdropout.bloodyhell.item.custom.base.SpellType;
 import net.agusdropout.bloodyhell.particle.ModParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -82,6 +83,7 @@ public class BloodSlashEntity extends Projectile implements IGemSpell {
     public BloodSlashEntity(Level level, double x, double y, double z, float damage, LivingEntity owner, float yaw, float pitch, List<Gem> gems) {
         this(level, x, y, z, damage, owner, yaw, pitch);
         configureSpell(gems);
+        applyConfigScaling(SpellType.BLOOD_SCRATCH);
     }
 
     @Override
@@ -324,6 +326,16 @@ public class BloodSlashEntity extends Projectile implements IGemSpell {
     public void increaseSpellDuration(int amount) {
         // Amount is seconds
         this.maxLife += amount;
+    }
+
+    @Override
+    public float getBaseDamage() {
+        return this.damage;
+    }
+
+    @Override
+    public void setBaseDamage(float damage) {
+        this.damage = damage;
     }
 
     @Override

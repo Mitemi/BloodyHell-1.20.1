@@ -4,6 +4,7 @@ import net.agusdropout.bloodyhell.entity.ModEntityTypes;
 import net.agusdropout.bloodyhell.entity.interfaces.IGemSpell;
 import net.agusdropout.bloodyhell.item.custom.base.Gem;
 import net.agusdropout.bloodyhell.item.custom.base.GemType;
+import net.agusdropout.bloodyhell.item.custom.base.SpellType;
 import net.agusdropout.bloodyhell.particle.ModParticles;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -63,6 +64,7 @@ public class BloodPortalEntity extends Entity implements IGemSpell {
         this.entityData.set(DATA_HEIGHT, heightOffset);
 
         configureSpell(gems);
+        applyConfigScaling(SpellType.BLOOD_DAGGERSRAIN);
     }
 
     @Override
@@ -203,6 +205,16 @@ public class BloodPortalEntity extends Entity implements IGemSpell {
     public void increaseSpellDuration(int amount) {
         int current = this.entityData.get(DATA_LIFE);
         this.entityData.set(DATA_LIFE, current + amount);
+    }
+
+    @Override
+    public float getBaseDamage() {
+        return this.damageBonus;
+    }
+
+    @Override
+    public void setBaseDamage(float damage) {
+        this.damageBonus = damage;
     }
 
     @Override

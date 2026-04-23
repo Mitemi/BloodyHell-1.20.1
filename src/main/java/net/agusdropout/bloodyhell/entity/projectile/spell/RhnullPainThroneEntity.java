@@ -6,6 +6,7 @@ import net.agusdropout.bloodyhell.entity.soul.BloodSoulEntity;
 import net.agusdropout.bloodyhell.entity.soul.BloodSoulSize;
 import net.agusdropout.bloodyhell.entity.soul.BloodSoulType;
 import net.agusdropout.bloodyhell.item.custom.base.Gem;
+import net.agusdropout.bloodyhell.item.custom.base.SpellType;
 import net.agusdropout.bloodyhell.networking.ModMessages;
 import net.agusdropout.bloodyhell.networking.packet.S2CPainThronePacket;
 import net.agusdropout.bloodyhell.particle.ModParticles;
@@ -71,6 +72,7 @@ public class RhnullPainThroneEntity extends Projectile implements IGemSpell {
         this.setOwner(owner);
         this.setPos(x, y, z);
         this.configureSpell(gems);
+        applyConfigScaling(SpellType.RHNULL_PAIN_THRONE);
     }
 
     @Override
@@ -237,6 +239,16 @@ public class RhnullPainThroneEntity extends Projectile implements IGemSpell {
     public void increaseSpellSize(double amount) { this.setSize(this.getSize()+ (float) amount); }
     @Override
     public void increaseSpellDuration(int amount) { this.maxDuration += amount; }
+
+    @Override
+    public float getBaseDamage() {
+        return this.damage;
+    }
+
+    @Override
+    public void setBaseDamage(float damage) {
+        this.damage = damage;
+    }
 
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {}

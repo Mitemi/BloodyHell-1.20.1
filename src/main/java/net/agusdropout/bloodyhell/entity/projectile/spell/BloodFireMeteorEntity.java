@@ -9,6 +9,7 @@ import net.agusdropout.bloodyhell.entity.effects.EntityFallingBlock;
 import net.agusdropout.bloodyhell.entity.interfaces.IBloodFlammable;
 import net.agusdropout.bloodyhell.entity.interfaces.IGemSpell;
 import net.agusdropout.bloodyhell.item.custom.base.Gem;
+import net.agusdropout.bloodyhell.item.custom.base.SpellType;
 import net.agusdropout.bloodyhell.particle.ModParticles;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.ImpactParticleOptions;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.MagicFloorParticleOptions;
@@ -89,6 +90,7 @@ public class BloodFireMeteorEntity extends Projectile implements IBloodFlammable
         this.setDataGrowTime(DEFAULT_GROW_TIME+ticksDelay);
         this.entityData.set(DATA_SCALE, size);
         configureSpell(gems);
+        applyConfigScaling(SpellType.BLOODFIRE_METEOR);
     }
 
     private void calculateSmartSpawnPosition(LivingEntity owner, Level level) {
@@ -356,6 +358,17 @@ public class BloodFireMeteorEntity extends Projectile implements IBloodFlammable
     public void increaseSpellDuration(int amount) {
         int current = this.entityData.get(DATA_GROW_TIME);
         this.entityData.set(DATA_GROW_TIME, current + amount);
+    }
+
+
+    @Override
+    public float getBaseDamage() {
+        return this.damage;
+    }
+
+    @Override
+    public void setBaseDamage(float damage) {
+        this.damage = damage;
     }
 
     // ---  BOILERPLATE ---

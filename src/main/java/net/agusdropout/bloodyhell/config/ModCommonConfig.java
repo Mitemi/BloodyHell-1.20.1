@@ -1,6 +1,10 @@
 package net.agusdropout.bloodyhell.config;
 
+import net.agusdropout.bloodyhell.item.custom.base.SpellType;
 import net.minecraftforge.common.ForgeConfigSpec;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ModCommonConfig {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
@@ -9,7 +13,27 @@ public class ModCommonConfig {
 
     public static final ForgeConfigSpec.BooleanValue GIVE_GUIDE_BOOK_ON_JOIN;
 
+    public static final ForgeConfigSpec.DoubleValue GLOBAL_SPELL_DAMAGE;
+    public static final Map<String, ForgeConfigSpec.DoubleValue> INDIVIDUAL_SPELL_DAMAGE = new HashMap<>();
+
     static {
+        BUILDER.push("Global Spell Scaling");
+        GLOBAL_SPELL_DAMAGE = BUILDER.comment("Global multiplier applied to ALL spells. (1.0 = Default, 0.5 = Half Damage, 2.0 = Double Damage)")
+                .defineInRange("globalDamageMultiplier", 1.0, 0.0, 100.0);
+        BUILDER.pop();
+
+        BUILDER.push("Individual Spell Scaling");
+        BUILDER.comment("Multipliers for specific spells. These stack multiplicatively with the Global multiplier.");
+
+
+        for (SpellType spell : SpellType.values()) {
+            INDIVIDUAL_SPELL_DAMAGE.put(spell.getId(), BUILDER
+                    .comment("Damage multiplier for " + spell.name().toLowerCase().replace("_", " "))
+                    .defineInRange(spell.getId() + "_damage", 1.0, 0.0, 100.0));
+        }
+        BUILDER.pop();
+
+
         BUILDER.push("Gameplay Settings");
 
         GIVE_GUIDE_BOOK_ON_JOIN = BUILDER
@@ -19,4 +43,11 @@ public class ModCommonConfig {
         BUILDER.pop();
         SPEC = BUILDER.build();
     }
+
+    public static double getFinalDamageMultiplier(String spellId) {
+        double global = GLOBAL_SPELL_DAMAGE.get();
+        double individual = INDIVIDUAL_SPELL_DAMAGE.containsKey(spellId) ? INDIVIDUAL_SPELL_DAMAGE.get(spellId).get() : 1.0;
+        return global * individual;
+    }
+
 }

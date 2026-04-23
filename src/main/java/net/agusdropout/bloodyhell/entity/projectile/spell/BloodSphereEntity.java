@@ -6,6 +6,7 @@ import net.agusdropout.bloodyhell.entity.effects.EntityFallingBlock;
 import net.agusdropout.bloodyhell.entity.interfaces.IGemSpell;
 import net.agusdropout.bloodyhell.entity.projectile.BloodClotProjectile;
 import net.agusdropout.bloodyhell.item.custom.base.Gem;
+import net.agusdropout.bloodyhell.item.custom.base.SpellType;
 import net.agusdropout.bloodyhell.particle.ModParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -63,6 +64,7 @@ public class BloodSphereEntity extends Projectile implements IGemSpell {
         this.delayTicks = delayTicks;
         this.initPosition(owner);
         configureSpell(gems);
+        applyConfigScaling(SpellType.BLOOD_SPHERE);
 
         if (delayTicks > 0) {
             this.setInvisible(true);
@@ -228,6 +230,16 @@ public class BloodSphereEntity extends Projectile implements IGemSpell {
     public void increaseSpellSize(double amount) {
         float current = this.entityData.get(DATA_RADIUS);
         this.entityData.set(DATA_RADIUS, current + (DEFAULT_RADIUS * (float)amount));
+    }
+
+    @Override
+    public float getBaseDamage() {
+        return this.damage;
+    }
+
+    @Override
+    public void setBaseDamage(float damage) {
+        this.damage = damage;
     }
 
     @Override

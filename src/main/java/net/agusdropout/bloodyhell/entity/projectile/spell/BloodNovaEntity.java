@@ -7,6 +7,7 @@ import net.agusdropout.bloodyhell.entity.interfaces.IGemSpell;
 import net.agusdropout.bloodyhell.entity.projectile.BloodClotProjectile;
 import net.agusdropout.bloodyhell.item.custom.base.Gem;
 import net.agusdropout.bloodyhell.item.custom.base.GemType;
+import net.agusdropout.bloodyhell.item.custom.base.SpellType;
 import net.agusdropout.bloodyhell.particle.ModParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
@@ -71,6 +72,7 @@ public class BloodNovaEntity extends Projectile implements IGemSpell {
         this.setDeltaMovement(new Vec3(xMotion * speed, yMotion * speed, zMotion * speed));
 
         configureSpell(gems);
+        applyConfigScaling(SpellType.BLOOD_NOVA);
     }
 
     @Override
@@ -382,6 +384,16 @@ public class BloodNovaEntity extends Projectile implements IGemSpell {
         int currentLife = this.entityData.get(DATA_LIFE_TICKS);
         this.entityData.set(DATA_COLLAPSE_TICKS, currentCollapse + amount);
         this.entityData.set(DATA_LIFE_TICKS, currentLife + amount);
+    }
+
+    @Override
+    public float getBaseDamage() {
+        return this.damage;
+    }
+
+    @Override
+    public void setBaseDamage(float damage) {
+        this.damage = damage;
     }
 
     @Override

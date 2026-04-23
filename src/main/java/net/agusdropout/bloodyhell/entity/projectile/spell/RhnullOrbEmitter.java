@@ -2,6 +2,7 @@ package net.agusdropout.bloodyhell.entity.projectile.spell;
 
 import net.agusdropout.bloodyhell.entity.interfaces.IGemSpell;
 import net.agusdropout.bloodyhell.item.custom.base.Gem;
+import net.agusdropout.bloodyhell.item.custom.base.SpellType;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.EtherealSwirlOptions;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.GlitterParticleOptions;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.MagicParticleOptions;
@@ -45,6 +46,7 @@ public class RhnullOrbEmitter extends Projectile implements IGemSpell {
         this.setOwner(owner);
         this.setPos(x, y, z);
         this.configureSpell(gems);
+        applyConfigScaling(SpellType.RHNULL_ORB_EMITTER);
     }
 
     @Override
@@ -137,6 +139,16 @@ public class RhnullOrbEmitter extends Projectile implements IGemSpell {
     @Override
     public void increaseSpellQuantity(double amount) {
         this.shotsPerTick += (float) (amount * 0.15f);
+    }
+
+    @Override
+    public float getBaseDamage() {
+        return this.damage;
+    }
+
+    @Override
+    public void setBaseDamage(float damage) {
+        this.damage = damage;
     }
 
     @Override

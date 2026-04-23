@@ -1,7 +1,9 @@
 package net.agusdropout.bloodyhell.entity.interfaces;
 
+import net.agusdropout.bloodyhell.config.ModCommonConfig;
 import net.agusdropout.bloodyhell.item.custom.base.Gem;
 import net.agusdropout.bloodyhell.item.custom.base.GemType;
+import net.agusdropout.bloodyhell.item.custom.base.SpellType;
 
 import java.util.List;
 
@@ -19,6 +21,19 @@ public interface IGemSpell {
             }
         }
     }
+
+    // Config Configuration (Multiplicative)
+    default void applyConfigScaling(SpellType spellType) {
+        double finalDamageMulti = ModCommonConfig.getFinalDamageMultiplier(spellType.getId());
+        if (finalDamageMulti != 1.0) {
+            setBaseDamage((float) (getBaseDamage() * finalDamageMulti));
+        }
+    }
+
+    //  Required Getters & Setters for the Interface to do the math
+    float getBaseDamage();
+    void setBaseDamage(float damage);
+
     void increaseSpellDamage(double amount);
     void increaseSpellSize(double amount);
     void increaseSpellDuration(int amount);
@@ -26,5 +41,7 @@ public interface IGemSpell {
     default void increaseSpellQuantity(double amount) {
 
     }
+
+
 
 }

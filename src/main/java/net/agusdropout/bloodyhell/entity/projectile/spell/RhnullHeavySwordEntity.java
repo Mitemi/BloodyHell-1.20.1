@@ -4,6 +4,7 @@ import net.agusdropout.bloodyhell.entity.ModEntityTypes;
 import net.agusdropout.bloodyhell.entity.effects.EntityCameraShake;
 import net.agusdropout.bloodyhell.entity.interfaces.IGemSpell;
 import net.agusdropout.bloodyhell.item.custom.base.Gem;
+import net.agusdropout.bloodyhell.item.custom.base.SpellType;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.HollowRectangleOptions;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.MagicFloorParticleOptions;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.MagicParticleOptions;
@@ -89,6 +90,7 @@ public class RhnullHeavySwordEntity extends Projectile implements IGemSpell {
     public RhnullHeavySwordEntity(Level level, LivingEntity owner,int delayTicks, List<Gem> gems) {
         this(level, owner, delayTicks);
         configureSpell(gems);
+        applyConfigScaling(SpellType.RHNULL_HEAVY_SWORD);
         this.setDelayTicks(delayTicks);
     }
 
@@ -228,6 +230,16 @@ public class RhnullHeavySwordEntity extends Projectile implements IGemSpell {
     @Override public void increaseSpellDamage(double amount) { this.damage += amount; }
     @Override public void increaseSpellSize(double amount) { this.size += (float) amount; this.entityData.set(SPELL_SCALE, this.size); }
     @Override public void increaseSpellDuration(int amount) { this.lifeTimeTicks += amount; }
+
+    @Override
+    public float getBaseDamage() {
+        return this.damage;
+    }
+
+    @Override
+    public void setBaseDamage(float damage) {
+        this.damage = damage;
+    }
     @Override public void handleEntityEvent(byte b) { if (b == 4) this.fallAnimationState.start(this.tickCount); }
     @Override public Packet<ClientGamePacketListener> getAddEntityPacket() { return NetworkHooks.getEntitySpawningPacket(this); }
 

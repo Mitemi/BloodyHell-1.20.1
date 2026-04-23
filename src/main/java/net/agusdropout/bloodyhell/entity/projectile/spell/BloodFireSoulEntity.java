@@ -7,6 +7,7 @@ import net.agusdropout.bloodyhell.entity.interfaces.IBloodFlammable;
 import net.agusdropout.bloodyhell.entity.interfaces.IGemSpell;
 import net.agusdropout.bloodyhell.item.custom.base.Gem;
 import net.agusdropout.bloodyhell.item.custom.base.GemType;
+import net.agusdropout.bloodyhell.item.custom.base.SpellType;
 import net.agusdropout.bloodyhell.particle.ModParticles;
 import net.agusdropout.bloodyhell.particle.ParticleOptions.MagicParticleOptions;
 import net.minecraft.core.BlockPos;
@@ -90,6 +91,7 @@ public class BloodFireSoulEntity extends Projectile implements IBloodFlammable, 
     public BloodFireSoulEntity(EntityType<? extends Projectile> type, Level level, LivingEntity owner, List<Gem> gems) {
         this(type, level, owner);
         configureSpell(gems);
+        applyConfigScaling(SpellType.BLOODFIRE_SOUL);
     }
 
     @Override
@@ -330,6 +332,16 @@ public class BloodFireSoulEntity extends Projectile implements IBloodFlammable, 
     public void increaseSpellDuration(int amount) {
         // Increase Lifetime (Seconds -> Ticks)
         this.maxLifetime += amount ;
+    }
+
+    @Override
+    public float getBaseDamage() {
+        return this.collisionDamage;
+    }
+
+    @Override
+    public void setBaseDamage(float damage) {
+        this.collisionDamage = damage;
     }
 
     // --- SECT 7: BOILERPLATE ---
