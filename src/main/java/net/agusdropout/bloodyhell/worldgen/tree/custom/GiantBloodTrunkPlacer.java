@@ -32,7 +32,6 @@ public class GiantBloodTrunkPlacer extends TrunkPlacer {
         @Override
         public List<FoliagePlacer.FoliageAttachment> placeTrunk(LevelSimulatedReader pLevel, BiConsumer<BlockPos,
                         BlockState> pBlockSetter, RandomSource pRandom, int pFreeTreeHeight, BlockPos pPos, TreeConfiguration pConfig) {
-            setDirtAt(pLevel, pBlockSetter, pRandom, pPos.below(), pConfig);
             List<FoliagePlacer.FoliageAttachment> list = Lists.newArrayList();
             OptionalInt optionalInt = OptionalInt.empty();
 

@@ -107,7 +107,7 @@ public class ModConfiguredFeatures {
                 new BloodTrunkPlacer(1, 2, 2),
                 BlockStateProvider.simple(ModBlocks.BLOOD_LEAVES.get()),
                 new BlobFoliagePlacer(ConstantInt.of(2), ConstantInt.of(2), 2),
-                new TwoLayersFeatureSize(1,0,2)).decorators(ImmutableList.of(BloodTreeTrunkDecorator.INSTANCE)).build()
+                new TwoLayersFeatureSize(1,0,2)).decorators(ImmutableList.of(BloodTreeTrunkDecorator.INSTANCE)).dirt(BlockStateProvider.simple(ModBlocks.BLOOD_DIRT_BLOCK.get())).build()
         );
         register(context,GIANT_BLOOD_TREE_KEY,Feature.TREE, new TreeConfiguration.TreeConfigurationBuilder(
                 BlockStateProvider.simple(ModBlocks.BLOOD_LOG.get()),
@@ -115,21 +115,21 @@ public class ModConfiguredFeatures {
                 new MegaJungleTrunkPlacer(10, 5, 5),
                 BlockStateProvider.simple(ModBlocks.BLOOD_LEAVES.get()),
                 new MegaJungleFoliagePlacer(ConstantInt.of(3), ConstantInt.of(0), 2),
-                new TwoLayersFeatureSize(1,0,2)).decorators(ImmutableList.of(BloodTreeTrunkDecorator.INSTANCE,BloodTreeLeafDecorator.INSTANCE)).build()
+                new TwoLayersFeatureSize(1,0,2)).decorators(ImmutableList.of(BloodTreeTrunkDecorator.INSTANCE,BloodTreeLeafDecorator.INSTANCE)).dirt(BlockStateProvider.simple(ModBlocks.BLOOD_DIRT_BLOCK.get())).build()
         );
         register(context,SOUL_TREE_KEY,Feature.TREE, new TreeConfiguration.TreeConfigurationBuilder(
                 BlockStateProvider.simple(ModBlocks.SOUL_LOG.get()),
                 new SoulTrunkPlacer(1, 2, 2),
                 BlockStateProvider.simple(ModBlocks.SOUL_LEAVES.get()),
                 new DarkOakFoliagePlacer(ConstantInt.of(1), ConstantInt.of(1)),
-                new TwoLayersFeatureSize(1,1,3)).decorators(ImmutableList.of(SoulTreeLeafDecorator.INSTANCE)).build()
+                new TwoLayersFeatureSize(1,1,3)).decorators(ImmutableList.of(SoulTreeLeafDecorator.INSTANCE)).dirt(BlockStateProvider.simple(ModBlocks.BLOOD_DIRT_BLOCK.get())).build()
         );
         register(context,SMALL_BLOOD_TREE_KEY,Feature.TREE, new TreeConfiguration.TreeConfigurationBuilder(
                 BlockStateProvider.simple(ModBlocks.BLOOD_LOG.get()),
                 new SmallBloodTrunkPlacer(1, 2, 2),
                 BlockStateProvider.simple(ModBlocks.BLOOD_LEAVES.get()),
                 new BushFoliagePlacer(ConstantInt.of(2), ConstantInt.of(1), 1),
-                new TwoLayersFeatureSize(1,1,1)).build()
+                new TwoLayersFeatureSize(1,1,1)).dirt(BlockStateProvider.simple(ModBlocks.BLOOD_DIRT_BLOCK.get())).build()
         );
         context.register(BLOOD_FLOWER_KEY, new ConfiguredFeature<>(Feature.FLOWER, patch(ModBlocks.BLOOD_FLOWER.get(), 64)));
         context.register(LIGHT_MUSHROOM_KEY, new ConfiguredFeature<>(Feature.FLOWER, patch(ModBlocks.LIGHT_MUSHROOM_BLOCK.get(), 35)));

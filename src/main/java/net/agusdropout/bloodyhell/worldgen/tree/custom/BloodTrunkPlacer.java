@@ -10,6 +10,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelSimulatedReader;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.TreeFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacer;
@@ -36,7 +37,6 @@ public class BloodTrunkPlacer extends TrunkPlacer {
     @Override
     public List<FoliagePlacer.FoliageAttachment> placeTrunk(LevelSimulatedReader pLevel, BiConsumer<BlockPos,
             BlockState> pBlockSetter, RandomSource pRandom, int pFreeTreeHeight, BlockPos pPos, TreeConfiguration pConfig) {
-        setDirtAt(pLevel, pBlockSetter, pRandom, pPos.below(), pConfig);
         List<FoliagePlacer.FoliageAttachment> list = Lists.newArrayList();
         OptionalInt optionalInt = OptionalInt.empty();
 
@@ -54,7 +54,7 @@ public class BloodTrunkPlacer extends TrunkPlacer {
 
                     pBlockSetter.accept(pPos.above(6).relative(Direction.NORTH, 3),
                             ((BlockState) Function.identity().apply(pConfig.trunkProvider.getState(pRandom, pPos).setValue(RotatedPillarBlock.AXIS, Direction.Axis.Y))));
-                    list.add(new FoliagePlacer.FoliageAttachment(pPos.above(6).relative(Direction.NORTH,3), 1, false));
+                    list.add(new FoliagePlacer.FoliageAttachment(pPos.above(6).relative(Direction.NORTH, 3), 1, false));
 
                 } else if (pRandom.nextFloat() > 0.25f) {
                     for (int j = 0; j < 4; j++) {
@@ -64,7 +64,7 @@ public class BloodTrunkPlacer extends TrunkPlacer {
 
                     pBlockSetter.accept(pPos.above(6).relative(Direction.SOUTH, 3),
                             ((BlockState) Function.identity().apply(pConfig.trunkProvider.getState(pRandom, pPos).setValue(RotatedPillarBlock.AXIS, Direction.Axis.Y))));
-                    list.add(new FoliagePlacer.FoliageAttachment(pPos.above(6).relative(Direction.SOUTH,3), 1, false));
+                    list.add(new FoliagePlacer.FoliageAttachment(pPos.above(6).relative(Direction.SOUTH, 3), 1, false));
                 } else if (pRandom.nextFloat() > 0.25f) {
                     for (int j = 0; j < 4; j++) {
                         pBlockSetter.accept(pPos.above(i).relative(Direction.WEST, j),
@@ -73,7 +73,7 @@ public class BloodTrunkPlacer extends TrunkPlacer {
 
                     pBlockSetter.accept(pPos.above(6).relative(Direction.WEST, 3),
                             ((BlockState) Function.identity().apply(pConfig.trunkProvider.getState(pRandom, pPos).setValue(RotatedPillarBlock.AXIS, Direction.Axis.Y))));
-                    list.add(new FoliagePlacer.FoliageAttachment(pPos.above(6).relative(Direction.WEST,3), 1, false));
+                    list.add(new FoliagePlacer.FoliageAttachment(pPos.above(6).relative(Direction.WEST, 3), 1, false));
                 } else {
                     for (int j = 0; j < 4; j++) {
                         pBlockSetter.accept(pPos.above(i).relative(Direction.EAST, j),
@@ -82,14 +82,15 @@ public class BloodTrunkPlacer extends TrunkPlacer {
 
                     pBlockSetter.accept(pPos.above(6).relative(Direction.EAST, 3),
                             ((BlockState) Function.identity().apply(pConfig.trunkProvider.getState(pRandom, pPos).setValue(RotatedPillarBlock.AXIS, Direction.Axis.Y))));
-                    list.add(new FoliagePlacer.FoliageAttachment(pPos.above(6).relative(Direction.EAST,3), 1, false));
+                    list.add(new FoliagePlacer.FoliageAttachment(pPos.above(6).relative(Direction.EAST, 3), 1, false));
                 }
             }
 
 
         }
-        list.add(new FoliagePlacer.FoliageAttachment(pPos.above(height-1), 2, false));
+        list.add(new FoliagePlacer.FoliageAttachment(pPos.above(height - 1), 2, false));
         return list;
     }
-    }
+
+}
 
