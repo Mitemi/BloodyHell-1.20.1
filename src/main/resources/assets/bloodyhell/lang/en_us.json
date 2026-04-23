@@ -416,5 +416,7 @@
   "effect.bloodyhell.frenzy": "Frenzy",
   "effect.bloodyhell.delusion_grasp": "Delusion Grasp",
 
-  "message.bloodyhell.whispers_fade": "The whispers fade into silence..."
+  "message.bloodyhell.whispers_fade": "The whispers fade into silence...",
+
+  "block.bloodyhell.flask_fill": "Filling Flask..."
 }

@@ -2,20 +2,24 @@ package net.agusdropout.bloodyhell.datagen.recipe;
 
 import net.agusdropout.bloodyhell.BloodyHell;
 import net.agusdropout.bloodyhell.block.ModBlocks;
+import net.agusdropout.bloodyhell.compat.FlaskFillCategory;
 import net.agusdropout.bloodyhell.datagen.*;
 import net.agusdropout.bloodyhell.datagen.recipe.builder.BlasphemousBloodAltarRecipeBuilder;
 import net.agusdropout.bloodyhell.datagen.recipe.builder.BloodAltarRecipeBuilder;
 import net.agusdropout.bloodyhell.datagen.recipe.builder.CondenserRecipeBuilder;
 import net.agusdropout.bloodyhell.fluid.ModFluids;
 import net.agusdropout.bloodyhell.item.ModItems;
+import net.agusdropout.bloodyhell.recipe.FlaskFillRecipe;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -1044,6 +1048,11 @@ public class ModRecipes extends ModRecipesProvider {
                 .requiresFluid(ModFluids.VISCOUS_BLASPHEMY_SOURCE.get(), 2000)
                 .unlockedBy("has_great_gem_frame", has(ModItems.RHNULL_GREAT_GEM_FRAME.get()))
                 .save(consumer, name("condense_great_ancient_blasphemous_gem"));
+
+
+
+
+
 
     }
 
